@@ -1,0 +1,2886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weddings · Jasper Hawkins Music</title>
+  <link rel="stylesheet" href="assets/colors_and_type.css">
+  <style>
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--ink); }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    .site-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background var(--dur) var(--ease),
+                  backdrop-filter var(--dur) var(--ease);
+    }
+    .site-nav.scrolled {
+      background: rgba(12, 10, 8, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--hairline);
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--bone);
+      position: relative;
+      z-index: 101;
+    }
+    .nav-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1;
+      color: var(--bone);
+    }
+    .nav-descriptor {
+      font-family: var(--font-sans);
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+    .nav-hamburger {
+      background: none;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      touch-action: manipulation;
+      position: relative;
+      z-index: 101;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--bone);
+      border-radius: 1px;
+      transition: transform 280ms var(--ease), opacity 200ms var(--ease);
+    }
+    .nav-hamburger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .nav-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: var(--ink);
+      display: flex;
+      flex-direction: column;
+      padding: 108px 32px 56px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(6%);
+      transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+    }
+    .nav-menu.is-open { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .nav-menu-links { display: flex; flex-direction: column; flex: 1; }
+    .nav-menu-links a {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(40px, 11vw, 56px);
+      line-height: 1;
+      color: var(--bone);
+      text-decoration: none;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--hairline);
+      display: block;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 260ms var(--ease), transform 260ms var(--ease), color 160ms var(--ease);
+    }
+    .nav-menu-links a:first-child { border-top: 1px solid var(--hairline); }
+    .nav-menu-links a[aria-current="page"] { color: var(--ember); }
+    .nav-menu.is-open .nav-menu-links a:nth-child(1) { opacity:1; transform:translateY(0); transition-delay:60ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(2) { opacity:1; transform:translateY(0); transition-delay:110ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(3) { opacity:1; transform:translateY(0); transition-delay:160ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(4) { opacity:1; transform:translateY(0); transition-delay:210ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(5) { opacity:1; transform:translateY(0); transition-delay:260ms; }
+    .nav-menu-cta {
+      display: block; background: var(--ember); color: var(--ink);
+      text-align: center; padding: 18px; border-radius: var(--radius-md);
+      font-family: var(--font-sans); font-size: 16px; font-weight: 500;
+      text-decoration: none; margin-top: 32px; touch-action: manipulation;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 260ms var(--ease), transform 260ms var(--ease), background 180ms var(--ease);
+    }
+    .nav-menu.is-open .nav-menu-cta { opacity:1; transform:translateY(0); transition-delay:310ms; }
+    .nav-menu-cta:hover { background: var(--ember-glow); }
+    .nav-menu-note {
+      text-align: center; font-family: var(--font-sans); font-size: 12px;
+      color: var(--bone-faint); margin-top: 12px; opacity: 0;
+      transition: opacity 260ms var(--ease);
+    }
+    .nav-menu.is-open .nav-menu-note { opacity:1; transition-delay:340ms; }
+    .nav-pill { display: none; }
+
+    /* ── Hero shell ──────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      height: 100vh;
+      height: 100svh;
+      min-height: 640px;
+      display: flex;
+      background: var(--ink);
+      overflow: hidden;
+    }
+
+    /* ── Left panel — transparent, sits above the gradient ────── */
+    .hero-panel {
+      position: relative;
+      z-index: 3;
+      width: 55%;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 100px 72px 56px 160px;
+      background: transparent;
+    }
+    .hero-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 80% 60% at 0% 85%,
+        rgba(255, 113, 61, 0.07) 0%,
+        transparent 70%
+      );
+      pointer-events: none;
+    }
+    .hero-panel-inner {
+      position: relative;
+      /* No max-width — let the headline fill the column naturally */
+    }
+
+    .hero-headline {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      /* Larger — fills the column, commands attention */
+      font-size: clamp(40px, 5.4vw, 78px);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+      color: var(--bone);
+      margin-bottom: 20px;
+    }
+    .hero-sub {
+      font-family: var(--font-sans);
+      font-weight: 400;
+      font-size: clamp(13px, 1.1vw, 16px);
+      line-height: 1.65;
+      color: var(--bone-mute);
+      margin-bottom: 32px;
+    }
+
+    /*
+      Action block — stats and CTAs live in ONE bordered unit.
+      Top row: 3 stat cells.
+      Bottom row: primary CTA | secondary CTA.
+      Everything reads as a single cohesive module.
+    */
+    .action-block {
+      border: none;
+      margin-bottom: 14px;
+    }
+    .action-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: none;
+    }
+    .action-stat {
+      padding: 14px 14px;
+      border-right: none;
+    }
+    .action-stat:last-child { border-right: none; }
+    .stat-value {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 18px;
+      color: var(--bone);
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+    .stat-value.stars { color: var(--ember); font-size: 11px; letter-spacing: 2px; }
+    .stat-value.compact { font-size: 13px; line-height: 1.25; }
+    .stat-label {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bone-faint);
+      line-height: 1.3;
+    }
+    /* CTA row — sits flush below the stats */
+    .action-ctas {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+    .cta-primary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--ember);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 14px 16px;
+      text-decoration: none;
+      border-right: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 180ms var(--ease);
+    }
+    .cta-primary:hover { background: var(--ember-glow); }
+    .cta-primary .arr { display: inline-block; transition: transform 180ms var(--ease); }
+    .cta-primary:hover .arr { transform: translateX(3px); }
+    .cta-secondary {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      /* Subtle fill so it reads as a sibling to the primary, not dead space */
+      background: rgba(242, 234, 216, 0.06);
+      color: var(--bone);
+      font-family: var(--font-sans);
+      font-size: 13px;
+      font-weight: 500;
+      padding: 14px 16px;
+      text-decoration: none;
+      cursor: pointer;
+      transition: color 180ms var(--ease), background 180ms var(--ease);
+    }
+    .cta-secondary:hover { background: rgba(242,234,216,0.12); color: var(--bone); }
+    .cta-secondary .arr { color: var(--ember); display: inline-block; transition: transform 180ms var(--ease); }
+    .cta-secondary:hover .arr { transform: translateX(3px); }
+
+    .hero-note {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--bone-faint);
+      position: relative;
+    }
+
+    /* ── Photo — starts at 25% from left, covers right 75% ────── */
+    .hero-photo {
+      position: absolute;
+      top: 0; left: 35%; right: 0; bottom: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .hero-photo img {
+      position: absolute;
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+      height: 100%;
+      width: auto;
+      max-width: none;
+      filter: var(--filter-photo);
+    }
+
+    /*
+      Gradient overlay — also starts at 25% to match the photo.
+      Fades from ink at the photo's left edge into full photo.
+      Left 25% is pure black from the hero background — no photo,
+      no overlay needed there.
+    */
+    .hero-overlay-left {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: linear-gradient(
+        to right,
+        var(--ink)            0%,
+        var(--ink)            28%,
+        rgba(0, 0, 0, 0.80)  40%,
+        rgba(0, 0, 0, 0.52)  55%,
+        rgba(0, 0, 0, 0.20)  70%,
+        rgba(0, 0, 0, 0.04)  84%,
+        transparent          95%
+      );
+      pointer-events: none;
+    }
+
+    /* Spotlight mood on the photo */
+    .hero-photo-spotlight {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: var(--gradient-spotlight);
+      pointer-events: none;
+    }
+
+
+    /* ── Desktop nav ─────────────────────────────────────────── */
+    @media (min-width: 1024px) {
+      .site-nav       { padding: 20px 80px; }
+      .nav-hamburger  { display: none; }
+      .nav-wordmark   { font-size: 18px; }
+      .nav-descriptor { font-size: 9px; }
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(242, 234, 216, 0.14);
+        border-radius: 100px;
+        padding: 10px 12px 10px 22px;
+      }
+      .nav-pill a {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        color: var(--bone);
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        padding: 6px 4px;
+        position: relative;
+        white-space: nowrap;
+      }
+      .nav-pill a::after {
+        content: "";
+        position: absolute;
+        left: 4px; right: 4px; bottom: 0;
+        height: 1px;
+        background: var(--ember);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform var(--dur) var(--ease);
+      }
+      .nav-pill a:hover::after,
+      .nav-pill a[aria-current="page"]::after { transform: scaleX(1); }
+      .nav-pill .nav-cta {
+        background: var(--ember);
+        color: var(--ink);
+        border: 0;
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-family: var(--font-sans);
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background var(--dur-fast) var(--ease);
+      }
+      .nav-pill .nav-cta:hover { background: var(--ember-glow); }
+    }
+
+    /* ── Mobile ──────────────────────────────────────────────── */
+    @media (max-width: 1023px) {
+      .hero { flex-direction: column-reverse; }
+      .hero-panel {
+        width: 100%;
+        padding: 28px 24px 52px;
+        justify-content: flex-end;
+      }
+      .hero-panel-inner { max-width: 100%; }
+      /* Mobile: photo is full bleed behind the stacked layout */
+      .hero-photo img { object-position: center 20%; }
+      .hero-overlay-left {
+        background: linear-gradient(
+          to bottom,
+          transparent 30%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.92) 100%
+        );
+      }
+      .hero-headline { font-size: clamp(30px, 8vw, 42px); }
+      .floating-review { display: none; } /* too small on mobile */
+    }
+
+    /* ── Placeholder ─────────────────────────────────────────── */
+    .below {
+      background: var(--ink);
+      min-height: 240px;
+      display: flex;
+      align-items: center;
+      padding: 80px 56px;
+      border-top: 1px solid var(--hairline);
+    }
+    .below-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--bone-faint);
+    }
+
+
+    /* ── Shared section utilities ────────────────────────────── */
+    .s-inner {
+      max-width: 1280px;
+      padding: 80px 24px;
+      margin: 0 auto;
+    }
+    .s-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .s-eyebrow::before {
+      content: "";
+      display: block;
+      width: 28px; height: 1px;
+      background: var(--ember);
+      flex-shrink: 0;
+    }
+    .s-eyebrow.on-shell-eye { color: var(--char-mute); }
+    .s-eyebrow.on-shell-eye::before { background: var(--ember-deep); }
+
+    /* Scroll reveal */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 480ms var(--ease), transform 480ms var(--ease);
+    }
+    [data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+    [data-reveal][data-delay="1"] { transition-delay: 80ms; }
+    [data-reveal][data-delay="2"] { transition-delay: 160ms; }
+    [data-reveal][data-delay="3"] { transition-delay: 240ms; }
+
+    /* Shared CTA buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--ember);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
+    }
+    .btn-primary:hover { background: var(--ember-glow); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,113,61,0.28); }
+    .btn-primary:active { background: var(--ember); transform: translateY(1px); box-shadow: none; }
+    .btn-primary-dark {
+      background: var(--ember-deep);
+      color: #fff;
+    }
+    .btn-primary-dark:hover { background: var(--ember); color: var(--ink); }
+
+    /* ── Logo Strip ─────────────────────────────────────────────── */
+    .section-logos {
+      background: var(--ink);
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+    }
+    .logos-layout {
+      max-width: 1440px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      align-items: center;
+    }
+    .logos-label {
+      padding: 48px 40px 48px 80px;
+      border-right: 1px solid var(--hairline);
+      flex-shrink: 0;
+    }
+    .logos-label-line {
+      width: 28px; height: 1px;
+      background: var(--ember);
+      margin-bottom: 14px;
+    }
+    .logos-label-text {
+      font-family: var(--font-sans);
+      font-size: 10px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--bone-mute);
+      line-height: 1.8;
+    }
+    .logos-marquee-outer {
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 6%, black 94%, transparent 100%);
+    }
+    .logos-track {
+      display: flex;
+      align-items: center;
+      width: max-content;
+      animation: logos-marquee 32s linear infinite;
+    }
+    .logos-track:hover { animation-play-state: paused; }
+    @keyframes logos-marquee {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+    .logo-slot {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 48px;
+      border-right: 1px solid var(--hairline);
+      flex-shrink: 0;
+    }
+    .logo-slot img {
+      display: block;
+      filter: invert(1) grayscale(1) brightness(2.2) contrast(1.4);
+      opacity: 0.72;
+      object-fit: contain;
+      transition: opacity 260ms;
+    }
+    .logos-track:hover .logo-slot img { opacity: 0.5; }
+    .logos-track:hover .logo-slot:hover img { opacity: 1; }
+    .logo-mudbrick    { height: 36px;  width: auto; }
+    .logo-castaways   { height: 52px;  width: auto; }
+    .logo-markovina   { height: 64px;  width: auto; }
+    .logo-waterlily   { height: 96px;  width: auto; }
+    .logo-kumeu       { height: 72px;  width: auto; }
+    .logo-stables     { height: 44px;  width: auto; }
+    .logo-bridgewater { height: 52px;  width: auto; }
+    @media (max-width: 900px) {
+      .logos-layout { grid-template-columns: 1fr; }
+      .logos-label {
+        padding: 32px 24px 24px;
+        border-right: none;
+        border-bottom: 1px solid var(--hairline);
+      }
+      .logo-slot { padding: 0 32px; }
+      .logo-mudbrick    { height: 28px; }
+      .logo-castaways   { height: 40px; }
+      .logo-markovina   { height: 52px; }
+      .logo-waterlily   { height: 76px; }
+      .logo-kumeu       { height: 56px; }
+      .logo-stables     { height: 36px; }
+      .logo-bridgewater { height: 40px; }
+    }
+
+    /* ── My Promise — Pillars ────────────────────────────────── */
+    .section-promise {
+      background: var(--ink);
+      border-top: 1px solid var(--hairline);
+      position: relative;
+      overflow: hidden;
+    }
+    .section-promise::before,
+    .section-promise::after {
+      content: "";
+      position: absolute;
+      width: 560px; height: 400px;
+      background: radial-gradient(ellipse at center,
+        rgba(255, 113, 61, 0.10) 0%,
+        transparent 70%
+      );
+      filter: blur(48px);
+      pointer-events: none;
+    }
+    .section-promise::before {
+      top: -80px; right: -120px;
+    }
+    .section-promise::after {
+      bottom: -80px; left: -120px;
+    }
+    .promise-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .promise-pillars {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .promise-pillar {
+      padding: 36px 28px;
+      border-radius: 14px;
+      border: 1px solid var(--hairline);
+      background: #1c1c1c;
+      transition: border-color 320ms ease, box-shadow 320ms ease, background 320ms ease;
+    }
+    .promise-pillar:hover {
+      background: rgba(255,113,61,0.05);
+      border-color: rgba(255,113,61,0.55);
+      box-shadow: 0 0 48px rgba(255,113,61,0.14), 0 0 0 1px rgba(255,113,61,0.18);
+    }
+    .promise-pillar-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ember);
+      letter-spacing: 0.1em;
+      margin-bottom: 16px;
+    }
+    .promise-pillar-heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(24px, 2.4vw, 32px);
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      margin-bottom: 12px;
+    }
+    .promise-pillar-text {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--bone-mute);
+      max-width: none;
+    }
+    @media (min-width: 640px) {
+      .promise-pillars { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+      .promise-pillar { padding: 48px 40px; }
+    }
+    @media (min-width: 1024px) {
+      .promise-inner { padding: 120px 80px; }
+    }
+
+    /* ── What You Get — Alternating Bands ───────────────────── */
+    .section-wyg {
+      background: var(--ink);
+    }
+    .wyg-intro {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 120px 80px 72px;
+    }
+    .wyg-heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      margin-bottom: 12px;
+      max-width: 700px;
+    }
+    .wyg-sub {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--bone-mute);
+      max-width: 560px;
+    }
+    .wyg-band {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 540px;
+      border-top: 1px solid var(--hairline);
+    }
+    .wyg-band-photo {
+      position: relative;
+      overflow: hidden;
+    }
+    .wyg-band-photo img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 20%;
+      filter: var(--filter-photo-warm);
+      transition: transform 700ms var(--ease);
+    }
+    .wyg-band:hover .wyg-band-photo img { transform: scale(1.03); }
+    .wyg-band-text {
+      background: var(--ink);
+      padding: 72px 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .wyg-band:nth-child(odd)  .wyg-band-photo { order: 1; }
+    .wyg-band:nth-child(odd)  .wyg-band-text  { order: 2; }
+    .wyg-band:nth-child(even) .wyg-band-photo { order: 2; }
+    .wyg-band:nth-child(even) .wyg-band-text  { order: 1; }
+    .wyg-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--ember);
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
+    }
+    .wyg-title {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(32px, 4vw, 52px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      margin-bottom: 16px;
+    }
+    .wyg-desc {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--bone-mute);
+      max-width: 440px;
+    }
+    @media (max-width: 1023px) {
+      .wyg-intro { padding: 72px 24px 48px; }
+      .wyg-band  { grid-template-columns: 1fr; min-height: auto; }
+      .wyg-band-photo { min-height: 280px; order: 1 !important; }
+      .wyg-band-text  { order: 2 !important; padding: 48px 24px; }
+    }
+
+    /* ── You Also Get — Staggered Timeline ──────────────────── */
+    .section-bonus {
+      background: var(--ink);
+      border-top: 1px solid var(--hairline);
+      padding: 80px 0 100px;
+    }
+    @media (min-width: 1024px) { .section-bonus { padding: 100px 0 120px; } }
+    .bonus-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+    @media (min-width: 1024px) { .bonus-inner { padding: 0 80px; } }
+    .bonus-header {
+      text-align: center;
+      margin-bottom: 64px;
+    }
+    .bonus-eyebrow {
+      font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--ember);
+      display: flex; align-items: center; justify-content: center;
+      gap: 14px; margin-bottom: 16px;
+    }
+    .bonus-eyebrow::before, .bonus-eyebrow::after {
+      content: ""; width: 28px; height: 1px;
+      background: var(--ember); opacity: 0.4;
+    }
+    .bonus-headline {
+      font-family: var(--font-serif); font-weight: 400;
+      font-size: clamp(28px, 3.5vw, 48px);
+      line-height: 1.05; letter-spacing: -0.02em; color: var(--bone);
+      margin-bottom: 10px;
+    }
+    .bonus-sub {
+      font-family: var(--font-sans); font-size: 15px; line-height: 1.65;
+      color: var(--bone-mute); max-width: 480px; margin: 0 auto;
+    }
+    .bonus-timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+    @media (min-width: 640px) { .bonus-timeline { padding-left: 56px; } }
+    .bonus-timeline::before {
+      content: ""; position: absolute;
+      left: 11px; top: 8px; bottom: 8px; width: 1px;
+      background: linear-gradient(to bottom,
+        transparent 0%,
+        rgba(255,113,61,0.4) 6%,
+        rgba(255,113,61,0.4) 94%,
+        transparent 100%
+      );
+    }
+    @media (min-width: 640px) { .bonus-timeline::before { left: 15px; } }
+    .bonus-tl-item {
+      position: relative;
+      padding-bottom: 16px;
+      opacity: 0;
+      transform: translateX(32px);
+      transition: opacity 560ms ease, transform 560ms ease;
+    }
+    .bonus-tl-item.in { opacity: 1; transform: translateX(0); }
+    .bonus-tl-item:last-child { padding-bottom: 0; }
+    .bonus-tl-item::before {
+      content: ""; position: absolute;
+      left: -34px; top: 20px;
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--ink);
+      border: 2px solid rgba(255,113,61,0.35);
+      transition: border-color 280ms ease, background 280ms ease, box-shadow 280ms ease;
+    }
+    @media (min-width: 640px) { .bonus-tl-item::before { left: -46px; width: 12px; height: 12px; } }
+    .bonus-tl-item:hover::before {
+      border-color: var(--ember);
+      background: rgba(255,113,61,0.15);
+      box-shadow: 0 0 12px rgba(255,113,61,0.3);
+    }
+    .bonus-tl-card {
+      background: #1c1c1c;
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 24px 28px;
+      transition: border-color 280ms ease, box-shadow 280ms ease, background 280ms ease;
+    }
+    .bonus-tl-item:hover .bonus-tl-card {
+      background: rgba(255,113,61,0.04);
+      border-color: rgba(255,113,61,0.45);
+      box-shadow: 0 0 32px rgba(255,113,61,0.10);
+    }
+    .bonus-tl-header { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+    .bonus-tl-num { font-family: var(--font-mono); font-size: 10px; color: var(--ember); letter-spacing: 0.12em; }
+    .bonus-tl-name {
+      font-family: var(--font-serif); font-weight: 400;
+      font-size: clamp(18px, 2vw, 22px); line-height: 1.18;
+      letter-spacing: -0.015em; color: var(--bone);
+    }
+    .bonus-tl-desc {
+      font-family: var(--font-sans); font-size: 14px;
+      line-height: 1.7; color: var(--bone-mute);
+    }
+    .bonus-tl-tag {
+      display: inline-block; margin-top: 10px;
+      font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--ember); border: 1px solid rgba(255,113,61,0.25); padding: 3px 10px;
+    }
+
+    /* ── Watch Me Play — V1 Split ───────────────────────────── */
+    .section-wmp { background: var(--ink); border-top: 1px solid var(--hairline); }
+    .wmp-grid {
+      max-width: 1440px; margin: 0 auto;
+      display: grid; grid-template-columns: 400px 1fr;
+      min-height: 680px;
+    }
+    .wmp-left {
+      padding: 80px 56px 80px 80px;
+      display: flex; flex-direction: column;
+      border-right: 1px solid var(--hairline);
+    }
+    .wmp-eyebrow {
+      font-family: var(--font-sans); font-size: 11px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--bone-mute);
+      display: flex; align-items: center; gap: 10px; margin-bottom: 24px;
+    }
+    .wmp-eyebrow::before { content:""; width:28px; height:1px; background:var(--ember); }
+    .wmp-heading {
+      font-family: var(--font-serif); font-weight: 400;
+      font-size: clamp(26px, 2.4vw, 34px); line-height: 1.12;
+      letter-spacing: -0.02em; color: var(--bone); margin-bottom: 40px;
+    }
+    .wmp-tabs { display: flex; flex-direction: column; gap: 2px; margin-bottom: 36px; }
+    .wmp-tab {
+      display: flex; align-items: center; gap: 16px;
+      padding: 16px 18px; border-radius: var(--radius-md);
+      background: none; border: 1px solid transparent;
+      cursor: pointer; text-align: left;
+      transition: background 200ms var(--ease), border-color 200ms var(--ease);
+    }
+    .wmp-tab:hover { background: rgba(242,234,216,0.04); }
+    .wmp-tab.active { background: rgba(255,113,61,0.08); border-color: rgba(255,113,61,0.28); }
+    .wmp-tab-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      border: 1.5px solid var(--bone-faint); flex-shrink: 0;
+      transition: background 200ms, border-color 200ms;
+    }
+    .wmp-tab.active .wmp-tab-dot { background: var(--ember); border-color: var(--ember); }
+    .wmp-tab-label {
+      font-family: var(--font-sans); font-size: 15px; font-weight: 500;
+      color: var(--bone-mute); transition: color 200ms;
+    }
+    .wmp-tab.active .wmp-tab-label { color: var(--bone); }
+    .wmp-tab-arr {
+      margin-left: auto; color: var(--ember); font-size: 14px;
+      opacity: 0; transform: translateX(-6px);
+      transition: opacity 200ms, transform 200ms;
+    }
+    .wmp-tab.active .wmp-tab-arr { opacity: 1; transform: translateX(0); }
+    .wmp-panel { display: none; flex-direction: column; gap: 16px; }
+    .wmp-panel.active { display: flex; }
+    .wmp-panel-desc {
+      font-family: var(--font-sans); font-size: 15px; line-height: 1.75;
+      color: var(--bone-mute); max-width: none;
+    }
+    .wmp-cta { margin-top: auto; padding-top: 40px; display: flex; flex-direction: column; gap: 10px; }
+    .wmp-avail { font-family: var(--font-sans); font-size: 11px; color: var(--bone-faint); }
+    /* Right — full-height video */
+    .wmp-right { position: relative; overflow: hidden; background: #000; }
+    .wmp-vid-panel {
+      position: absolute; inset: 0;
+      opacity: 0; transition: opacity 450ms var(--ease); pointer-events: none;
+    }
+    .wmp-vid-panel.active { opacity: 1; pointer-events: auto; }
+    .wmp-vid {
+      position: relative; width: 100%; height: 100%; overflow: hidden; cursor: pointer;
+    }
+    .wmp-vid img {
+      display: block; width: 100%; height: 100%; object-fit: cover;
+      object-position: center 25%;
+      filter: brightness(0.55) var(--filter-photo);
+      transition: filter 360ms var(--ease), transform 600ms var(--ease);
+    }
+    .wmp-vid:hover img { filter: brightness(0.65) var(--filter-photo); transform: scale(1.02); }
+    .wmp-play {
+      position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 72px; height: 72px; border-radius: 50%;
+      background: var(--ember);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; color: var(--ink); padding-left: 5px;
+      transition: background 220ms var(--ease), transform 220ms var(--ease),
+                  box-shadow 220ms var(--ease);
+    }
+    .wmp-vid:hover .wmp-play {
+      background: var(--ember-glow);
+      transform: translate(-50%, -50%) scale(1.1);
+      box-shadow: 0 0 0 14px rgba(255,113,61,0.12);
+    }
+    .wmp-vid-label { display: none; }
+    @media (max-width: 1023px) {
+      .wmp-grid { grid-template-columns: 1fr; min-height: auto; }
+      .wmp-left { padding: 56px 24px 40px; border-right: none; border-bottom: 1px solid var(--hairline); }
+      .wmp-right { min-height: 280px; }
+      .wmp-vid-panel { position: relative; inset: auto; }
+      .wmp-vid-panel:not(.active) { display: none; }
+      .wmp-cta { margin-top: 0; padding-top: 24px; }
+    }
+
+    /* ── Song Selection ──────────────────────────────────────── */
+    /* ── Song Selection — Option B (song titles as texture) ─── */
+    .songs-b {
+      position: relative; overflow: hidden;
+      background: var(--ink);
+      border-top: 1px solid rgba(255,113,61,0.08);
+    }
+    .songs-b::before {
+      content: "";
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 260px; height: 1px; z-index: 3;
+      background: linear-gradient(to right,
+        transparent 0%, rgba(255,113,61,0.25) 25%,
+        rgba(255,113,61,0.42) 50%, rgba(255,113,61,0.25) 75%,
+        transparent 100%
+      );
+    }
+    .songs-b-bg {
+      position: absolute; inset: 0; z-index: 0;
+      overflow: hidden; pointer-events: none;
+      display: flex; flex-direction: column;
+      justify-content: center; gap: 0;
+    }
+    .songs-b-bg::before, .songs-b-bg::after {
+      content: ""; position: absolute; left: 0; right: 0;
+      height: 35%; z-index: 2; pointer-events: none;
+    }
+    .songs-b-bg::before { top: 0; background: linear-gradient(to bottom, var(--ink) 0%, transparent 100%); }
+    .songs-b-bg::after  { bottom: 0; background: linear-gradient(to top, var(--ink) 0%, transparent 100%); }
+    .songs-b-vignette {
+      position: absolute; inset: 0; z-index: 1; pointer-events: none;
+      background: radial-gradient(ellipse 60% 70% at 50% 50%,
+        rgba(0,0,0,0.72) 0%, transparent 100%
+      );
+    }
+    .songs-b-row { display: flex; width: 100%; overflow: hidden; padding: 9px 0; }
+    .songs-b-track { display: flex; gap: 0; flex-shrink: 0; white-space: nowrap; }
+    .songs-b-track span {
+      font-family: var(--font-sans); font-size: 12px; font-weight: 400;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--bone); opacity: 0.11; padding: 0 28px;
+    }
+    .songs-b-track span.dot { opacity: 0.06; padding: 0; color: var(--ember); }
+    .songs-b-row:nth-child(1) .songs-b-track { animation: sb-fwd 55s linear infinite; }
+    .songs-b-row:nth-child(2) .songs-b-track { animation: sb-bwd 42s linear infinite; }
+    .songs-b-row:nth-child(3) .songs-b-track { animation: sb-fwd 32s linear infinite; }
+    .songs-b-row:nth-child(4) .songs-b-track { animation: sb-bwd 60s linear infinite; }
+    .songs-b-row:nth-child(5) .songs-b-track { animation: sb-fwd 44s linear infinite; }
+    .songs-b-row:nth-child(6) .songs-b-track { animation: sb-bwd 30s linear infinite; }
+    .songs-b-row:nth-child(7) .songs-b-track { animation: sb-fwd 50s linear infinite; }
+    @keyframes sb-fwd { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+    @keyframes sb-bwd { from { transform: translateX(-50%); } to { transform: translateX(0); } }
+    .songs-b-inner {
+      position: relative; z-index: 4;
+      padding: 96px 24px 100px;
+      text-align: center;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    @media (min-width: 768px)  { .songs-b-inner { padding: 112px 48px 116px; } }
+    @media (min-width: 1024px) { .songs-b-inner { padding: 128px 80px 132px; } }
+    .songs-b-eyebrow {
+      font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--ember);
+      display: flex; align-items: center; gap: 12px; margin-bottom: 24px;
+    }
+    .songs-b-eyebrow::before, .songs-b-eyebrow::after {
+      content: ""; width: 28px; height: 1px; background: var(--ember); opacity: 0.5;
+    }
+    .songs-b-heading {
+      font-family: var(--font-serif); font-weight: 400;
+      font-size: clamp(36px, 6vw, 72px);
+      line-height: 1.0; letter-spacing: -0.03em;
+      color: var(--bone); margin-bottom: 32px; max-width: 700px;
+    }
+    .songs-b-sub {
+      font-family: var(--font-serif); font-style: italic;
+      font-size: clamp(16px, 1.8vw, 20px); color: var(--bone-mute);
+      margin-bottom: 40px; line-height: 1.5; max-width: 520px;
+    }
+    .songs-b-link {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: none; border: 1px solid rgba(255,255,255,0.18);
+      color: var(--bone);
+      font-family: var(--font-sans); font-size: 14px; font-weight: 500;
+      padding: 14px 28px; text-decoration: none;
+      border-radius: var(--radius-md);
+      transition: background 200ms, border-color 200ms, transform 200ms;
+    }
+    .songs-b-link:hover {
+      background: rgba(255,113,61,0.1);
+      border-color: rgba(255,113,61,0.45);
+      transform: translateY(-1px);
+    }
+    .songs-b-arr { color: var(--ember); transition: transform 200ms; }
+    .songs-b-link:hover .songs-b-arr { transform: translateX(4px); }
+
+    /* ── Testimonial — photo-backed ──────────────────────────── */
+    .section-testi {
+      position: relative;
+      background: var(--ink);
+      overflow: hidden;
+      padding: 0;
+    }
+    .testi-photo {
+      position: absolute; inset: 0;
+    }
+    .testi-photo img {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      filter: var(--filter-photo);
+    }
+    .testi-o-flat   { position:absolute; inset:0; background:rgba(0,0,0,0.62); pointer-events:none; z-index:1; }
+    .testi-o-edges  { position:absolute; inset:0; background:radial-gradient(ellipse 85% 85% at 50% 50%, transparent 30%, rgba(0,0,0,0.55) 100%); pointer-events:none; z-index:2; }
+    .testi-o-warm   { position:absolute; inset:0; background:radial-gradient(ellipse 70% 70% at 50% 50%, rgba(255,113,61,0.07) 0%, transparent 70%); pointer-events:none; z-index:3; }
+    .testi-o-top    { position:absolute; inset:0; background:linear-gradient(to bottom, var(--ink) 0%, rgba(0,0,0,0.70) 12%, rgba(0,0,0,0.20) 28%, transparent 50%); pointer-events:none; z-index:4; }
+    .testi-o-bottom { position:absolute; inset:0; background:linear-gradient(to top, var(--ink) 0%, rgba(0,0,0,0.60) 10%, rgba(0,0,0,0.15) 24%, transparent 42%); pointer-events:none; z-index:4; }
+    .testi-content {
+      position: relative;
+      z-index: 5;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 200px 24px 160px;
+      text-align: center;
+    }
+    .testi-section-heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(24px, 3.5vw, 42px);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      color: var(--bone);
+      margin-bottom: 12px;
+    }
+    .testi-section-sub {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 18px;
+      color: var(--bone-mute);
+      margin-bottom: 48px;
+    }
+    .testi-deco {
+      font-family: var(--font-serif);
+      font-size: clamp(120px, 18vw, 200px);
+      line-height: 0.8;
+      color: var(--ember);
+      opacity: 0.08;
+      position: absolute;
+      top: 120px; left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      user-select: none;
+      z-index: -1;
+    }
+    .testi-stars {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--ember);
+      letter-spacing: 3px;
+      margin-bottom: 20px;
+    }
+    .testi-source {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--bone-faint);
+    }
+    .testi-quote {
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: 400;
+      font-size: clamp(18px, 2.6vw, 26px);
+      line-height: 1.55;
+      color: var(--bone);
+      margin-bottom: 24px;
+    }
+    .testi-attr {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+    }
+    .review-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--ember);
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
+    /* ── Why Choose Me ───────────────────────────────────────── */
+    .section-why {
+      background: var(--ink);
+      border-top: 1px solid var(--hairline);
+    }
+    .why-inner {
+      padding: 80px 24px;
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+    .why-heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(28px, 4vw, 52px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      margin-bottom: 12px;
+    }
+    .why-sub {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(16px, 2vw, 22px);
+      color: var(--bone-mute);
+      margin-bottom: 32px;
+    }
+    .why-body p {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.75;
+      color: var(--bone-mute);
+      max-width: 640px;
+      margin-bottom: 20px;
+    }
+    .why-body p:last-child { margin-bottom: 36px; }
+    .why-photo {
+      margin-top: 48px;
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 4 / 5;
+    }
+    .why-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 20%;
+      filter: var(--filter-photo);
+      display: block;
+    }
+
+    /* ── FAQ ─────────────────────────────────────────────────── */
+    .section-faq {
+      background: var(--ink);
+      border-top: 1px solid var(--hairline);
+    }
+    .faq-list {
+      border-top: 1px solid var(--hairline);
+      margin-top: 32px;
+    }
+    details.faq-item {
+      border-bottom: 1px solid var(--hairline);
+    }
+    summary.faq-q {
+      font-family: var(--font-sans);
+      font-size: clamp(15px, 1.5vw, 17px);
+      font-weight: 500;
+      color: var(--bone);
+      padding: 22px 40px 22px 0;
+      cursor: pointer;
+      list-style: none;
+      position: relative;
+      line-height: 1.4;
+      transition: color 180ms var(--ease);
+    }
+    summary.faq-q::-webkit-details-marker { display: none; }
+    summary.faq-q::after {
+      content: "+";
+      position: absolute;
+      right: 0; top: 50%;
+      transform: translateY(-50%);
+      font-size: 20px;
+      color: var(--ember);
+      font-weight: 300;
+      line-height: 1;
+      transition: transform 280ms var(--ease);
+    }
+    details[open] summary.faq-q { color: var(--ember); }
+    details[open] summary.faq-q::after { transform: translateY(-50%) rotate(45deg); }
+    .faq-a {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.75;
+      color: var(--bone-mute);
+      padding: 0 40px 24px 0;
+      max-width: 720px;
+    }
+    .faq-cta-block {
+      margin-top: 48px;
+      padding-top: 40px;
+      border-top: 1px solid var(--hairline);
+    }
+    .faq-cta-text {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(20px, 2.5vw, 28px);
+      color: var(--bone);
+      margin-bottom: 28px;
+      line-height: 1.3;
+      max-width: 560px;
+    }
+
+    /* ── Final CTA ───────────────────────────────────────────── */
+    .section-cta {
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+      border-top: 1px solid rgba(255,113,61,0.08);
+    }
+    .cta-photo { position: absolute; inset: 0; z-index: 0; }
+    .cta-photo img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.55) saturate(0.75);
+    }
+    .cta-o-flat  { position: absolute; inset: 0; background: rgba(0,0,0,0.62); pointer-events: none; z-index: 1; }
+    .cta-o-warm  { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 75% at 50% 50%, rgba(255,113,61,0.09) 0%, transparent 65%); pointer-events: none; z-index: 2; }
+    .cta-o-top   { position: absolute; inset: 0; background: linear-gradient(to bottom, var(--ink) 0%, rgba(0,0,0,0.55) 22%, transparent 55%); pointer-events: none; z-index: 3; }
+    .cta-inner {
+      position: relative; z-index: 5;
+      padding: 96px 24px;
+      max-width: 680px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .cta-heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(32px, 5vw, 64px);
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      margin-bottom: 14px;
+    }
+    .cta-sub {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: clamp(16px, 2vw, 22px);
+      color: var(--bone-mute);
+      margin-bottom: 36px;
+    }
+    .cta-note {
+      margin-top: 16px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--bone-faint);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--ink);
+      border-top: 1px solid var(--hairline);
+      padding: 56px 24px 40px;
+    }
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .footer-name {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 20px;
+      color: var(--bone);
+      line-height: 1;
+    }
+    .footer-descriptor {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+      margin-top: 4px;
+    }
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-contact a {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--bone-mute);
+      text-decoration: none;
+      transition: color 180ms var(--ease);
+    }
+    .footer-contact a:hover { color: var(--ember); }
+    .footer-copy {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--bone-faint);
+      padding-top: 24px;
+      border-top: 1px solid var(--hairline);
+    }
+
+    /* ── Desktop enhancements ────────────────────────────────── */
+    @media (min-width: 640px) {
+    }
+    @media (min-width: 1024px) {
+      .s-inner { padding: 120px 80px; }
+      .wyg-services {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        border-bottom: none;
+        margin-bottom: 72px;
+      }
+      .wyg-service {
+        padding: 40px 48px 40px 0;
+        border-bottom: none;
+        border-right: 1px solid var(--hairline);
+      }
+      .wyg-service:last-child { border-right: none; padding-right: 0; padding-left: 48px; }
+      .wyg-service:nth-child(2) { padding-left: 48px; }
+      .wyg-bonus-list {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px 48px;
+      }
+      .why-inner {
+        padding: 120px 80px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 80px;
+        align-items: start;
+      }
+      .why-photo { margin-top: 0; }
+      .testi-content { padding: 240px 80px 200px; }
+      .cta-inner { padding: 120px 80px; }
+      .site-footer { padding: 80px 80px 48px; }
+      .footer-inner {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-copy { border-top: none; padding-top: 0; }
+    }
+
+    /* ════════════════════════════════════════════════════════════
+       ANIMATION SYSTEM
+    ════════════════════════════════════════════════════════════ */
+
+    /* — Hero photo load ——————————————————————————————————————— */
+    .hero-photo img {
+      opacity: 0;
+      transition: opacity 900ms var(--ease);
+    }
+    .hero-photo img.loaded { opacity: 1; }
+
+    /* — Page-load sequence (hero text + nav) ————————————————— */
+    [data-load] {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 640ms var(--ease), transform 640ms var(--ease);
+    }
+    [data-load].loaded { opacity: 1; transform: translateY(0); }
+
+    /* — Directional scroll reveal ——————————————————————————— */
+    [data-reveal-left] {
+      opacity: 0;
+      transform: translateX(-48px);
+      transition: opacity 680ms var(--ease), transform 680ms var(--ease);
+    }
+    [data-reveal-right] {
+      opacity: 0;
+      transform: translateX(48px);
+      transition: opacity 680ms var(--ease), transform 680ms var(--ease);
+    }
+    [data-reveal-left].is-visible,
+    [data-reveal-right].is-visible {
+      opacity: 1;
+      transform: translate(0);
+    }
+
+    /* — Promise pillar cards — start hidden, stagger in ————— */
+    .promise-pillar {
+      opacity: 0;
+      transform: translateY(40px) scale(0.97);
+      transition: opacity 700ms var(--ease),
+                  transform 700ms var(--ease),
+                  background 320ms ease,
+                  border-color 320ms ease,
+                  box-shadow 320ms ease;
+    }
+    .promise-pillar.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+
+    /* ── Enquiry Off-Canvas ──────────────────────────────────── */
+    .eq-scrim {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.72);
+      z-index: 400;
+      opacity: 0; pointer-events: none;
+      transition: opacity 360ms ease;
+    }
+    .eq-scrim.is-open { opacity: 1; pointer-events: auto; }
+    .eq-panel {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: min(500px, 100vw);
+      background: var(--ink-soft);
+      border-left: 1px solid var(--hairline);
+      z-index: 401;
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .eq-panel.is-open { transform: translateX(0); }
+    .eq-panel-head {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+      padding: 28px 28px 22px;
+      border-bottom: 1px solid var(--hairline);
+      flex-shrink: 0;
+    }
+    .eq-eyebrow {
+      font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--ember);
+      margin-bottom: 8px;
+    }
+    .eq-heading {
+      font-family: var(--font-serif); font-weight: 400;
+      font-size: 24px; line-height: 1.2; letter-spacing: -0.01em; color: var(--bone);
+    }
+    .eq-close {
+      flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--hairline);
+      color: var(--bone-mute); font-size: 20px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; margin-top: 2px;
+      transition: background 180ms, color 180ms;
+    }
+    .eq-close:hover { background: rgba(255,255,255,0.12); color: var(--bone); }
+    .eq-body {
+      flex: 1; overflow-y: auto; padding: 24px 28px 40px;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent;
+    }
+    .eq-intro {
+      font-family: var(--font-sans); font-size: 14px; line-height: 1.65;
+      color: var(--bone-mute); margin-bottom: 24px;
+    }
+    .eq-form { color-scheme: dark; }
+    .eq-field { margin-bottom: 16px; }
+    .eq-label {
+      display: block; font-family: var(--font-sans);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--bone-mute); margin-bottom: 7px;
+    }
+    .eq-req { color: var(--ember); margin-left: 1px; }
+    .eq-input, .eq-select, .eq-textarea {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--hairline); border-radius: 8px;
+      padding: 12px 14px;
+      font-family: var(--font-sans); font-size: 14px; color: var(--bone);
+      outline: none; -webkit-appearance: none; appearance: none;
+      transition: border-color 200ms, box-shadow 200ms;
+    }
+    .eq-input::placeholder, .eq-textarea::placeholder { color: var(--bone-faint); opacity: 1; }
+    .eq-input:focus, .eq-select:focus, .eq-textarea:focus {
+      border-color: var(--ember);
+      box-shadow: 0 0 0 3px rgba(255,113,61,0.12);
+    }
+    .eq-select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B8AC97' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px;
+    }
+    .eq-select option { background: #1f1f1f; }
+    .eq-textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
+    .eq-submit { width: 100%; justify-content: center; padding: 15px; margin-top: 4px; border-radius: 8px; }
+
+    /* ── Package Tagline ─────────────────────────────────────── */
+    .section-package {
+      position: relative;
+      border-top: 1px solid rgba(255,113,61,0.08);
+    }
+    .package-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 88px 48px 96px;
+      text-align: center;
+    }
+    @media (min-width: 1024px) { .package-inner { padding: 100px 120px 108px; } }
+    .package-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ember);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .package-eyebrow::before, .package-eyebrow::after {
+      content: "";
+      display: block;
+      width: 32px;
+      height: 1px;
+      background: var(--ember);
+      opacity: 0.5;
+    }
+    .package-tagline {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(22px, 2.8vw, 40px);
+      line-height: 1.3;
+      color: var(--bone);
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .package-tagline em {
+      color: var(--ember);
+      font-style: italic;
+    }
+
+    /* ── Acoustic Performances ────────────────────────────────── */
+    .section-perf {
+      background: var(--ink);
+      border-top: 1px solid rgba(255,113,61,0.08);
+      padding: 88px 48px 96px;
+    }
+    @media (min-width: 1024px) { .section-perf { padding: 100px 120px 108px; } }
+    .perf-inner {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+    .perf-header { text-align: center; margin-bottom: 56px; }
+    .perf-eyebrow {
+      font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase; color: var(--ember);
+      display: flex; align-items: center; justify-content: center;
+      gap: 12px; margin-bottom: 20px;
+    }
+    .perf-eyebrow::before, .perf-eyebrow::after {
+      content: ""; width: 28px; height: 1px; background: var(--ember); opacity: 0.5;
+    }
+    .perf-heading {
+      font-family: var(--font-serif); font-weight: 400;
+      font-size: clamp(28px, 3.5vw, 48px);
+      line-height: 1.05; letter-spacing: -0.02em; color: var(--bone);
+    }
+    .perf-grid {
+      display: grid; grid-template-columns: 1fr; gap: 16px;
+    }
+    @media (min-width: 640px) { .perf-grid { grid-template-columns: 1fr 1fr; gap: 20px; } }
+    @media (min-width: 1024px) { .perf-grid { gap: 24px; } }
+    .perf-item {
+      position: relative; aspect-ratio: 16 / 9;
+      overflow: hidden; border-radius: 10px;
+      background: #0c0a09; cursor: pointer;
+    }
+    .perf-facade {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .perf-facade img {
+      position: absolute; inset: 0; width: 100%; height: 100%;
+      object-fit: cover;
+      filter: brightness(0.62) saturate(0.8);
+      transition: filter 300ms var(--ease), transform 600ms var(--ease);
+    }
+    .perf-item:hover .perf-facade img {
+      filter: brightness(0.78) saturate(0.9);
+      transform: scale(1.04);
+    }
+    .perf-play {
+      position: relative; z-index: 2;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: var(--ember);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; color: var(--ink); padding-left: 4px;
+      transition: transform 220ms var(--ease), box-shadow 220ms var(--ease);
+    }
+    .perf-item:hover .perf-play {
+      transform: scale(1.12);
+      box-shadow: 0 0 0 14px rgba(255,113,61,0.15);
+    }
+    .perf-meta {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+      padding: 48px 20px 16px;
+      background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, transparent 100%);
+    }
+    .perf-song {
+      font-family: var(--font-serif); font-weight: 400;
+      font-size: clamp(15px, 1.6vw, 20px); letter-spacing: -0.01em;
+      color: var(--bone); margin-bottom: 2px;
+    }
+    .perf-artist {
+      font-family: var(--font-sans); font-size: 11px;
+      color: var(--bone-mute); letter-spacing: 0.06em;
+    }
+    .perf-item iframe {
+      position: absolute; inset: 0; width: 100%; height: 100%; border: none;
+    }
+
+    /* ── Animated Reviews ─────────────────────────────────────── */
+    .section-reviews {
+      background: var(--ink);
+      padding: 100px 48px 120px;
+    }
+    @media (min-width: 1024px) {
+      .section-reviews { padding: 100px 120px 120px; }
+    }
+    .reviews-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .reviews-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--ember);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .reviews-eyebrow::before {
+      content: "";
+      width: 28px;
+      height: 1px;
+      background: var(--ember);
+      opacity: 0.5;
+      flex-shrink: 0;
+    }
+    .reviews-heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(26px, 3.5vw, 44px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      margin-bottom: 16px;
+    }
+    .reviews-sub {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--bone-mute);
+      margin-bottom: 40px;
+      max-width: 360px;
+    }
+    .reviews-dots {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .reviews-dot {
+      height: 10px;
+      width: 10px;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.15);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: background 300ms ease, width 300ms ease;
+    }
+    .reviews-dot.active {
+      width: 32px;
+      background: var(--ember);
+    }
+    .reviews-right { display: grid; }
+    .reviews-card {
+      grid-row: 1;
+      grid-column: 1;
+      background: var(--ink-soft);
+      border: 1px solid var(--hairline-strong);
+      border-radius: 16px;
+      padding: 40px 36px;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateX(56px) scale(0.96);
+      pointer-events: none;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.4), 0 16px 56px rgba(0,0,0,0.45), 0 32px 96px rgba(0,0,0,0.3);
+      transition: opacity 480ms cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 480ms cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 480ms ease;
+    }
+    .reviews-card.is-active {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+      pointer-events: auto;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.5), 0 16px 56px rgba(0,0,0,0.55), 0 32px 96px rgba(0,0,0,0.4), 0 0 80px rgba(255,113,61,0.07);
+    }
+    .reviews-card.is-prev {
+      opacity: 0;
+      transform: translateX(-56px) scale(0.96);
+    }
+    .reviews-stars {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 20px;
+      color: #f59e0b;
+      font-size: 16px;
+      line-height: 1;
+      letter-spacing: 2px;
+    }
+    .reviews-quote-deco {
+      font-family: var(--font-serif);
+      font-size: 96px;
+      line-height: 0.6;
+      color: var(--ember);
+      opacity: 0.16;
+      display: block;
+      margin-bottom: 10px;
+      user-select: none;
+    }
+    .reviews-text {
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.78;
+      color: var(--bone);
+      flex: 1;
+      margin-bottom: 28px;
+    }
+    .reviews-sep {
+      height: 1px;
+      background: var(--hairline);
+      margin-bottom: 20px;
+      flex-shrink: 0;
+    }
+    .reviews-author {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-shrink: 0;
+    }
+    .reviews-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,113,61,0.1);
+      border: 1px solid rgba(255,113,61,0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 18px;
+      color: var(--ember);
+      flex-shrink: 0;
+    }
+    .reviews-name {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--bone);
+      line-height: 1.3;
+    }
+    .reviews-label {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--bone-mute);
+      opacity: 0.55;
+      letter-spacing: 0.04em;
+      margin-top: 2px;
+    }
+    @media (min-width: 900px) {
+      .reviews-inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 72px;
+      }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ─────────────────────────────────────────────── -->
+  <nav class="site-nav" id="site-nav" data-load="120">
+    <a class="nav-brand" href="#">
+      <svg width="34" height="34" viewBox="0 0 80 80" role="img" aria-label="Jasper Hawkins" style="flex-shrink:0">
+        <circle cx="40" cy="40" r="38" fill="#FF713D"/>
+        <circle cx="40" cy="40" r="34" fill="none" stroke="#B3411C" stroke-width="0.8"/>
+        <circle cx="40" cy="40" r="30" fill="#000000"/>
+        <circle cx="40" cy="40" r="28" fill="none" stroke="#FF713D" stroke-width="0.6" opacity="0.5"/>
+        <text x="40" y="49" text-anchor="middle"
+          font-family="'Playfair Display', Georgia, serif"
+          font-weight="400" font-size="24"
+          fill="#F2EAD8" letter-spacing="-0.02em">JH</text>
+      </svg>
+      <div>
+        <div class="nav-wordmark">Jasper Hawkins</div>
+        <div class="nav-descriptor">Singer · Guitarist · DJ</div>
+      </div>
+    </a>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-pill">
+      <a href="#">Home</a>
+      <a href="#" aria-current="page">Weddings</a>
+      <a href="#">Music</a>
+      <a href="#">Diary</a>
+      <a href="#">Contact</a>
+      <a class="nav-cta" href="#" data-enquire>Hold a date</a>
+    </div>
+  </nav>
+
+  <!-- ── Mobile menu ──────────────────────────────────────── -->
+  <div class="nav-menu" id="nav-menu" aria-hidden="true">
+    <nav class="nav-menu-links">
+      <a href="#">Home</a>
+      <a href="#" aria-current="page">Weddings</a>
+      <a href="#">Music</a>
+      <a href="#">Diary</a>
+      <a href="#">Contact</a>
+    </nav>
+    <a class="nav-menu-cta" href="#">Hold a date</a>
+    <div class="nav-menu-note">Booking subject to availability</div>
+  </div>
+
+  <!-- ── Hero ─────────────────────────────────────────────── -->
+  <section class="hero">
+
+    <!-- Left: dark panel -->
+    <div class="hero-panel">
+      <div class="hero-panel-inner">
+
+        <h1 class="hero-headline" data-load="380">All Day Wedding<br>Music Package</h1>
+        <p class="hero-sub" data-load="540">
+          Enjoy beautiful acoustic sets for your ceremony &amp; canapés, plus an epic DJ set for your reception all covered in one simple booking
+        </p>
+
+        <!--
+          Action block — stats + CTAs as one unified module.
+          Social proof is immediate; the CTA sits right below it.
+        -->
+        <div class="action-block" data-load="700">
+          <div class="action-stats">
+            <div class="action-stat">
+              <div class="stat-value">1,000+</div>
+              <div class="stat-label">Gigs performed</div>
+            </div>
+            <div class="action-stat">
+              <div class="stat-value stars">★★★★★</div>
+              <div class="stat-label">80+ Google<br>Reviews</div>
+            </div>
+            <div class="action-stat">
+              <div class="stat-value compact">Entertainer<br>of the Year</div>
+              <div class="stat-label">Wild Hearts 2022</div>
+            </div>
+          </div>
+          <div class="action-ctas">
+            <a class="cta-primary" href="#below">
+              Learn More <span class="arr">→</span>
+            </a>
+            <a class="cta-secondary" href="#" data-enquire>
+              Hold a date <span class="arr">→</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-note" data-load="880">Booking subject to availability</div>
+
+      </div>
+    </div>
+
+    <!-- Full-bleed photo behind everything -->
+    <div class="hero-photo">
+      <img
+        src="assets/photos/jas-acoustic-markovina.webp"
+        alt="Jasper Hawkins performing acoustic guitar at Markovina Vineyard"
+      >
+    </div>
+    <!-- Full-width gradient: dark left → transparent right, no edge -->
+    <div class="hero-overlay-left"></div>
+    <div class="hero-photo-spotlight"></div>
+
+  </section>
+
+  <!-- ── Logo Strip ───────────────────────────────────────── -->
+  <section class="section-logos">
+    <div class="logos-layout">
+
+      <div class="logos-label">
+        <div class="logos-label-line"></div>
+        <div class="logos-label-text">Trusted by<br>Auckland's finest<br>wedding venues</div>
+      </div>
+
+      <div class="logos-marquee-outer">
+        <div class="logos-track">
+          <!-- Set 1 -->
+          <div class="logo-slot"><img class="logo-mudbrick"    src="assets/logos/mudbrick.png"            alt="Mudbrick Vineyard"></div>
+          <div class="logo-slot"><img class="logo-castaways"   src="assets/logos/castaways.png"           alt="Castaways Resort"></div>
+          <div class="logo-slot"><img class="logo-markovina"   src="assets/logos/markovina.jpeg"          alt="Markovina Vineyard Estate"></div>
+          <div class="logo-slot"><img class="logo-waterlily"   src="assets/logos/waterlily.png"   alt="The Waterlily Gardens"></div>
+          <div class="logo-slot"><img class="logo-kumeu"       src="assets/logos/kumeu.png"      alt="Kumeu Valley Estate"></div>
+          <div class="logo-slot"><img class="logo-stables"     src="assets/logos/stables.webp"            alt="The Stables"></div>
+          <div class="logo-slot"><img class="logo-bridgewater" src="assets/logos/bridgewater.jpeg" alt="Bridgewater Country Estate"></div>
+          <!-- Set 2 — duplicate for seamless loop -->
+          <div class="logo-slot"><img class="logo-mudbrick"    src="assets/logos/mudbrick.png"            alt="Mudbrick Vineyard"></div>
+          <div class="logo-slot"><img class="logo-castaways"   src="assets/logos/castaways.png"           alt="Castaways Resort"></div>
+          <div class="logo-slot"><img class="logo-markovina"   src="assets/logos/markovina.jpeg"          alt="Markovina Vineyard Estate"></div>
+          <div class="logo-slot"><img class="logo-waterlily"   src="assets/logos/waterlily.png"   alt="The Waterlily Gardens"></div>
+          <div class="logo-slot"><img class="logo-kumeu"       src="assets/logos/kumeu.png"      alt="Kumeu Valley Estate"></div>
+          <div class="logo-slot"><img class="logo-stables"     src="assets/logos/stables.webp"            alt="The Stables"></div>
+          <div class="logo-slot"><img class="logo-bridgewater" src="assets/logos/bridgewater.jpeg" alt="Bridgewater Country Estate"></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── My Promise ───────────────────────────────────────── -->
+  <section class="section-promise">
+    <div class="promise-inner">
+
+      <div class="s-eyebrow" data-reveal>My promise</div>
+
+      <div class="promise-pillars">
+        <div class="promise-pillar">
+          <div class="promise-pillar-num">01</div>
+          <div class="promise-pillar-heading">One artist.<br>One booking.</div>
+          <p class="promise-pillar-text">No juggling multiple vendors, contracts, or styles. Everything is handled by one person, seamlessly.</p>
+        </div>
+        <div class="promise-pillar">
+          <div class="promise-pillar-num">02</div>
+          <div class="promise-pillar-heading">Every moment.<br>Covered.</div>
+          <p class="promise-pillar-text">Ceremony, canapés, and reception — beautiful live acoustic music followed by an epic DJ set, without a gap.</p>
+        </div>
+        <div class="promise-pillar">
+          <div class="promise-pillar-num">03</div>
+          <div class="promise-pillar-heading">Your day.<br>Your soundtrack.</div>
+          <p class="promise-pillar-text">Every song is tailored to you — from your aisle song to your first dance. Nothing is generic. Nothing is left to chance.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Testimonial ───────────────────────────────────────── -->
+  <section class="section-testi">
+    <div class="testi-photo">
+      <img
+        src="assets/photos/jas-dj-wedding-party.png"
+        alt="Jasper DJing at a wedding reception"
+      >
+    </div>
+    <div class="testi-o-flat"></div>
+    <div class="testi-o-edges"></div>
+    <div class="testi-o-warm"></div>
+    <div class="testi-o-top"></div>
+    <div class="testi-o-bottom"></div>
+    <div class="testi-content" data-reveal>
+      <div class="testi-deco" aria-hidden="true">"</div>
+      <div class="testi-stars">★★★★★ <span class="testi-source">Google Review</span></div>
+      <blockquote class="testi-quote">"One of the best decisions we made for our wedding! All of the guests were raving about the live music, then how good the DJ was — so so happy"</blockquote>
+      <div class="testi-attr"><span class="review-dot"></span> Jennifer-Claire van der Merwe</div>
+    </div>
+  </section>
+
+  <!-- ── What You Get — Alternating Bands ────────────────── -->
+  <section class="section-wyg">
+
+    <div class="wyg-intro">
+      <div class="s-eyebrow" data-reveal>What you get</div>
+      <h2 class="wyg-heading" data-reveal data-delay="1">Perfect music for the perfect moments</h2>
+      <p class="wyg-sub" data-reveal data-delay="2">To ensure your wedding day is a seamless, stress-free and unforgettable experience.</p>
+    </div>
+
+    <div class="wyg-band">
+      <div class="wyg-band-photo" data-reveal-left>
+        <img src="assets/photos/jas-acoustic-mudbrick.webp" alt="Jasper Hawkins performing live acoustic at wedding ceremony">
+      </div>
+      <div class="wyg-band-text" data-reveal-right>
+        <div class="wyg-num">01</div>
+        <h3 class="wyg-title">Ceremony</h3>
+        <p class="wyg-desc">Acoustic music for the perfect moments including aisle song, signing the register and the exit.</p>
+      </div>
+    </div>
+
+    <div class="wyg-band">
+      <div class="wyg-band-photo" data-reveal-right>
+        <img src="assets/photos/jas-acoustic-waterlily2.webp" alt="Jasper Hawkins performing live acoustic at wedding canapés">
+      </div>
+      <div class="wyg-band-text" data-reveal-left>
+        <div class="wyg-num">02</div>
+        <h3 class="wyg-title">Canapés</h3>
+        <p class="wyg-desc">Upbeat acoustic background songs to create a fun vibe while you and your guests mix and mingle.</p>
+      </div>
+    </div>
+
+    <div class="wyg-band">
+      <div class="wyg-band-photo" data-reveal-left>
+        <img src="assets/photos/wedding-reception.webp" alt="Wedding reception">
+      </div>
+      <div class="wyg-band-text" data-reveal-right>
+        <div class="wyg-num">03</div>
+        <h3 class="wyg-title">Reception</h3>
+        <p class="wyg-desc">A rocking DJ set with all the crowd favourites. A guaranteed party that guests will talk about for years to come.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ── You Also Get — Staggered Timeline ────────────────── -->
+  <section class="section-bonus">
+    <div class="bonus-inner">
+      <div class="bonus-header">
+        <div class="bonus-eyebrow">Additional bonuses</div>
+        <h2 class="bonus-headline">You also get...</h2>
+        <p class="bonus-sub">Every booking comes with all of this — no extras, no add-ons, no surprises.</p>
+      </div>
+      <div class="bonus-timeline">
+
+        <div class="bonus-tl-item">
+          <div class="bonus-tl-card">
+            <div class="bonus-tl-header">
+              <span class="bonus-tl-num">01</span>
+              <div class="bonus-tl-name">Personalised aisle song</div>
+            </div>
+            <p class="bonus-tl-desc">Learned and performed live — the moment you walk in will give everyone goosebumps.</p>
+          </div>
+        </div>
+
+        <div class="bonus-tl-item">
+          <div class="bonus-tl-card">
+            <div class="bonus-tl-header">
+              <span class="bonus-tl-num">02</span>
+              <div class="bonus-tl-name">Personalised bridal entrance</div>
+            </div>
+            <p class="bonus-tl-desc">Your entrance, your way — the exact track you've chosen, mixed and timed perfectly for your moment.</p>
+          </div>
+        </div>
+
+        <div class="bonus-tl-item">
+          <div class="bonus-tl-card">
+            <div class="bonus-tl-header">
+              <span class="bonus-tl-num">03</span>
+              <div class="bonus-tl-name">Dinner &amp; dessert acoustic set</div>
+            </div>
+            <p class="bonus-tl-desc">45 minutes of live music keeping the energy alive between dinner and the dance floor.</p>
+            <span class="bonus-tl-tag">45 minutes</span>
+          </div>
+        </div>
+
+        <div class="bonus-tl-item">
+          <div class="bonus-tl-card">
+            <div class="bonus-tl-header">
+              <span class="bonus-tl-num">04</span>
+              <div class="bonus-tl-name">Personalised first dance</div>
+            </div>
+            <p class="bonus-tl-desc">The moment the whole room watches. Made exactly how you imagined it.</p>
+          </div>
+        </div>
+
+        <div class="bonus-tl-item">
+          <div class="bonus-tl-card">
+            <div class="bonus-tl-header">
+              <span class="bonus-tl-num">05</span>
+              <div class="bonus-tl-name">Personalised cake cutting song</div>
+            </div>
+            <p class="bonus-tl-desc">A small touch that always lands. Guests notice — and they remember it.</p>
+          </div>
+        </div>
+
+        <div class="bonus-tl-item">
+          <div class="bonus-tl-card">
+            <div class="bonus-tl-header">
+              <span class="bonus-tl-num">06</span>
+              <div class="bonus-tl-name">Full sound equipment &amp; lighting</div>
+            </div>
+            <p class="bonus-tl-desc">Professional-grade gear — nothing for you to hire, organise, or worry about. Includes a microphone for speeches, set up and managed so every word lands clearly.</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Watch Me Play ────────────────────────────────────── -->
+  <section class="section-wmp">
+    <div class="wmp-grid">
+
+      <!-- Left: text + tabs -->
+      <div class="wmp-left" data-reveal>
+        <div class="wmp-eyebrow">Watch me play</div>
+        <h2 class="wmp-heading">See what your day could sound like</h2>
+
+        <div class="wmp-tabs">
+          <button class="wmp-tab active" data-wmp="acoustic">
+            <span class="wmp-tab-dot"></span>
+            <span class="wmp-tab-label">Acoustic</span>
+            <span class="wmp-tab-arr">→</span>
+          </button>
+          <button class="wmp-tab" data-wmp="dj">
+            <span class="wmp-tab-dot"></span>
+            <span class="wmp-tab-label">DJ Set</span>
+            <span class="wmp-tab-arr">→</span>
+          </button>
+        </div>
+
+        <div class="wmp-panel active" id="wmpp-acoustic">
+          <p class="wmp-panel-desc">Live acoustic guitar and vocals for your ceremony and canapés. Warm, intimate, and completely tailored to your moments — from the aisle to the last drink before dinner.</p>
+        </div>
+        <div class="wmp-panel" id="wmpp-dj">
+          <p class="wmp-panel-desc">A high-energy DJ set built to fill the dance floor and keep it packed all night. Every track chosen for your crowd, every moment read in real time.</p>
+        </div>
+
+        <div class="wmp-cta">
+          <a class="btn-primary" href="#" data-enquire>Enquire now</a>
+          <span class="wmp-avail">Booking subject to availability</span>
+        </div>
+      </div>
+
+      <!-- Right: full-height video -->
+      <div class="wmp-right">
+        <div class="wmp-vid-panel active" id="wmpv-acoustic">
+          <div class="wmp-vid" data-vimeo="916991360">
+            <img src="assets/photos/watch-me-play-thumbnail.jpg" alt="Jasper Hawkins performing live acoustic guitar at wedding">
+            <div class="wmp-play">▶</div>
+          </div>
+        </div>
+        <div class="wmp-vid-panel" id="wmpv-dj">
+          <div class="wmp-vid" data-vimeo="821542116">
+            <img src="assets/photos/jas-dj.webp" alt="Jasper Hawkins DJ set at wedding reception">
+            <div class="wmp-play">▶</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Song Selection ────────────────────────────────────── -->
+  <!-- ── Song Selection ────────────────────────────────────── -->
+  <section class="songs-b">
+
+    <div class="songs-b-bg">
+      <div class="songs-b-row"><div class="songs-b-track"><span>Perfect</span><span class="dot">·</span><span>All of Me</span><span class="dot">·</span><span>Thinking Out Loud</span><span class="dot">·</span><span>Can't Help Falling in Love</span><span class="dot">·</span><span>Marry You</span><span class="dot">·</span><span>Better Together</span><span class="dot">·</span><span>Riptide</span><span class="dot">·</span><span>Photograph</span><span class="dot">·</span><span>Just the Way You Are</span><span class="dot">·</span><span>Perfect</span><span class="dot">·</span><span>All of Me</span><span class="dot">·</span><span>Thinking Out Loud</span><span class="dot">·</span><span>Can't Help Falling in Love</span><span class="dot">·</span><span>Marry You</span><span class="dot">·</span><span>Better Together</span><span class="dot">·</span><span>Riptide</span><span class="dot">·</span><span>Photograph</span><span class="dot">·</span><span>Just the Way You Are</span><span class="dot">·</span></div></div>
+      <div class="songs-b-row"><div class="songs-b-track"><span>Here Comes the Sun</span><span class="dot">·</span><span>Let It Be</span><span class="dot">·</span><span>Wonderwall</span><span class="dot">·</span><span>Stand By Me</span><span class="dot">·</span><span>Free Fallin'</span><span class="dot">·</span><span>Valerie</span><span class="dot">·</span><span>Lover</span><span class="dot">·</span><span>Shallow</span><span class="dot">·</span><span>Make You Feel My Love</span><span class="dot">·</span><span>Here Comes the Sun</span><span class="dot">·</span><span>Let It Be</span><span class="dot">·</span><span>Wonderwall</span><span class="dot">·</span><span>Stand By Me</span><span class="dot">·</span><span>Free Fallin'</span><span class="dot">·</span><span>Valerie</span><span class="dot">·</span><span>Lover</span><span class="dot">·</span><span>Shallow</span><span class="dot">·</span><span>Make You Feel My Love</span><span class="dot">·</span></div></div>
+      <div class="songs-b-row"><div class="songs-b-track"><span>Fast Car</span><span class="dot">·</span><span>All I Want</span><span class="dot">·</span><span>Somewhere Over the Rainbow</span><span class="dot">·</span><span>The Chain</span><span class="dot">·</span><span>Hold Back the River</span><span class="dot">·</span><span>Let Her Go</span><span class="dot">·</span><span>Africa</span><span class="dot">·</span><span>Sweet Disposition</span><span class="dot">·</span><span>Fast Car</span><span class="dot">·</span><span>All I Want</span><span class="dot">·</span><span>Somewhere Over the Rainbow</span><span class="dot">·</span><span>The Chain</span><span class="dot">·</span><span>Hold Back the River</span><span class="dot">·</span><span>Let Her Go</span><span class="dot">·</span><span>Africa</span><span class="dot">·</span><span>Sweet Disposition</span><span class="dot">·</span></div></div>
+      <div class="songs-b-row"><div class="songs-b-track"><span>Dancing in the Moonlight</span><span class="dot">·</span><span>Mr Brightside</span><span class="dot">·</span><span>Love Story</span><span class="dot">·</span><span>Go Your Own Way</span><span class="dot">·</span><span>September</span><span class="dot">·</span><span>Chasing Cars</span><span class="dot">·</span><span>Flaws</span><span class="dot">·</span><span>Ho Hey</span><span class="dot">·</span><span>Dancing in the Moonlight</span><span class="dot">·</span><span>Mr Brightside</span><span class="dot">·</span><span>Love Story</span><span class="dot">·</span><span>Go Your Own Way</span><span class="dot">·</span><span>September</span><span class="dot">·</span><span>Chasing Cars</span><span class="dot">·</span><span>Flaws</span><span class="dot">·</span><span>Ho Hey</span><span class="dot">·</span></div></div>
+      <div class="songs-b-row"><div class="songs-b-track"><span>Sweet Home Alabama</span><span class="dot">·</span><span>Midnight Train to Georgia</span><span class="dot">·</span><span>Rolling in the Deep</span><span class="dot">·</span><span>Uptown Funk</span><span class="dot">·</span><span>Don't Stop Believin'</span><span class="dot">·</span><span>Teenage Dirtbag</span><span class="dot">·</span><span>Don't Look Back in Anger</span><span class="dot">·</span><span>Sweet Home Alabama</span><span class="dot">·</span><span>Midnight Train to Georgia</span><span class="dot">·</span><span>Rolling in the Deep</span><span class="dot">·</span><span>Uptown Funk</span><span class="dot">·</span><span>Don't Stop Believin'</span><span class="dot">·</span><span>Teenage Dirtbag</span><span class="dot">·</span><span>Don't Look Back in Anger</span><span class="dot">·</span></div></div>
+      <div class="songs-b-row"><div class="songs-b-track"><span>Bohemian Rhapsody</span><span class="dot">·</span><span>Golden Hour</span><span class="dot">·</span><span>Levitating</span><span class="dot">·</span><span>Blinding Lights</span><span class="dot">·</span><span>Shape of You</span><span class="dot">·</span><span>Happy</span><span class="dot">·</span><span>I Gotta Feeling</span><span class="dot">·</span><span>Mr Brightside</span><span class="dot">·</span><span>Bohemian Rhapsody</span><span class="dot">·</span><span>Golden Hour</span><span class="dot">·</span><span>Levitating</span><span class="dot">·</span><span>Blinding Lights</span><span class="dot">·</span><span>Shape of You</span><span class="dot">·</span><span>Happy</span><span class="dot">·</span><span>I Gotta Feeling</span><span class="dot">·</span><span>Mr Brightside</span><span class="dot">·</span></div></div>
+      <div class="songs-b-row"><div class="songs-b-track"><span>Galway Girl</span><span class="dot">·</span><span>One Dance</span><span class="dot">·</span><span>Watermelon Sugar</span><span class="dot">·</span><span>Flowers</span><span class="dot">·</span><span>Anti-Hero</span><span class="dot">·</span><span>As It Was</span><span class="dot">·</span><span>Cruel Summer</span><span class="dot">·</span><span>Starboy</span><span class="dot">·</span><span>Galway Girl</span><span class="dot">·</span><span>One Dance</span><span class="dot">·</span><span>Watermelon Sugar</span><span class="dot">·</span><span>Flowers</span><span class="dot">·</span><span>Anti-Hero</span><span class="dot">·</span><span>As It Was</span><span class="dot">·</span><span>Cruel Summer</span><span class="dot">·</span><span>Starboy</span><span class="dot">·</span></div></div>
+    </div>
+
+    <div class="songs-b-vignette"></div>
+
+    <div class="songs-b-inner">
+      <div class="songs-b-eyebrow">Song selection</div>
+      <h2 class="songs-b-heading">Song Selection Is Everything</h2>
+      <p class="songs-b-sub">Every song is chosen for a reason. Browse my full list and pick the moments that matter most to you.</p>
+      <a class="songs-b-link" href="#">View my song list <span class="songs-b-arr">→</span></a>
+    </div>
+
+  </section>
+
+  <!-- ── Google Reviews ──────────────────────────────────────── -->
+  <section class="section-reviews">
+    <div class="reviews-inner">
+
+      <div class="reviews-left">
+        <div class="reviews-eyebrow">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" style="flex-shrink:0;">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          Google Reviews
+        </div>
+        <h2 class="reviews-heading">Music that will have you and your guests talking for years to come.</h2>
+        <p class="reviews-sub">But don't take my word for it&nbsp;.&nbsp;.&nbsp;.</p>
+        <div class="reviews-dots">
+          <button class="reviews-dot active" aria-label="Review 1"></button>
+          <button class="reviews-dot" aria-label="Review 2"></button>
+          <button class="reviews-dot" aria-label="Review 3"></button>
+          <button class="reviews-dot" aria-label="Review 4"></button>
+          <button class="reviews-dot" aria-label="Review 5"></button>
+          <button class="reviews-dot" aria-label="Review 6"></button>
+          <button class="reviews-dot" aria-label="Review 7"></button>
+          <button class="reviews-dot" aria-label="Review 8"></button>
+        </div>
+      </div>
+
+      <div class="reviews-right">
+
+        <div class="reviews-card is-active">
+          <div class="reviews-stars">★★★★★</div>
+          <span class="reviews-quote-deco" aria-hidden="true">"</span>
+          <p class="reviews-text">Jasper was absolutely incredible — the music was one of the highlights of our wedding day. He even learned a song especially for us to walk down the aisle to. The first thing people mention when they talk about our wedding is how beautiful the live music was. We cannot recommend him enough!</p>
+          <div class="reviews-sep"></div>
+          <div class="reviews-author">
+            <div class="reviews-avatar">E</div>
+            <div>
+              <div class="reviews-name">Eden Sweeney</div>
+              <div class="reviews-label">Google Review</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews-card">
+          <div class="reviews-stars">★★★★★</div>
+          <span class="reviews-quote-deco" aria-hidden="true">"</span>
+          <p class="reviews-text">I wish there was a 5 star option! We have had nothing but rave reviews for Jasper's beautiful acoustic performance and how lively he kept the dance floor. Thanks so much for your impeccable communications leading up to the day and your talent shared on the day!</p>
+          <div class="reviews-sep"></div>
+          <div class="reviews-author">
+            <div class="reviews-avatar">A</div>
+            <div>
+              <div class="reviews-name">Ashleigh Blackwell</div>
+              <div class="reviews-label">Google Review</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews-card">
+          <div class="reviews-stars">★★★★★</div>
+          <span class="reviews-quote-deco" aria-hidden="true">"</span>
+          <p class="reviews-text">You were the life of the party! Every guest we've spoken to since the wedding has mentioned how incredible you were. You have an amazing ability to read the room and keep the energy just right. We're convinced you're the best in the business.</p>
+          <div class="reviews-sep"></div>
+          <div class="reviews-author">
+            <div class="reviews-avatar">K</div>
+            <div>
+              <div class="reviews-name">Koshina</div>
+              <div class="reviews-label">Google Review</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews-card">
+          <div class="reviews-stars">★★★★★</div>
+          <span class="reviews-quote-deco" aria-hidden="true">"</span>
+          <p class="reviews-text">I cannot rate him highly enough — he absolutely nailed the brief. Dance floor was never empty. His live music was the real star of the show. He learned 2 songs very particular to us and gave us the genuine impression that he really cared for our celebration.</p>
+          <div class="reviews-sep"></div>
+          <div class="reviews-author">
+            <div class="reviews-avatar">G</div>
+            <div>
+              <div class="reviews-name">Gregor MacDonald</div>
+              <div class="reviews-label">Google Review</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews-card">
+          <div class="reviews-stars">★★★★★</div>
+          <span class="reviews-quote-deco" aria-hidden="true">"</span>
+          <p class="reviews-text">We truly cannot thank you enough. So many friends and family have commented on how incredibly talented you are — from your beautiful acoustic vocals at our ceremony to the dance floor. Incredible humans like you elevate special days into something even more unforgettable.</p>
+          <div class="reviews-sep"></div>
+          <div class="reviews-author">
+            <div class="reviews-avatar">M</div>
+            <div>
+              <div class="reviews-name">Marley Araiti</div>
+              <div class="reviews-label">Google Review</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews-card">
+          <div class="reviews-stars">★★★★★</div>
+          <span class="reviews-quote-deco" aria-hidden="true">"</span>
+          <p class="reviews-text">Absolutely incredible DJ and musician! His live acoustic songs as we walked down the aisle added a personal touch to the ceremony. He read the room and kept the dance floor packed all night for every age group. We couldn't recommend him more highly.</p>
+          <div class="reviews-sep"></div>
+          <div class="reviews-author">
+            <div class="reviews-avatar">E</div>
+            <div>
+              <div class="reviews-name">Emma Fox</div>
+              <div class="reviews-label">Google Review</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews-card">
+          <div class="reviews-stars">★★★★★</div>
+          <span class="reviews-quote-deco" aria-hidden="true">"</span>
+          <p class="reviews-text">This guy is honestly the best. Can't get better. Brilliant voice, great vibes, and super DJ set. Made our wedding so special!</p>
+          <div class="reviews-sep"></div>
+          <div class="reviews-author">
+            <div class="reviews-avatar">B</div>
+            <div>
+              <div class="reviews-name">Byron Terris</div>
+              <div class="reviews-label">Google Review</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reviews-card">
+          <div class="reviews-stars">★★★★★</div>
+          <span class="reviews-quote-deco" aria-hidden="true">"</span>
+          <p class="reviews-text">I'm a marriage celebrant and have had the pleasure of hearing Jasper play at several events. His incredible talent, combined with the way he connects with people, truly adds a touch of magic. Having Jasper at your event will be one of the best decisions you make.</p>
+          <div class="reviews-sep"></div>
+          <div class="reviews-author">
+            <div class="reviews-avatar">S</div>
+            <div>
+              <div class="reviews-name">Sharelle Lincoln</div>
+              <div class="reviews-label">Marriage Celebrant</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Acoustic Performances ───────────────────────────────── -->
+  <section class="section-perf">
+    <div class="perf-inner">
+      <header class="perf-header" data-reveal>
+        <div class="perf-eyebrow">Watch me play</div>
+        <h2 class="perf-heading">Hear me perform live</h2>
+      </header>
+      <div class="perf-grid">
+
+        <div class="perf-item">
+          <div class="perf-facade" data-vimeo="1153418307">
+            <img src="https://vumbnail.com/1153418307.jpg" alt="Perfect — Ed Sheeran" loading="lazy">
+            <div class="perf-play">&#9654;</div>
+            <div class="perf-meta">
+              <div class="perf-song">Perfect</div>
+              <div class="perf-artist">Ed Sheeran</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="perf-item">
+          <div class="perf-facade" data-vimeo="1153418432">
+            <img src="https://vumbnail.com/1153418432.jpg" alt="Beautiful Crazy — Luke Combs" loading="lazy">
+            <div class="perf-play">&#9654;</div>
+            <div class="perf-meta">
+              <div class="perf-song">Beautiful Crazy</div>
+              <div class="perf-artist">Luke Combs</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="perf-item">
+          <div class="perf-facade" data-vimeo="1153418507">
+            <img src="https://vumbnail.com/1153418507.jpg" alt="She Will Be Loved — Maroon 5" loading="lazy">
+            <div class="perf-play">&#9654;</div>
+            <div class="perf-meta">
+              <div class="perf-song">She Will Be Loved</div>
+              <div class="perf-artist">Maroon 5</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="perf-item">
+          <div class="perf-facade" data-vimeo="1153418374">
+            <img src="https://vumbnail.com/1153418374.jpg" alt="The Best — Tina Turner" loading="lazy">
+            <div class="perf-play">&#9654;</div>
+            <div class="perf-meta">
+              <div class="perf-song">The Best</div>
+              <div class="perf-artist">Tina Turner</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="perf-item">
+          <div class="perf-facade" data-vimeo="1153418452">
+            <img src="https://vumbnail.com/1153418452.jpg" alt="Drops of Jupiter — Train" loading="lazy">
+            <div class="perf-play">&#9654;</div>
+            <div class="perf-meta">
+              <div class="perf-song">Drops of Jupiter</div>
+              <div class="perf-artist">Train</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="perf-item">
+          <div class="perf-facade" data-vimeo="1153418485">
+            <img src="https://vumbnail.com/1153418485.jpg" alt="The A-Team — Ed Sheeran" loading="lazy">
+            <div class="perf-play">&#9654;</div>
+            <div class="perf-meta">
+              <div class="perf-song">The A-Team</div>
+              <div class="perf-artist">Ed Sheeran</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why Choose Me ─────────────────────────────────────── -->
+  <section class="section-why">
+    <div class="why-inner">
+      <div>
+        <div class="s-eyebrow" data-reveal>Why choose me</div>
+        <h2 class="why-heading" data-reveal data-delay="1">I'm Jasper Hawkins — Musician, Songwriter, Producer, and DJ</h2>
+        <p class="why-sub" data-reveal data-delay="2">...and I've created something couples didn't know they needed until now...</p>
+        <div class="why-body" data-reveal data-delay="2">
+          <p>After more than a decade performing at over 800 weddings and events, I've seen what works, what doesn't, and what truly makes a wedding unforgettable. That's why I offer a unique, all-in-one wedding music experience: live acoustic sets for your ceremony and canapés, followed by a high-energy DJ set that keeps the dance floor packed all night — all delivered by one artist, in one seamless booking.</p>
+          <p>This isn't just music. It's your entire wedding day, professionally soundtracked from start to finish. No juggling multiple vendors. No gaps or awkward transitions. Just the perfect vibe, at every moment, with every detail tailored to you — right down to your custom aisle song and first dance track.</p>
+          <p>In 2022, I was honoured to be named Wild Hearts Entertainer of the Year, but the real reward is helping couples create moments they'll never forget. If you're looking for someone who can do more than just show up and play — someone who can help elevate your day into something truly extraordinary — let's talk.</p>
+        </div>
+        <a class="btn-primary" href="#contact" data-reveal data-delay="3">Enquire now</a>
+      </div>
+      <div class="why-photo" data-reveal>
+        <img
+          src="assets/photos/jas-acoustic-waterlily.webp"
+          alt="Jasper Hawkins performing at Waterlily"
+        >
+      </div>
+    </div>
+  </section>
+
+  <!-- ── FAQ ───────────────────────────────────────────────── -->
+  <section class="section-faq">
+    <div class="s-inner">
+      <div class="s-eyebrow" data-reveal>FAQ</div>
+      <div class="faq-list" data-reveal data-delay="1">
+
+        <details class="faq-item">
+          <summary class="faq-q">Why should I have live music at my wedding?</summary>
+          <p class="faq-a">Through my years of experience performing at weddings and receiving feedback with couples, their families and guests, one thing has become clear... music (along with food) is one of the most talked-about parts of the day. It's what people remember, what sets the atmosphere, and what keeps the energy flowing from the ceremony to the dance floor. Music isn't just background noise. It creates the moments you'll never forget. It sets the tone for the day, brings people together, and turns a gathering into a celebration. Whether it's the emotion of walking down the aisle, the joy of a packed dance floor, or the singalongs that happen when no one wants the night to end, music is what makes it all come alive.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">Why choose me?</summary>
+          <p class="faq-a">I take care of your wedding music from start to finish in one simple booking. From live acoustic music for your ceremony and canapés to a high energy DJ set for your reception, I ensure the perfect soundtrack for every moment of your big day. I also personalise your aisle song and play all the key moments including your first dance so your wedding feels uniquely yours. With years of experience and a professional approach, I handle everything seamlessly, so you can relax and enjoy your day without a worry.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">How is this different from hiring multiple vendors or using a playlist?</summary>
+          <p class="faq-a">Hiring separate artists means juggling different contracts, sound setups, and styles. A playlist can't read the room, adapt in real-time, or create emotion. With me, you get consistency, flow, and personalisation across your entire day — no awkward gaps, no missed moments.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">What kind of music do you play?</summary>
+          <p class="faq-a">My acoustic sets are based on my song list and I always play to suit the vibe of the room — whether it's something relaxed or a bit more upbeat. As a DJ, I mix everything from crowd favourites to modern hits and know how to keep the energy flowing all night. Your guests will feel it, and they'll remember it.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">Can we choose the music?</summary>
+          <p class="faq-a">Yes, absolutely. I'll learn your aisle song of choice, and you're welcome to select songs for the signing of the register and your exit as a newly married couple from my song list. During canapés, I'll read the room and play to the vibe, and when it comes to the DJ set, you can have as much input as you like — whether that's full control or leaving it in my hands.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">We don't know what songs we want yet — is that a problem?</summary>
+          <p class="faq-a">Not at all. I'll guide you through the process and help you choose songs that match your style and moments. Whether you have a full playlist or no idea where to start, I've got you.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">We're having a small wedding — is this still right for us?</summary>
+          <p class="faq-a">Absolutely. Smaller weddings often feel even more intimate and emotional, and live music can really elevate those moments. My package is fully scalable to suit your venue and guest size. That said, if you're keeping things low-key and not planning an evening reception, it might be worth chatting to me about whether just the acoustic part of my service would be the best fit for your day.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">Can one person really handle music for the entire day?</summary>
+          <p class="faq-a">Yes — and that's exactly what makes this service so powerful. I provide a full-day experience: beautiful live acoustic music for your ceremony and canapés, then transition into a professional DJ set that fills the dance floor all night. One artist. One setup. One seamless, unforgettable soundtrack.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">Do you provide all the sound equipment and lighting?</summary>
+          <p class="faq-a">Yes, I provide all the sound equipment — and it's top quality. I also bring lighting for the DJ set to help create the right atmosphere. All I need is access to a standard power outlet. If your ceremony is outdoors with no power nearby, I've got a battery-powered sound system to cover the music. Just note: if there's no power at the ceremony site, your celebrant will need to bring their own battery-powered microphone.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">What happens if our timeline changes or something runs late?</summary>
+          <p class="faq-a">It's all good — I've played over 800 weddings, and flexibility is part of the job. I'll adapt in real-time and work closely with your planner or venue to keep things smooth, even if the schedule shifts.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">How far do you travel?</summary>
+          <p class="faq-a">I travel throughout Auckland, as well as to Northland, Waikato, and the Bay of Plenty. If your wedding is further afield, feel free to get in touch — I'm always open to seeing what we can make work.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">We're on a budget — is this really worth it?</summary>
+          <p class="faq-a">This one package replaces what most couples hire 2–3 vendors to do. It saves you time, money, and hassle — and more importantly, it elevates every moment of your day. Music sets the tone. When it's done right, it's one of the best investments you can make.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">How far in advance should we book?</summary>
+          <p class="faq-a">As soon as possible — key dates, especially in summer, book out fast. I only take on a limited number of weddings to give each couple my full focus. Enquire early to secure your date.</p>
+        </details>
+
+        <details class="faq-item">
+          <summary class="faq-q">What's the booking process?</summary>
+          <p class="faq-a">Fill out the enquiry form by clicking the button below. I'll get back to you within 48 hours with availability and info. We'll lock in your date with a deposit. From there, I'll guide you through the music planning process.</p>
+        </details>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Final CTA ──────────────────────────────────────────── -->
+  <section class="section-cta" id="contact">
+    <div class="cta-photo">
+      <img src="assets/photos/jas-acoustic-marquee.webp" alt="Jasper Hawkins performing acoustic guitar in a wedding marquee">
+    </div>
+    <div class="cta-o-flat"></div>
+    <div class="cta-o-warm"></div>
+    <div class="cta-o-top"></div>
+    <div class="cta-inner">
+      <h2 class="cta-heading" data-reveal>Contact me now</h2>
+      <p class="cta-sub" data-reveal data-delay="1">And let's make your wedding an unforgettable day</p>
+      <a class="btn-primary" href="#" data-enquire data-reveal data-delay="2">Enquire now</a>
+      <p class="cta-note" data-reveal data-delay="3">Booking subject to availability</p>
+    </div>
+  </section>
+
+  <!-- ── Footer ─────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg width="36" height="36" viewBox="0 0 80 80" role="img" aria-label="Jasper Hawkins" style="flex-shrink:0">
+          <circle cx="40" cy="40" r="38" fill="#FF713D"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#B3411C" stroke-width="0.8"/>
+          <circle cx="40" cy="40" r="30" fill="#000000"/>
+          <circle cx="40" cy="40" r="28" fill="none" stroke="#FF713D" stroke-width="0.6" opacity="0.5"/>
+          <text x="40" y="49" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-weight="400" font-size="24" fill="#F2EAD8" letter-spacing="-0.02em">JH</text>
+        </svg>
+        <div>
+          <div class="footer-name">Jasper Hawkins</div>
+          <div class="footer-descriptor">Singer · Guitarist · DJ</div>
+        </div>
+      </div>
+      <div class="footer-contact">
+        <a href="tel:+64220805085">+64 22 080 5085</a>
+        <a href="mailto:hello@jasperhawkinsmusic.co.nz">hello@jasperhawkinsmusic.co.nz</a>
+      </div>
+      <div class="footer-copy">© 2026 Jasper Hawkins Music</div>
+    </div>
+  </footer>
+
+  <!-- ── Enquiry Off-Canvas ────────────────────────────────── -->
+  <div class="eq-scrim" id="eqScrim"></div>
+  <aside class="eq-panel" id="eqPanel" role="dialog" aria-modal="true" aria-label="Make an enquiry">
+    <div class="eq-panel-head">
+      <div>
+        <p class="eq-eyebrow">Check your date</p>
+        <h2 class="eq-heading">Let's talk about your wedding.</h2>
+      </div>
+      <button class="eq-close" id="eqClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="eq-body">
+      <p class="eq-intro">Fill in your details and I'll get back to you within 24 hours.</p>
+      <form class="eq-form" id="eqForm" novalidate>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-name">First Name <span class="eq-req">*</span></label>
+          <input class="eq-input" type="text" id="eq-name" name="firstName" required autocomplete="given-name" placeholder="Your first name">
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-email">Email <span class="eq-req">*</span></label>
+          <input class="eq-input" type="email" id="eq-email" name="email" required autocomplete="email" placeholder="your@email.com">
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-phone">Phone <span class="eq-req">*</span></label>
+          <input class="eq-input" type="tel" id="eq-phone" name="phone" required autocomplete="tel" placeholder="+64 21 000 0000">
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-type">Event Type <span class="eq-req">*</span></label>
+          <select class="eq-select" id="eq-type" name="eventType" required>
+            <option value="" disabled selected>Select event type</option>
+            <option value="wedding">Wedding</option>
+            <option value="birthday">Birthday</option>
+            <option value="corporate">Corporate Event</option>
+            <option value="function">Private Function</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-date">Event Date <span class="eq-req">*</span></label>
+          <input class="eq-input" type="date" id="eq-date" name="eventDate" required>
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-location">Event Location <span class="eq-req">*</span></label>
+          <input class="eq-input" type="text" id="eq-location" name="eventLocation" required placeholder="Venue or City/Town">
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-source">How Did You Hear About Me? <span class="eq-req">*</span></label>
+          <select class="eq-select" id="eq-source" name="source" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="google">Google Search</option>
+            <option value="instagram">Instagram</option>
+            <option value="facebook">Facebook</option>
+            <option value="referral">Referred by a Friend</option>
+            <option value="attended">Attended an Event</option>
+            <option value="directory">Wedding Directory</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-message">Your Message <span class="eq-req">*</span></label>
+          <textarea class="eq-textarea" id="eq-message" name="message" required placeholder="Tell me a bit about your day..."></textarea>
+        </div>
+
+        <button type="submit" class="btn-primary eq-submit">Send enquiry &nbsp;→</button>
+
+      </form>
+    </div>
+  </aside>
+
+  <script>
+    /* ── Nav scroll state ────────────────────────────────────── */
+    const nav = document.getElementById('site-nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 10);
+    }, { passive: true });
+
+    /* ── Mobile menu ─────────────────────────────────────────── */
+    const hamburger = document.getElementById('nav-hamburger');
+    const navMenu   = document.getElementById('nav-menu');
+    function openMenu()  { hamburger.classList.add('is-open'); navMenu.classList.add('is-open'); hamburger.setAttribute('aria-expanded','true'); navMenu.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+    function closeMenu() { hamburger.classList.remove('is-open'); navMenu.classList.remove('is-open'); hamburger.setAttribute('aria-expanded','false'); navMenu.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+    hamburger.addEventListener('click', () => hamburger.classList.contains('is-open') ? closeMenu() : openMenu());
+    navMenu.querySelectorAll('a').forEach(l => l.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+    /* ── 1. PAGE LOAD SEQUENCE ───────────────────────────────────
+       Hero photo fades in immediately.
+       Nav + headline + sub + action block step in with delays.    */
+    document.addEventListener('DOMContentLoaded', () => {
+      // Photo: immediate fade in
+      const heroImg = document.querySelector('.hero-photo img');
+      if (heroImg) requestAnimationFrame(() => requestAnimationFrame(() => heroImg.classList.add('loaded')));
+
+      // Sequenced elements via data-load="ms"
+      document.querySelectorAll('[data-load]').forEach(el => {
+        const delay = parseInt(el.dataset.load) || 0;
+        setTimeout(() => el.classList.add('loaded'), delay);
+      });
+    });
+
+    /* ── 2. GENERAL SCROLL REVEAL ────────────────────────────────
+       Handles [data-reveal], [data-reveal-left], [data-reveal-right].
+       data-delay="1/2/3" adds a stagger offset.                   */
+    const ro = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = (parseInt(e.target.dataset.delay) || 0) * 90;
+          setTimeout(() => e.target.classList.add('is-visible'), delay);
+          ro.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    document.querySelectorAll('[data-reveal], [data-reveal-left], [data-reveal-right]').forEach(el => ro.observe(el));
+
+    /* ── Watch Me Play: tab toggle ──────────────────────────── */
+    document.querySelectorAll('.wmp-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const key = tab.dataset.wmp;
+        // Stop any playing Vimeo iframe before switching
+        document.querySelectorAll('.wmp-vid iframe').forEach(iframe => {
+          iframe.src = iframe.src; // reloads iframe, stopping playback
+        });
+        document.querySelectorAll('.wmp-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.wmp-panel').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.wmp-vid-panel').forEach(p => p.classList.remove('active'));
+        tab.classList.add('active');
+        document.getElementById('wmpp-' + key).classList.add('active');
+        document.getElementById('wmpv-' + key).classList.add('active');
+      });
+    });
+
+    /* ── Watch Me Play: Vimeo click-to-play ─────────────────── */
+    document.querySelectorAll('.wmp-vid[data-vimeo]').forEach(vid => {
+      vid.style.cursor = 'pointer';
+      vid.addEventListener('click', () => {
+        const id = vid.dataset.vimeo;
+        const iframe = document.createElement('iframe');
+        iframe.src = 'https://player.vimeo.com/video/' + id + '?autoplay=1&color=FF713D&title=0&byline=0&portrait=0';
+        iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+        iframe.allowFullscreen = true;
+        iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
+        vid.style.position = 'relative';
+        vid.innerHTML = '';
+        vid.appendChild(iframe);
+      });
+    });
+
+    /* ── Bonus grid: staggered pop-in ───────────────────────── */
+    const bonusGrid = document.getElementById('bonus-grid');
+    if (bonusGrid) {
+      new IntersectionObserver((entries, obs) => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          e.target.querySelectorAll('.bonus-item').forEach((item, i) => {
+            setTimeout(() => item.classList.add('is-visible'), i * 100);
+          });
+          obs.unobserve(e.target);
+        });
+      }, { threshold: 0.08 }).observe(bonusGrid);
+    }
+
+    /* ── 3. PROMISE PILLAR STAGGER ───────────────────────────────
+       Fires when any part of the container enters view (threshold 0).
+       Cards land at 0ms / 650ms / 1300ms for a clear 1-2-3 beat.  */
+    const pillarsEl = document.querySelector('.promise-pillars');
+    if (pillarsEl) {
+      new IntersectionObserver((entries, obs) => {
+        entries.forEach(e => {
+          if (!e.isIntersecting) return;
+          e.target.querySelectorAll('.promise-pillar').forEach((p, i) => {
+            setTimeout(() => p.classList.add('is-visible'), i * 650);
+          });
+          obs.unobserve(e.target);
+        });
+      }, { threshold: 0, rootMargin: '0px 0px -80px 0px' }).observe(pillarsEl);
+    }
+
+    // ── Bonus scroll-driven section ──────────────────────────
+    (function () {
+      const tlItems = document.querySelectorAll('.bonus-tl-item');
+      const tlObs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            tlObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.2, rootMargin: '0px 0px -40px 0px' });
+      tlItems.forEach((item, i) => {
+        item.style.transitionDelay = `${i * 80}ms`;
+        tlObs.observe(item);
+      });
+    }());
+
+  /* ── Enquiry Off-Canvas ─────────────────────────────────── */
+  (function () {
+    const panel = document.getElementById('eqPanel');
+    const scrim = document.getElementById('eqScrim');
+    const close = document.getElementById('eqClose');
+    if (!panel) return;
+
+    function openPanel() {
+      panel.classList.add('is-open');
+      scrim.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => panel.querySelector('input')?.focus(), 420);
+    }
+    function closePanel() {
+      panel.classList.remove('is-open');
+      scrim.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    document.querySelectorAll('[data-enquire]').forEach(el =>
+      el.addEventListener('click', e => { e.preventDefault(); openPanel(); })
+    );
+    close.addEventListener('click', closePanel);
+    scrim.addEventListener('click', closePanel);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('is-open')) closePanel(); });
+
+    document.getElementById('eqForm').addEventListener('submit', e => {
+      e.preventDefault();
+      // ActiveCampaign integration goes here
+    });
+  }());
+
+  /* ── Acoustic Performances — click to play ───────────── */
+  document.querySelectorAll('.perf-facade').forEach(facade => {
+    facade.addEventListener('click', () => {
+      const id = facade.dataset.vimeo;
+      const iframe = document.createElement('iframe');
+      iframe.src = `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0&color=FF713D`;
+      iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+      iframe.allowFullscreen = true;
+      facade.replaceWith(iframe);
+    });
+  });
+
+  /* ── Animated Reviews ─────────────────────────────────── */
+  (function () {
+    const cards = Array.from(document.querySelectorAll('.reviews-card'));
+    const dots  = Array.from(document.querySelectorAll('.reviews-dot'));
+    const TOTAL = cards.length;
+    let current = 0;
+    let timer;
+
+    function show(idx) {
+      cards.forEach((c, i) => {
+        c.classList.remove('is-active', 'is-prev');
+        if (i === idx) c.classList.add('is-active');
+        else if (i === (idx - 1 + TOTAL) % TOTAL) c.classList.add('is-prev');
+      });
+      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+      current = idx;
+    }
+
+    function advance() { show((current + 1) % TOTAL); }
+    function startTimer() { timer = setInterval(advance, 3000); }
+    function stopTimer()  { clearInterval(timer); }
+
+    dots.forEach((dot, i) => dot.addEventListener('click', () => {
+      stopTimer(); show(i); startTimer();
+    }));
+
+    const right = document.querySelector('.reviews-right');
+    if (right) {
+      right.addEventListener('mouseenter', stopTimer);
+      right.addEventListener('mouseleave', startTimer);
+    }
+
+    show(0);
+    startTimer();
+  }());
+
+  </script>
+
+</body>
+</html>
