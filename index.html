@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weddings · Jasper Hawkins Music</title>
-  <link rel="stylesheet" href="assets/colors_and_type.css">
+  <link rel="stylesheet" href="../../Design System/Jasper Hawkins Music — Design System/colors_and_type.css">
   <style>
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -496,8 +496,15 @@
     /* ── Logo Strip ─────────────────────────────────────────────── */
     .section-logos {
       background: var(--ink);
-      border-top: 1px solid var(--hairline);
-      border-bottom: 1px solid var(--hairline);
+      position: relative;
+      overflow: hidden;
+    }
+    .section-logos::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 160% at 50% 50%, rgba(255,113,61,0.05) 0%, transparent 70%);
+      pointer-events: none;
     }
     .logos-layout {
       max-width: 1440px;
@@ -553,16 +560,19 @@
       opacity: 0.72;
       object-fit: contain;
       transition: opacity 260ms;
+      width: auto;
+      height: 30px;
     }
     .logos-track:hover .logo-slot img { opacity: 0.5; }
     .logos-track:hover .logo-slot:hover img { opacity: 1; }
-    .logo-mudbrick    { height: 36px;  width: auto; }
-    .logo-castaways   { height: 52px;  width: auto; }
-    .logo-markovina   { height: 64px;  width: auto; }
-    .logo-waterlily   { height: 96px;  width: auto; }
-    .logo-kumeu       { height: 72px;  width: auto; }
-    .logo-stables     { height: 44px;  width: auto; }
-    .logo-bridgewater { height: 52px;  width: auto; }
+    /* Per-logo — using img.classname for higher specificity than .logo-slot img */
+    img.logo-mudbrick    { height: 21px; }
+    img.logo-castaways   { height: 28px; }
+    img.logo-markovina   { height: 72px; }
+    img.logo-waterlily   { height: 96px; }
+    img.logo-kumeu       { height: 80px; }
+    img.logo-stables     { height: 40px; }
+    img.logo-bridgewater { height: 42px; }
     @media (max-width: 900px) {
       .logos-layout { grid-template-columns: 1fr; }
       .logos-label {
@@ -571,19 +581,18 @@
         border-bottom: 1px solid var(--hairline);
       }
       .logo-slot { padding: 0 32px; }
-      .logo-mudbrick    { height: 28px; }
-      .logo-castaways   { height: 40px; }
-      .logo-markovina   { height: 52px; }
-      .logo-waterlily   { height: 76px; }
-      .logo-kumeu       { height: 56px; }
-      .logo-stables     { height: 36px; }
-      .logo-bridgewater { height: 40px; }
+      img.logo-mudbrick    { height: 16px; }
+      img.logo-castaways   { height: 22px; }
+      img.logo-markovina   { height: 56px; }
+      img.logo-waterlily   { height: 76px; }
+      img.logo-kumeu       { height: 62px; }
+      img.logo-stables     { height: 32px; }
+      img.logo-bridgewater { height: 34px; }
     }
 
     /* ── My Promise — Pillars ────────────────────────────────── */
     .section-promise {
       background: var(--ink);
-      border-top: 1px solid var(--hairline);
       position: relative;
       overflow: hidden;
     }
@@ -622,12 +631,6 @@
       border-radius: 14px;
       border: 1px solid var(--hairline);
       background: #1c1c1c;
-      transition: border-color 320ms ease, box-shadow 320ms ease, background 320ms ease;
-    }
-    .promise-pillar:hover {
-      background: rgba(255,113,61,0.05);
-      border-color: rgba(255,113,61,0.55);
-      box-shadow: 0 0 48px rgba(255,113,61,0.14), 0 0 0 1px rgba(255,113,61,0.18);
     }
     .promise-pillar-num {
       font-family: var(--font-mono);
@@ -1026,25 +1029,24 @@
       color: var(--bone); margin-bottom: 32px; max-width: 700px;
     }
     .songs-b-sub {
-      font-family: var(--font-serif); font-style: italic;
-      font-size: clamp(16px, 1.8vw, 20px); color: var(--bone-mute);
-      margin-bottom: 40px; line-height: 1.5; max-width: 520px;
+      font-family: var(--font-sans); font-style: normal;
+      font-size: clamp(15px, 1.6vw, 18px); color: var(--bone-mute);
+      margin-bottom: 40px; line-height: 1.7; max-width: 520px;
     }
     .songs-b-link {
       display: inline-flex; align-items: center; gap: 10px;
-      background: none; border: 1px solid rgba(255,255,255,0.18);
-      color: var(--bone);
+      background: var(--ember); border: 1px solid transparent;
+      color: var(--ink);
       font-family: var(--font-sans); font-size: 14px; font-weight: 500;
       padding: 14px 28px; text-decoration: none;
       border-radius: var(--radius-md);
-      transition: background 200ms, border-color 200ms, transform 200ms;
+      transition: background 200ms, transform 200ms;
     }
     .songs-b-link:hover {
-      background: rgba(255,113,61,0.1);
-      border-color: rgba(255,113,61,0.45);
+      background: var(--ember-glow);
       transform: translateY(-1px);
     }
-    .songs-b-arr { color: var(--ember); transition: transform 200ms; }
+    .songs-b-arr { color: var(--ink); transition: transform 200ms; }
     .songs-b-link:hover .songs-b-arr { transform: translateX(4px); }
 
     /* ── Testimonial — photo-backed ──────────────────────────── */
@@ -1669,105 +1671,150 @@
       position: absolute; inset: 0; width: 100%; height: 100%; border: none;
     }
 
-    /* ── Animated Reviews ─────────────────────────────────────── */
+    /* ── Reviews Carousel ─────────────────────────────────────── */
     .section-reviews {
       background: var(--ink);
-      padding: 100px 48px 120px;
+      border-top: 1px solid var(--hairline);
+      padding: 100px 0 112px;
     }
-    @media (min-width: 1024px) {
-      .section-reviews { padding: 100px 120px 120px; }
-    }
-    .reviews-inner {
-      max-width: 900px;
+    .reviews-container {
+      max-width: 1100px;
       margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 56px;
-      align-items: center;
+      padding: 0 80px;
+    }
+    @media (max-width: 720px) {
+      .reviews-container { padding: 0 24px; }
+    }
+    .reviews-header {
+      text-align: center;
+      margin-bottom: 56px;
     }
     .reviews-eyebrow {
-      font-family: var(--font-sans);
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--ember);
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 9px;
       margin-bottom: 20px;
     }
-    .reviews-eyebrow::before {
-      content: "";
-      width: 28px;
-      height: 1px;
-      background: var(--ember);
-      opacity: 0.5;
-      flex-shrink: 0;
+    .reviews-eyebrow span {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
     }
-    .reviews-heading {
+    .reviews-headline {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(26px, 3.5vw, 44px);
-      line-height: 1.1;
-      letter-spacing: -0.02em;
+      font-size: clamp(36px, 5vw, 64px);
+      line-height: 1.08;
+      letter-spacing: -0.01em;
       color: var(--bone);
-      margin-bottom: 16px;
+      margin-bottom: 18px;
     }
-    .reviews-sub {
-      font-family: var(--font-sans);
-      font-size: 15px;
-      line-height: 1.7;
-      color: var(--bone-mute);
-      margin-bottom: 40px;
-      max-width: 360px;
-    }
-    .reviews-dots {
+    .reviews-meta {
       display: flex;
       align-items: center;
-      gap: 10px;
+      justify-content: center;
+      gap: 12px;
     }
-    .reviews-dot {
-      height: 10px;
-      width: 10px;
-      border-radius: 99px;
-      background: rgba(255,255,255,0.15);
-      border: none;
-      cursor: pointer;
-      padding: 0;
-      transition: background 300ms ease, width 300ms ease;
+    .reviews-stars-row { display: flex; gap: 3px; }
+    .reviews-stars-row svg { width: 16px; height: 16px; }
+    .reviews-score {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--bone-mute);
     }
-    .reviews-dot.active {
-      width: 32px;
-      background: var(--ember);
+    .reviews-carousel-outer { overflow: hidden; }
+    .reviews-track {
+      display: flex;
+      gap: 20px;
+      will-change: transform;
     }
-    .reviews-right { display: grid; }
-    .reviews-card {
-      grid-row: 1;
-      grid-column: 1;
-      background: var(--ink-soft);
-      border: 1px solid var(--hairline-strong);
-      border-radius: 16px;
-      padding: 40px 36px;
+    .review-card {
+      flex-shrink: 0;
+      background: #1c1c1c;
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 32px 28px;
       display: flex;
       flex-direction: column;
-      opacity: 0;
-      transform: translateX(56px) scale(0.96);
-      pointer-events: none;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.4), 0 16px 56px rgba(0,0,0,0.45), 0 32px 96px rgba(0,0,0,0.3);
-      transition: opacity 480ms cubic-bezier(0.4, 0, 0.2, 1),
-                  transform 480ms cubic-bezier(0.4, 0, 0.2, 1),
-                  box-shadow 480ms ease;
+      gap: 20px;
     }
-    .reviews-card.is-active {
-      opacity: 1;
-      transform: translateX(0) scale(1);
-      pointer-events: auto;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.5), 0 16px 56px rgba(0,0,0,0.55), 0 32px 96px rgba(0,0,0,0.4), 0 0 80px rgba(255,113,61,0.07);
+    .card-stars { display: flex; gap: 3px; }
+    .card-stars svg { width: 15px; height: 15px; }
+    .card-quote {
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: 400;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--bone);
+      flex: 1;
     }
-    .reviews-card.is-prev {
-      opacity: 0;
-      transform: translateX(-56px) scale(0.96);
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding-top: 16px;
+      border-top: 1px solid var(--hairline);
+    }
+    .card-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 113, 61, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--ember);
+      font-weight: 500;
+    }
+    .card-reviewer-name {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--bone);
+      line-height: 1.2;
+    }
+    .card-reviewer-tag {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--bone-mute);
+      margin-top: 2px;
+    }
+    .card-google {
+      width: 15px; height: 15px;
+      margin-left: auto;
+      flex-shrink: 0;
+      opacity: 0.45;
+    }
+    .reviews-dots-wrap {
+      display: flex;
+      justify-content: center;
+      margin-top: 32px;
+    }
+    .reviews-dots-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .reviews-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(242, 234, 216, 0.18);
+      transition: background 300ms ease, width 300ms ease, border-radius 300ms ease;
+      cursor: pointer;
+      border: none;
+      padding: 0;
+      flex-shrink: 0;
+    }
+    .reviews-dot.active {
+      background: var(--ember);
+      width: 24px;
+      border-radius: 4px;
     }
     .reviews-stars {
       display: flex;
@@ -1842,6 +1889,54 @@
         grid-template-columns: 1fr 1fr;
         gap: 72px;
       }
+    }
+
+    /* ── Mid-page CTA — after bonus section ─────────────────── */
+    .section-mid-cta {
+      background: var(--ink);
+      border-top: 1px solid var(--hairline);
+      border-bottom: 1px solid var(--hairline);
+      padding: 80px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-mid-cta::before {
+      content: "";
+      position: absolute;
+      top: -100px; left: 50%; transform: translateX(-50%);
+      width: 600px; height: 320px;
+      background: radial-gradient(ellipse at center, rgba(255,113,61,0.08) 0%, transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+    }
+    .mid-cta-inner {
+      position: relative;
+      z-index: 1;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+    .mid-cta-heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(28px, 4vw, 48px);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      margin-bottom: 14px;
+    }
+    .mid-cta-sub {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.65;
+      color: var(--bone-mute);
+      margin-bottom: 32px;
+    }
+    .mid-cta-note {
+      margin-top: 14px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--bone-faint);
     }
 
   </style>
@@ -1941,7 +2036,7 @@
     <!-- Full-bleed photo behind everything -->
     <div class="hero-photo">
       <img
-        src="assets/photos/jas-acoustic-markovina.webp"
+        src="../../Design System/Jasper Hawkins Music — Design System/assets/photos/jas-acoustic-markovina.webp"
         alt="Jasper Hawkins performing acoustic guitar at Markovina Vineyard"
       >
     </div>
@@ -1963,21 +2058,21 @@
       <div class="logos-marquee-outer">
         <div class="logos-track">
           <!-- Set 1 -->
-          <div class="logo-slot"><img class="logo-mudbrick"    src="assets/logos/mudbrick.png"            alt="Mudbrick Vineyard"></div>
-          <div class="logo-slot"><img class="logo-castaways"   src="assets/logos/castaways.png"           alt="Castaways Resort"></div>
-          <div class="logo-slot"><img class="logo-markovina"   src="assets/logos/markovina.jpeg"          alt="Markovina Vineyard Estate"></div>
-          <div class="logo-slot"><img class="logo-waterlily"   src="assets/logos/waterlily.png"   alt="The Waterlily Gardens"></div>
-          <div class="logo-slot"><img class="logo-kumeu"       src="assets/logos/kumeu.png"      alt="Kumeu Valley Estate"></div>
-          <div class="logo-slot"><img class="logo-stables"     src="assets/logos/stables.webp"            alt="The Stables"></div>
-          <div class="logo-slot"><img class="logo-bridgewater" src="assets/logos/bridgewater.jpeg" alt="Bridgewater Country Estate"></div>
+          <div class="logo-slot"><img class="logo-mudbrick"    src="../../Photos/Logos/Mudbrick logo.png"            alt="Mudbrick Vineyard"></div>
+          <div class="logo-slot"><img class="logo-castaways"   src="../../Photos/Logos/Castaways logo.png"           alt="Castaways Resort"></div>
+          <div class="logo-slot"><img class="logo-markovina"   src="../../Photos/Logos/Markovina logo.jpeg"          alt="Markovina Vineyard Estate"></div>
+          <div class="logo-slot"><img class="logo-waterlily"   src="../../Photos/Logos/Waterlily gardens logo.png"   alt="The Waterlily Gardens"></div>
+          <div class="logo-slot"><img class="logo-kumeu"       src="../../Photos/Logos/Kumeu Valley Estate.png"      alt="Kumeu Valley Estate"></div>
+          <div class="logo-slot"><img class="logo-stables"     src="../../Photos/Logos/Stables logo.webp"            alt="The Stables"></div>
+          <div class="logo-slot"><img class="logo-bridgewater" src="../../Photos/Logos/Bridgewater Estate Logo.jpeg" alt="Bridgewater Country Estate"></div>
           <!-- Set 2 — duplicate for seamless loop -->
-          <div class="logo-slot"><img class="logo-mudbrick"    src="assets/logos/mudbrick.png"            alt="Mudbrick Vineyard"></div>
-          <div class="logo-slot"><img class="logo-castaways"   src="assets/logos/castaways.png"           alt="Castaways Resort"></div>
-          <div class="logo-slot"><img class="logo-markovina"   src="assets/logos/markovina.jpeg"          alt="Markovina Vineyard Estate"></div>
-          <div class="logo-slot"><img class="logo-waterlily"   src="assets/logos/waterlily.png"   alt="The Waterlily Gardens"></div>
-          <div class="logo-slot"><img class="logo-kumeu"       src="assets/logos/kumeu.png"      alt="Kumeu Valley Estate"></div>
-          <div class="logo-slot"><img class="logo-stables"     src="assets/logos/stables.webp"            alt="The Stables"></div>
-          <div class="logo-slot"><img class="logo-bridgewater" src="assets/logos/bridgewater.jpeg" alt="Bridgewater Country Estate"></div>
+          <div class="logo-slot"><img class="logo-mudbrick"    src="../../Photos/Logos/Mudbrick logo.png"            alt="Mudbrick Vineyard"></div>
+          <div class="logo-slot"><img class="logo-castaways"   src="../../Photos/Logos/Castaways logo.png"           alt="Castaways Resort"></div>
+          <div class="logo-slot"><img class="logo-markovina"   src="../../Photos/Logos/Markovina logo.jpeg"          alt="Markovina Vineyard Estate"></div>
+          <div class="logo-slot"><img class="logo-waterlily"   src="../../Photos/Logos/Waterlily gardens logo.png"   alt="The Waterlily Gardens"></div>
+          <div class="logo-slot"><img class="logo-kumeu"       src="../../Photos/Logos/Kumeu Valley Estate.png"      alt="Kumeu Valley Estate"></div>
+          <div class="logo-slot"><img class="logo-stables"     src="../../Photos/Logos/Stables logo.webp"            alt="The Stables"></div>
+          <div class="logo-slot"><img class="logo-bridgewater" src="../../Photos/Logos/Bridgewater Estate Logo.jpeg" alt="Bridgewater Country Estate"></div>
         </div>
       </div>
 
@@ -2015,7 +2110,7 @@
   <section class="section-testi">
     <div class="testi-photo">
       <img
-        src="assets/photos/jas-dj-wedding-party.png"
+        src="../../Photos/Jas DJ - wedding party.png"
         alt="Jasper DJing at a wedding reception"
       >
     </div>
@@ -2043,7 +2138,7 @@
 
     <div class="wyg-band">
       <div class="wyg-band-photo" data-reveal-left>
-        <img src="assets/photos/jas-acoustic-mudbrick.webp" alt="Jasper Hawkins performing live acoustic at wedding ceremony">
+        <img src="../../Design System/Jasper Hawkins Music — Design System/assets/photos/jas-acoustic-mudbrick.webp" alt="Jasper Hawkins performing live acoustic at wedding ceremony">
       </div>
       <div class="wyg-band-text" data-reveal-right>
         <div class="wyg-num">01</div>
@@ -2054,7 +2149,7 @@
 
     <div class="wyg-band">
       <div class="wyg-band-photo" data-reveal-right>
-        <img src="assets/photos/jas-acoustic-waterlily2.webp" alt="Jasper Hawkins performing live acoustic at wedding canapés">
+        <img src="../../Design System/Jasper Hawkins Music — Design System/uploads/Jas Acoustic - Waterlily 2.webp" alt="Jasper Hawkins performing live acoustic at wedding canapés">
       </div>
       <div class="wyg-band-text" data-reveal-left>
         <div class="wyg-num">02</div>
@@ -2065,7 +2160,7 @@
 
     <div class="wyg-band">
       <div class="wyg-band-photo" data-reveal-left>
-        <img src="assets/photos/wedding-reception.webp" alt="Wedding reception">
+        <img src="../../Photos/emma-matt-sp-valo-148.jpg.webp" alt="Wedding reception">
       </div>
       <div class="wyg-band-text" data-reveal-right>
         <div class="wyg-num">03</div>
@@ -2151,6 +2246,16 @@
     </div>
   </section>
 
+  <!-- ── Mid CTA ──────────────────────────────────────────── -->
+  <section class="section-mid-cta">
+    <div class="mid-cta-inner" data-reveal>
+      <h2 class="mid-cta-heading">Is your date available?</h2>
+      <p class="mid-cta-sub">Check the calendar to see if I'm free on your wedding day. Auckland summers book out fast — if your date is open, it's worth holding it.</p>
+      <a class="btn-primary" href="#" data-enquire>Check availability →</a>
+      <p class="mid-cta-note">Dates are held on a first-come basis</p>
+    </div>
+  </section>
+
   <!-- ── Watch Me Play ────────────────────────────────────── -->
   <section class="section-wmp">
     <div class="wmp-grid">
@@ -2190,13 +2295,13 @@
       <div class="wmp-right">
         <div class="wmp-vid-panel active" id="wmpv-acoustic">
           <div class="wmp-vid" data-vimeo="916991360">
-            <img src="assets/photos/watch-me-play-thumbnail.jpg" alt="Jasper Hawkins performing live acoustic guitar at wedding">
+            <img src="../../Photos/Acoustic - Watch Me Play Thumbnail.jpg" alt="Jasper Hawkins performing live acoustic guitar at wedding">
             <div class="wmp-play">▶</div>
           </div>
         </div>
         <div class="wmp-vid-panel" id="wmpv-dj">
           <div class="wmp-vid" data-vimeo="821542116">
-            <img src="assets/photos/jas-dj.webp" alt="Jasper Hawkins DJ set at wedding reception">
+            <img src="../../Design System/Jasper Hawkins Music — Design System/assets/photos/jas-dj.webp" alt="Jasper Hawkins DJ set at wedding reception">
             <div class="wmp-play">▶</div>
           </div>
         </div>
@@ -2232,148 +2337,90 @@
 
   <!-- ── Google Reviews ──────────────────────────────────────── -->
   <section class="section-reviews">
-    <div class="reviews-inner">
+    <div class="reviews-container">
 
-      <div class="reviews-left">
+      <div class="reviews-header">
         <div class="reviews-eyebrow">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" style="flex-shrink:0;">
+          <svg width="15" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
             <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
           </svg>
-          Google Reviews
+          <span>Google Reviews</span>
         </div>
-        <h2 class="reviews-heading">Music that will have you and your guests talking for years to come.</h2>
-        <p class="reviews-sub">But don't take my word for it&nbsp;.&nbsp;.&nbsp;.</p>
-        <div class="reviews-dots">
-          <button class="reviews-dot active" aria-label="Review 1"></button>
-          <button class="reviews-dot" aria-label="Review 2"></button>
-          <button class="reviews-dot" aria-label="Review 3"></button>
-          <button class="reviews-dot" aria-label="Review 4"></button>
-          <button class="reviews-dot" aria-label="Review 5"></button>
-          <button class="reviews-dot" aria-label="Review 6"></button>
-          <button class="reviews-dot" aria-label="Review 7"></button>
-          <button class="reviews-dot" aria-label="Review 8"></button>
+        <h2 class="reviews-headline">80+ Five Star Reviews</h2>
+        <div class="reviews-meta">
+          <div class="reviews-stars-row">
+            <svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg>
+            <svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg>
+          </div>
+          <span class="reviews-score">5.0 · 80+ reviews on Google</span>
         </div>
       </div>
 
-      <div class="reviews-right">
+      <div class="reviews-carousel-outer" id="reviewsOuter">
+        <div class="reviews-track" id="reviewsTrack">
 
-        <div class="reviews-card is-active">
-          <div class="reviews-stars">★★★★★</div>
-          <span class="reviews-quote-deco" aria-hidden="true">"</span>
-          <p class="reviews-text">Jasper was absolutely incredible — the music was one of the highlights of our wedding day. He even learned a song especially for us to walk down the aisle to. The first thing people mention when they talk about our wedding is how beautiful the live music was. We cannot recommend him enough!</p>
-          <div class="reviews-sep"></div>
-          <div class="reviews-author">
-            <div class="reviews-avatar">E</div>
-            <div>
-              <div class="reviews-name">Eden Sweeney</div>
-              <div class="reviews-label">Google Review</div>
-            </div>
+          <div class="review-card">
+            <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+            <p class="card-quote">"Jasper was absolutely incredible — the music was one of the highlights of our wedding day. He even learned a song especially for us to walk down the aisle to. The first thing people mention when they talk about our wedding is how beautiful the live music was. We cannot recommend him enough!"</p>
+            <div class="card-footer"><div class="card-avatar">E</div><div><div class="card-reviewer-name">Eden Sweeney</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
           </div>
-        </div>
 
-        <div class="reviews-card">
-          <div class="reviews-stars">★★★★★</div>
-          <span class="reviews-quote-deco" aria-hidden="true">"</span>
-          <p class="reviews-text">I wish there was a 5 star option! We have had nothing but rave reviews for Jasper's beautiful acoustic performance and how lively he kept the dance floor. Thanks so much for your impeccable communications leading up to the day and your talent shared on the day!</p>
-          <div class="reviews-sep"></div>
-          <div class="reviews-author">
-            <div class="reviews-avatar">A</div>
-            <div>
-              <div class="reviews-name">Ashleigh Blackwell</div>
-              <div class="reviews-label">Google Review</div>
-            </div>
+          <div class="review-card">
+            <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+            <p class="card-quote">"I wish there was a 5 star option! We have had nothing but rave reviews for Jasper's beautiful acoustic performance and how lively he kept the dance floor. Thanks so much for your impeccable communications leading up to the day and your talent shared on the day!"</p>
+            <div class="card-footer"><div class="card-avatar">A</div><div><div class="card-reviewer-name">Ashleigh Blackwell</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
           </div>
-        </div>
 
-        <div class="reviews-card">
-          <div class="reviews-stars">★★★★★</div>
-          <span class="reviews-quote-deco" aria-hidden="true">"</span>
-          <p class="reviews-text">You were the life of the party! Every guest we've spoken to since the wedding has mentioned how incredible you were. You have an amazing ability to read the room and keep the energy just right. We're convinced you're the best in the business.</p>
-          <div class="reviews-sep"></div>
-          <div class="reviews-author">
-            <div class="reviews-avatar">K</div>
-            <div>
-              <div class="reviews-name">Koshina</div>
-              <div class="reviews-label">Google Review</div>
-            </div>
+          <div class="review-card">
+            <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+            <p class="card-quote">"You were the life of the party! Every guest we've spoken to since the wedding has mentioned how incredible you were. You have an amazing ability to read the room and keep the energy just right. We're convinced you're the best in the business."</p>
+            <div class="card-footer"><div class="card-avatar">K</div><div><div class="card-reviewer-name">Koshina</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
           </div>
-        </div>
 
-        <div class="reviews-card">
-          <div class="reviews-stars">★★★★★</div>
-          <span class="reviews-quote-deco" aria-hidden="true">"</span>
-          <p class="reviews-text">I cannot rate him highly enough — he absolutely nailed the brief. Dance floor was never empty. His live music was the real star of the show. He learned 2 songs very particular to us and gave us the genuine impression that he really cared for our celebration.</p>
-          <div class="reviews-sep"></div>
-          <div class="reviews-author">
-            <div class="reviews-avatar">G</div>
-            <div>
-              <div class="reviews-name">Gregor MacDonald</div>
-              <div class="reviews-label">Google Review</div>
-            </div>
+          <div class="review-card">
+            <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+            <p class="card-quote">"I cannot rate him highly enough — he absolutely nailed the brief. Dance floor was never empty. His live music was the real star of the show. He learned 2 songs very particular to us and gave us the genuine impression that he really cared for our celebration."</p>
+            <div class="card-footer"><div class="card-avatar">G</div><div><div class="card-reviewer-name">Gregor MacDonald</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
           </div>
-        </div>
 
-        <div class="reviews-card">
-          <div class="reviews-stars">★★★★★</div>
-          <span class="reviews-quote-deco" aria-hidden="true">"</span>
-          <p class="reviews-text">We truly cannot thank you enough. So many friends and family have commented on how incredibly talented you are — from your beautiful acoustic vocals at our ceremony to the dance floor. Incredible humans like you elevate special days into something even more unforgettable.</p>
-          <div class="reviews-sep"></div>
-          <div class="reviews-author">
-            <div class="reviews-avatar">M</div>
-            <div>
-              <div class="reviews-name">Marley Araiti</div>
-              <div class="reviews-label">Google Review</div>
-            </div>
+          <div class="review-card">
+            <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+            <p class="card-quote">"We truly cannot thank you enough. So many friends and family have commented on how incredibly talented you are — from your beautiful acoustic vocals at our ceremony to the dance floor. Incredible humans like you elevate special days into something even more unforgettable."</p>
+            <div class="card-footer"><div class="card-avatar">M</div><div><div class="card-reviewer-name">Marley Araiti</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
           </div>
-        </div>
 
-        <div class="reviews-card">
-          <div class="reviews-stars">★★★★★</div>
-          <span class="reviews-quote-deco" aria-hidden="true">"</span>
-          <p class="reviews-text">Absolutely incredible DJ and musician! His live acoustic songs as we walked down the aisle added a personal touch to the ceremony. He read the room and kept the dance floor packed all night for every age group. We couldn't recommend him more highly.</p>
-          <div class="reviews-sep"></div>
-          <div class="reviews-author">
-            <div class="reviews-avatar">E</div>
-            <div>
-              <div class="reviews-name">Emma Fox</div>
-              <div class="reviews-label">Google Review</div>
-            </div>
+          <div class="review-card">
+            <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+            <p class="card-quote">"Absolutely incredible DJ and musician! His live acoustic songs as we walked down the aisle added a personal touch to the ceremony. He read the room and kept the dance floor packed all night for every age group. We couldn't recommend him more highly."</p>
+            <div class="card-footer"><div class="card-avatar">E</div><div><div class="card-reviewer-name">Emma Fox</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
           </div>
-        </div>
 
-        <div class="reviews-card">
-          <div class="reviews-stars">★★★★★</div>
-          <span class="reviews-quote-deco" aria-hidden="true">"</span>
-          <p class="reviews-text">This guy is honestly the best. Can't get better. Brilliant voice, great vibes, and super DJ set. Made our wedding so special!</p>
-          <div class="reviews-sep"></div>
-          <div class="reviews-author">
-            <div class="reviews-avatar">B</div>
-            <div>
-              <div class="reviews-name">Byron Terris</div>
-              <div class="reviews-label">Google Review</div>
-            </div>
+          <div class="review-card">
+            <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+            <p class="card-quote">"This guy is honestly the best. Can't get better. Brilliant voice, great vibes, and super DJ set. Made our wedding so special!"</p>
+            <div class="card-footer"><div class="card-avatar">B</div><div><div class="card-reviewer-name">Byron Terris</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
           </div>
-        </div>
 
-        <div class="reviews-card">
-          <div class="reviews-stars">★★★★★</div>
-          <span class="reviews-quote-deco" aria-hidden="true">"</span>
-          <p class="reviews-text">I'm a marriage celebrant and have had the pleasure of hearing Jasper play at several events. His incredible talent, combined with the way he connects with people, truly adds a touch of magic. Having Jasper at your event will be one of the best decisions you make.</p>
-          <div class="reviews-sep"></div>
-          <div class="reviews-author">
-            <div class="reviews-avatar">S</div>
-            <div>
-              <div class="reviews-name">Sharelle Lincoln</div>
-              <div class="reviews-label">Marriage Celebrant</div>
-            </div>
+          <div class="review-card">
+            <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+            <p class="card-quote">"I'm a marriage celebrant and have had the pleasure of hearing Jasper play at several events. His incredible talent, combined with the way he connects with people, truly adds a touch of magic. Having Jasper at your event will be one of the best decisions you make."</p>
+            <div class="card-footer"><div class="card-avatar">S</div><div><div class="card-reviewer-name">Sharelle Lincoln</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
           </div>
-        </div>
 
+        </div><!-- /reviews-track -->
       </div>
-    </div>
+
+      <div class="reviews-dots-wrap">
+        <div class="reviews-dots-row" id="reviewsDots"></div>
+      </div>
+
+    </div><!-- /reviews-container -->
   </section>
 
   <!-- ── Acoustic Performances ───────────────────────────────── -->
@@ -2471,7 +2518,7 @@
       </div>
       <div class="why-photo" data-reveal>
         <img
-          src="assets/photos/jas-acoustic-waterlily.webp"
+          src="../../Design System/Jasper Hawkins Music — Design System/assets/photos/jas-acoustic-waterlily.webp"
           alt="Jasper Hawkins performing at Waterlily"
         >
       </div>
@@ -2561,7 +2608,7 @@
   <!-- ── Final CTA ──────────────────────────────────────────── -->
   <section class="section-cta" id="contact">
     <div class="cta-photo">
-      <img src="assets/photos/jas-acoustic-marquee.webp" alt="Jasper Hawkins performing acoustic guitar in a wedding marquee">
+      <img src="../../Photos/From Current Wordpress Website /Jas Acoustic - Marquee.webp" alt="Jasper Hawkins performing acoustic guitar in a wedding marquee">
     </div>
     <div class="cta-o-flat"></div>
     <div class="cta-o-warm"></div>
@@ -2844,40 +2891,99 @@
     });
   });
 
-  /* ── Animated Reviews ─────────────────────────────────── */
+  /* ── Reviews Carousel ─────────────────────────────────── */
   (function () {
-    const cards = Array.from(document.querySelectorAll('.reviews-card'));
-    const dots  = Array.from(document.querySelectorAll('.reviews-dot'));
-    const TOTAL = cards.length;
-    let current = 0;
-    let timer;
+    const outer    = document.getElementById('reviewsOuter');
+    const track    = document.getElementById('reviewsTrack');
+    const dotsWrap = document.getElementById('reviewsDots');
+    if (!outer || !track || !dotsWrap) return;
 
-    function show(idx) {
-      cards.forEach((c, i) => {
-        c.classList.remove('is-active', 'is-prev');
-        if (i === idx) c.classList.add('is-active');
-        else if (i === (idx - 1 + TOTAL) % TOTAL) c.classList.add('is-prev');
+    const cards   = Array.from(track.querySelectorAll('.review-card'));
+    const VISIBLE = 3;
+    const GAP     = 20;
+    const AUTO_MS = 4200;
+    const SLIDE_MS = 600;
+
+    let currentIndex = 0;
+    let cardW = 0;
+    let autoTimer = null;
+
+    function setup() {
+      cardW = (outer.offsetWidth - GAP * (VISIBLE - 1)) / VISIBLE;
+      cards.forEach(c => {
+        c.style.width    = cardW + 'px';
+        c.style.minWidth = cardW + 'px';
       });
-      dots.forEach((d, i) => d.classList.toggle('active', i === idx));
-      current = idx;
+      buildDots();
+      goTo(currentIndex, false);
+      startAuto();
     }
 
-    function advance() { show((current + 1) % TOTAL); }
-    function startTimer() { timer = setInterval(advance, 3000); }
-    function stopTimer()  { clearInterval(timer); }
-
-    dots.forEach((dot, i) => dot.addEventListener('click', () => {
-      stopTimer(); show(i); startTimer();
-    }));
-
-    const right = document.querySelector('.reviews-right');
-    if (right) {
-      right.addEventListener('mouseenter', stopTimer);
-      right.addEventListener('mouseleave', startTimer);
+    function buildDots() {
+      dotsWrap.innerHTML = '';
+      const positions = cards.length - VISIBLE + 1;
+      for (let i = 0; i < positions; i++) {
+        const dot = document.createElement('button');
+        dot.className = 'reviews-dot' + (i === 0 ? ' active' : '');
+        dot.setAttribute('aria-label', 'Go to slide ' + (i + 1));
+        dot.addEventListener('click', () => { resetAuto(); goTo(i); });
+        dotsWrap.appendChild(dot);
+      }
     }
 
-    show(0);
-    startTimer();
+    function goTo(index, animate) {
+      if (animate === undefined) animate = true;
+      const maxIdx = cards.length - VISIBLE;
+      currentIndex = Math.max(0, Math.min(index, maxIdx));
+      const offset = currentIndex * (cardW + GAP);
+      track.style.transition = animate
+        ? 'transform ' + SLIDE_MS + 'ms cubic-bezier(0.25, 0.8, 0.25, 1)'
+        : 'none';
+      track.style.transform = 'translateX(-' + offset + 'px)';
+      updateDots();
+    }
+
+    function updateDots() {
+      dotsWrap.querySelectorAll('.reviews-dot').forEach(function(d, i) {
+        d.classList.toggle('active', i === currentIndex);
+      });
+    }
+
+    function startAuto() {
+      clearInterval(autoTimer);
+      autoTimer = setInterval(function() {
+        const maxIdx = cards.length - VISIBLE;
+        if (currentIndex >= maxIdx) {
+          const overOffset = (maxIdx + 1) * (cardW + GAP);
+          track.style.transition = 'transform ' + SLIDE_MS + 'ms cubic-bezier(0.25, 0.8, 0.25, 1)';
+          track.style.transform  = 'translateX(-' + overOffset + 'px)';
+          setTimeout(function() {
+            track.style.transition = 'none';
+            track.style.transform  = 'translateX(0)';
+            currentIndex = 0;
+            updateDots();
+          }, SLIDE_MS);
+        } else {
+          goTo(currentIndex + 1);
+        }
+      }, AUTO_MS);
+    }
+
+    function resetAuto() {
+      clearInterval(autoTimer);
+      startAuto();
+    }
+
+    setup();
+
+    var resizeTimer;
+    window.addEventListener('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function() {
+        clearInterval(autoTimer);
+        setup();
+      }, 120);
+    });
   }());
 
   </script>
