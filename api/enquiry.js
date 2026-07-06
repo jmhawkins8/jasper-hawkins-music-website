@@ -14,6 +14,8 @@
 //   NOTIFY_EMAIL                where the alert lands, e.g. jmhawkins8@gmail.com
 //   FROM_EMAIL                  verified sender, e.g. "Enquiries <enquiries@jasperhawkinsmusic.co.nz>"
 
+import { randomUUID } from 'crypto';
+
 const clean = (v, max = 500) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 
 // NZ-local YYYY-MM-DD for the enquiry_date stamp.
@@ -52,6 +54,7 @@ export default async function handler(req, res) {
 
   const location = clean(body.eventLocation, 200);
   const record = {
+    id: randomUUID(),                                // clients.id is NOT NULL with no default
     user_id: OWNER,
     stage: 'enquiry',
     gig_type: 'wedding',
