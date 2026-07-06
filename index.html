@@ -9,7 +9,7 @@
   <style>
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
     body { background: var(--ink); }
 
     /* ── Nav ─────────────────────────────────────────────────── */
@@ -597,6 +597,20 @@
       img.logo-kumeu       { height: 62px; }
       img.logo-stables     { height: 32px; }
       img.logo-bridgewater { height: 34px; }
+    }
+    /* Phone only: hide one logo so the strip reads a tidy 3 + 3, not 3 + 3 + 1,
+       and lock it to an even 3-column grid so rows/columns line up symmetrically.
+       Logo SIZES are left untouched — only the alignment changes. */
+    @media (max-width: 560px) {
+      .logo-slot--waterlily { display: none; }
+      .logos-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        column-gap: 14px;
+        row-gap: 30px;
+        align-items: center;
+        justify-items: center;
+      }
     }
 
     /* ── My Promise — Pillars ────────────────────────────────── */
@@ -1795,7 +1809,7 @@
     .vt-photo img {
       width: 100%; height: 100%;
       object-fit: cover;
-      object-position: center top;
+      object-position: var(--vt-pos, center top);
       opacity: 1;
       transition: opacity 0.35s ease;
     }
@@ -1897,6 +1911,7 @@
       .vt-header { margin-bottom: 36px; }
       .vt-stage { flex-direction: column; align-items: stretch; }
       .vt-photo { width: 100%; height: 260px; border-radius: 16px 16px 0 0; }
+      .vt-photo img { object-position: var(--vt-pos-m, center top); }  /* mobile crop override */
       .vt-card { margin-left: 0; margin-top: -16px; border-radius: 0 0 16px 16px; padding: 28px 22px 24px; }
     }
 
@@ -1967,14 +1982,14 @@
       font-family: var(--font-sans);
       font-style: normal;
       font-weight: 400;
-      font-size: 15px;
-      line-height: 1.7;
+      font-size: 14px;
+      line-height: 1.6;
       color: var(--bone);
       flex: 1;
     }
     @media (max-width: 639px) {
       .review-card { padding: 22px 20px; gap: 13px; border-radius: 12px; }
-      .card-quote { font-size: 14px; line-height: var(--lh-body); }
+      .card-quote { font-size: 14px; line-height: 1.55; }
       .card-stars svg { width: 13px; height: 13px; }
       .card-footer { padding-top: 13px; gap: 10px; }
       .card-avatar { width: 30px; height: 30px; font-size: 13px; }
@@ -2021,8 +2036,28 @@
     .reviews-dots-wrap {
       display: flex;
       justify-content: center;
+      align-items: center;
+      gap: 16px;
       margin-top: 32px;
     }
+    .reviews-arrow {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      border: 1px solid var(--hairline);
+      background: #1c1c1c;
+      color: var(--bone);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      line-height: 1;
+      transition: border-color 0.2s, background 0.2s;
+      flex-shrink: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .reviews-arrow:hover { border-color: var(--ember); background: #242424; }
+    .reviews-arrow:active { background: #2a2a2a; }
     .reviews-dots-row {
       display: flex;
       gap: 8px;
@@ -2613,7 +2648,7 @@
             </div>
           </div>
           <div class="action-ctas">
-            <a class="cta-primary" href="#promise">
+            <a class="cta-primary" href="#venues">
               Learn More <span class="arr">→</span>
             </a>
             <a class="cta-secondary" href="#" data-enquire>
@@ -2641,14 +2676,14 @@
   </section>
 
   <!-- ── Logo Strip ───────────────────────────────────────── -->
-  <section class="section-logos">
+  <section class="section-logos" id="venues">
     <div class="logos-inner">
       <div class="logos-eyebrow" data-reveal>Trusted by Auckland's finest wedding venues</div>
       <div class="logos-row">
         <div class="logo-slot" data-reveal style="transition-delay:0ms"><img class="logo-mudbrick"    src="assets/logos/mudbrick.png"     alt="Mudbrick Vineyard"></div>
         <div class="logo-slot" data-reveal style="transition-delay:70ms"><img class="logo-castaways"   src="assets/logos/castaways.png"    alt="Castaways Resort"></div>
         <div class="logo-slot" data-reveal style="transition-delay:140ms"><img class="logo-markovina"   src="assets/logos/markovina.jpeg"   alt="Markovina Vineyard Estate"></div>
-        <div class="logo-slot" data-reveal style="transition-delay:210ms"><img class="logo-waterlily"   src="assets/logos/waterlily.png"    alt="The Waterlily Gardens"></div>
+        <div class="logo-slot logo-slot--waterlily" data-reveal style="transition-delay:210ms"><img class="logo-waterlily"   src="assets/logos/waterlily.png"    alt="The Waterlily Gardens"></div>
         <div class="logo-slot" data-reveal style="transition-delay:280ms"><img class="logo-kumeu"       src="assets/logos/kumeu.png"        alt="Kumeu Valley Estate"></div>
         <div class="logo-slot" data-reveal style="transition-delay:350ms"><img class="logo-stables"     src="assets/logos/stables.webp"     alt="The Stables"></div>
         <div class="logo-slot" data-reveal style="transition-delay:420ms"><img class="logo-bridgewater" src="assets/logos/bridgewater.jpeg" alt="Bridgewater Country Estate"></div>
@@ -3025,7 +3060,9 @@
       </div>
 
       <div class="reviews-dots-wrap">
+        <button class="reviews-arrow" id="reviewsPrev" type="button" aria-label="Previous review">&#8592;</button>
         <div class="reviews-dots-row" id="reviewsDots"></div>
+        <button class="reviews-arrow" id="reviewsNext" type="button" aria-label="Next review">&#8594;</button>
       </div>
 
     </div><!-- /reviews-container -->
@@ -3707,6 +3744,20 @@
 
     setup();
 
+    // Manual prev/next arrows — browse at your own pace; each tap resets the auto-timer.
+    var prevBtn = document.getElementById('reviewsPrev');
+    var nextBtn = document.getElementById('reviewsNext');
+    function step(dir) {
+      resetAuto();
+      var maxIdx = cards.length - VISIBLE;
+      var next = currentIndex + dir;
+      if (next < 0) next = maxIdx;      // wrap to end
+      if (next > maxIdx) next = 0;      // wrap to start
+      goTo(next);
+    }
+    if (prevBtn) prevBtn.addEventListener('click', function () { step(-1); });
+    if (nextBtn) nextBtn.addEventListener('click', function () { step(1); });
+
     var resizeTimer;
     window.addEventListener('resize', function() {
       clearTimeout(resizeTimer);
@@ -3733,6 +3784,8 @@
     const slides = [
       {
         photo: 'assets/photos/annette-kumeu-valley.png?v=2',
+        pos:   'center 28%',
+        posM:  'center top',
         alt:   'Annette, Kumeu Valley Estate',
         name:  'Annette',
         venue: 'Kumeu Valley Estate',
@@ -3741,6 +3794,7 @@
       },
       {
         photo: 'assets/photos/mark-markovina.png',
+        pos:   'center top',
         alt:   'Mark, Markovina Estate',
         name:  'Mark',
         venue: 'Markovina Estate',
@@ -3749,6 +3803,8 @@
       },
       {
         photo: 'assets/photos/tracey-bridgewater.png?v=2',
+        pos:   'center 22%',
+        posM:  'center 20%',
         alt:   'Tracey, Bridgewater Estate',
         name:  'Tracey',
         venue: 'Bridgewater Estate',
@@ -3782,6 +3838,9 @@
       setTimeout(function() {
         photoEl.src = s.photo;
         photoEl.alt = s.alt;
+        // desktop crop via --vt-pos; mobile override via --vt-pos-m (see 767px media query)
+        photoEl.style.setProperty('--vt-pos', s.pos || 'center top');
+        photoEl.style.setProperty('--vt-pos-m', s.posM || s.pos || 'center top');
         quoteEl.innerHTML = '<span class="vt-lead">' + s.lead + '</span> ' + s.quote;
         nameEl.textContent  = s.name;
         venueEl.textContent = s.venue;
