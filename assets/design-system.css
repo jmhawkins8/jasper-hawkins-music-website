@@ -1,0 +1,61 @@
+/* ============================================================================
+   JASPER HAWKINS MUSIC — design-system.css
+   ============================================================================
+   Consolidated spacing, section-padding, type and radius tokens.
+   Reuses the FONTS and COLOURS already defined in colors_and_type.css —
+   this file adds no new fonts and no new colours. Link order in <head>:
+
+       1. colors_and_type.css   (fonts + colour palette)
+       2. design-system.css     (this — spacing / type scale / rhythm)
+       3. page <style>          (page-specific layout only)
+
+   Single source of truth for the site's spacing rhythm and type hierarchy.
+============================================================================ */
+
+:root {
+  /* — SECTION VERTICAL PADDING — three tiers, nothing in between ————— */
+  --section-compact:  clamp(64px, 8vw, 96px);    /* footers, tight bands */
+  --section-standard: clamp(80px, 10vw, 120px);  /* the default section  */
+  --section-feature:  clamp(96px, 12vw, 160px);  /* hero-weight moments  */
+
+  /* — LAYOUT ————————————————————————————————————————————————————————— */
+  --container-wide:   1280px;   /* standard content sections */
+  --container-narrow: 720px;    /* centred prose / CTA sections */
+  --gutter:           clamp(24px, 6vw, 80px);   /* 24 mobile → 80 desktop */
+  --gutter-tight:     clamp(20px, 5vw, 48px);   /* narrow/centred sections */
+
+  /* — TYPE SCALE — one size per role (fonts inherited from tokens file) — */
+  --font-h1:      clamp(48px, 7vw, 88px);   /* hero / page title */
+  --font-h2:      clamp(32px, 5vw, 52px);   /* section heading — ONE size */
+  --font-h3:      clamp(24px, 3vw, 34px);   /* subhead / card title */
+  --font-lead:    clamp(17px, 1.5vw, 20px); /* intro paragraph */
+  --font-body:    16px;                     /* body copy */
+  --font-sm:      15px;                      /* small / secondary body */
+  --font-xs:      13px;                      /* meta / caption */
+  --font-eyebrow: 11px;                      /* uppercase label */
+
+  /* — LINE-HEIGHT — three values only ———————————————————————————————— */
+  --lh-tight: 1.1;    /* single/short headings */
+  --lh-mid:   1.35;   /* multi-line headings, leads */
+  --lh-body:  1.65;   /* body copy */
+
+  /* — LETTER-SPACING ————————————————————————————————————————————————— */
+  --track-tight:   -0.02em;   /* headings */
+  --track-eyebrow:  0.22em;   /* uppercase labels */
+
+  /* — HEADING RHYTHM — consistent margins around headings ——————————— */
+  --h-eyebrow-mb: 22px;   /* eyebrow → heading */
+  --h2-mb:        18px;   /* section heading → body/sub */
+  --h3-mb:        12px;   /* subhead → body */
+
+  /* — RADIUS ————————————————————————————————————————————————————————— */
+  --r-input:  8px;    /* inputs, standard buttons */
+  --r-card:  14px;    /* cards — one card radius */
+  --r-pill:  9999px;  /* pills, round buttons */
+
+  /* — COLOUR: unify a genuine inconsistency only ———————————————————————
+     The page used two different ambers (#f59e0b for stars, #E0A766 for the
+     calendar). Consolidated to the nicer calendar amber. No new colours. */
+  --amber:      #E0A766;
+  --amber-soft: #ECCFA6;
+}

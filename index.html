@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weddings · Jasper Hawkins Music</title>
   <link rel="stylesheet" href="assets/colors_and_type.css">
+  <link rel="stylesheet" href="assets/design-system.css">
   <style>
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -434,7 +435,7 @@
       .hero { flex-direction: column-reverse; }
       .hero-panel {
         width: 100%;
-        padding: 28px 24px 52px;
+        padding: 48px 24px 56px;
         justify-content: flex-end;
       }
       .hero-panel-inner { max-width: 100%; }
@@ -457,7 +458,7 @@
       min-height: 240px;
       display: flex;
       align-items: center;
-      padding: 80px 56px;
+      padding: var(--section-standard) var(--gutter);
       border-top: 1px solid var(--hairline);
     }
     .below-label {
@@ -472,8 +473,8 @@
 
     /* ── Shared section utilities ────────────────────────────── */
     .s-inner {
-      max-width: 1280px;
-      padding: 80px 24px;
+      max-width: var(--container-wide);
+      padding: var(--section-standard) var(--gutter);
       margin: 0 auto;
     }
     .s-eyebrow {
@@ -540,7 +541,7 @@
     .section-logos {
       position: relative;
       background: var(--ink);
-      padding: clamp(64px, 8vw, 104px) 24px;
+      padding: var(--section-standard) var(--gutter);
       overflow: hidden;
     }
     .logos-inner {
@@ -586,7 +587,7 @@
     img.logo-stables     { height: 40px; }
     img.logo-bridgewater { height: 42px; }
     @media (max-width: 900px) {
-      .section-logos { padding: clamp(48px,11vw,76px) 20px; }
+      .section-logos { padding: var(--section-standard) var(--gutter); }
       .logos-eyebrow { font-size: 9px; letter-spacing: 0.14em; gap: 10px; }
       .logos-eyebrow::before, .logos-eyebrow::after { width: 16px; }
       img.logo-mudbrick    { height: 16px; }
@@ -625,9 +626,9 @@
     .promise-inner {
       position: relative;
       z-index: 1;
-      max-width: 1280px;
+      max-width: var(--container-wide);
       margin: 0 auto;
-      padding: 80px 24px;
+      padding: var(--section-standard) var(--gutter);
     }
     .promise-pillars {
       display: grid;
@@ -656,11 +657,11 @@
     .promise-pillar-heading {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(24px, 2.4vw, 32px);
-      line-height: 1.12;
+      font-size: var(--font-h3);
+      line-height: var(--lh-tight);
       letter-spacing: -0.02em;
       color: var(--bone);
-      margin-bottom: 12px;
+      margin-bottom: var(--h3-mb);
     }
     .promise-pillar-text {
       font-family: var(--font-sans);
@@ -674,7 +675,7 @@
       .promise-pillar { padding: 48px 40px; }
     }
     @media (min-width: 1024px) {
-      .promise-inner { padding: 120px 80px; }
+      .promise-inner { padding: var(--section-standard) var(--gutter); }
     }
 
     /* ── What You Get — Alternating Bands ───────────────────── */
@@ -682,14 +683,14 @@
       background: var(--ink);
     }
     .wyg-intro {
-      max-width: 1280px;
+      max-width: var(--container-wide);
       margin: 0 auto;
-      padding: 120px 80px 72px;
+      padding: var(--section-standard) var(--gutter) 48px;
     }
     .wyg-heading {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(32px, 4vw, 52px);
+      font-size: var(--font-h2);
       line-height: 1.08;
       letter-spacing: -0.02em;
       color: var(--bone);
@@ -742,7 +743,7 @@
     .wyg-title {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(32px, 4vw, 52px);
+      font-size: var(--font-h2);
       line-height: 1.06;
       letter-spacing: -0.02em;
       color: var(--bone);
@@ -765,21 +766,19 @@
     /* ── You Also Get — Staggered Timeline ──────────────────── */
     .section-bonus {
       background: var(--ink);
-      padding: 80px 0 100px;
+      padding: var(--section-standard) 0;
     }
-    @media (min-width: 1024px) { .section-bonus { padding: 100px 0 120px; } }
     .bonus-inner {
       max-width: 900px;
       margin: 0 auto;
-      padding: 0 24px;
+      padding: 0 var(--gutter);
     }
-    @media (min-width: 1024px) { .bonus-inner { padding: 0 80px; } }
     .bonus-header {
       text-align: center;
       margin-bottom: 64px;
     }
     .bonus-eyebrow {
-      font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+      font-family: var(--font-sans); font-size: var(--font-eyebrow); font-weight: 500;
       letter-spacing: 0.22em; text-transform: uppercase; color: var(--ember);
       display: flex; align-items: center; justify-content: center;
       gap: 14px; margin-bottom: 16px;
@@ -790,7 +789,7 @@
     }
     .bonus-headline {
       font-family: var(--font-serif); font-weight: 400;
-      font-size: clamp(28px, 3.5vw, 48px);
+      font-size: var(--font-h2);
       line-height: 1.05; letter-spacing: -0.02em; color: var(--bone);
       margin-bottom: 10px;
     }
@@ -871,7 +870,7 @@
     .section-wmp { background: var(--ink); }
     .wmp-grid {
       max-width: 1200px; margin: 0 auto;
-      padding: 84px 24px;
+      padding: var(--section-standard) var(--gutter);
       display: grid; grid-template-columns: 1fr 1.12fr;
       gap: 56px; align-items: center;
     }
@@ -884,13 +883,13 @@
     .wmp-eyebrow::before { content:""; width:28px; height:1px; background:var(--ember); }
     .wmp-heading {
       font-family: var(--font-serif); font-weight: 400;
-      font-size: clamp(28px, 3.4vw, 40px); line-height: 1.12;
+      font-size: var(--font-h2); line-height: var(--lh-tight);
       letter-spacing: -0.02em; color: var(--bone); margin-bottom: 20px;
     }
     .wmp-panel { display: none; margin-bottom: 26px; }
     .wmp-panel.active { display: block; }
     .wmp-panel-desc {
-      font-family: var(--font-sans); font-size: 15.5px; line-height: 1.75;
+      font-family: var(--font-sans); font-size: var(--font-sm); line-height: var(--lh-body);
       color: var(--bone-mute); max-width: 46ch;
     }
     .wmp-tabs { display: flex; flex-direction: column; gap: 4px; margin-bottom: 30px; }
@@ -955,18 +954,18 @@
     }
     .wmp-vid-label { display: none; }
     @media (max-width: 860px) {
-      .wmp-grid { grid-template-columns: 1fr; gap: 34px; padding: 56px 24px; }
+      .wmp-grid { grid-template-columns: 1fr; gap: 34px; padding: var(--section-standard) var(--gutter); }
     }
 
     /* ── Hear me play — phone fan (Bunny video) + song list ── */
-.fansec{position:relative;overflow:hidden;background:var(--ink);padding:56px 16px 84px;--ph-w:236px;--ph-h:484px;--scr-r:27px}
+.fansec{position:relative;overflow:hidden;background:var(--ink);padding:var(--section-standard) var(--gutter);--ph-w:236px;--ph-h:484px;--scr-r:27px}
 @media(max-width:900px){.fansec{--ph-w:206px;--ph-h:422px;--scr-r:23px}}
-@media(max-width:560px){.fansec{--ph-w:172px;--ph-h:352px;padding:40px 12px 64px;--scr-r:19px}}
+@media(max-width:560px){.fansec{--ph-w:172px;--ph-h:352px;--scr-r:19px}}
 .fansec::before{content:"";position:absolute;top:8%;left:50%;transform:translateX(-50%);width:820px;max-width:120%;height:520px;background:radial-gradient(60% 60% at 50% 40%,rgba(255,113,61,.14),transparent 70%);filter:blur(20px);pointer-events:none}
 .fansec-head{position:relative;text-align:center;max-width:640px;margin:0 auto 10px}
 .fs-eyebrow{font-family:var(--font-sans);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--bone-mute);display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:22px}
 .fs-eyebrow::before,.fs-eyebrow::after{content:"";width:28px;height:1px;background:var(--ember)}
-.fs-heading{font-family:var(--font-serif);font-weight:400;font-size:clamp(28px,3.4vw,40px);line-height:1.12;letter-spacing:-.02em;color:var(--bone);margin-bottom:16px}
+.fs-heading{font-family:var(--font-serif);font-weight:400;font-size:var(--font-h2);line-height:var(--lh-tight);letter-spacing:-.02em;color:var(--bone);margin-bottom:16px}
 .fs-sub{font-size:clamp(15px,1.3vw,17px);line-height:1.7;color:var(--bone-mute);max-width:48ch;margin:0 auto}
 
 .fan-stage{position:relative;height:calc(var(--ph-h) + 150px);max-width:1100px;margin:30px auto 0;touch-action:pan-y;user-select:none}
@@ -1091,14 +1090,14 @@
       z-index: 5;
       max-width: 700px;
       margin: 0 auto;
-      padding: 200px 24px 160px;
+      padding: var(--section-feature) var(--gutter);
       text-align: center;
     }
     .testi-section-heading {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(24px, 3.5vw, 42px);
-      line-height: 1.2;
+      font-size: var(--font-h2);
+      line-height: var(--lh-tight);
       letter-spacing: -0.01em;
       color: var(--bone);
       margin-bottom: 12px;
@@ -1201,8 +1200,8 @@
       background: var(--ink);
     }
     .why-inner {
-      padding: 80px 24px;
-      max-width: 1280px;
+      padding: var(--section-standard) var(--gutter);
+      max-width: var(--container-wide);
       margin: 0 auto;
     }
     .why-eyebrow {
@@ -1217,7 +1216,7 @@
     .why-heading {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(28px, 4vw, 48px);
+      font-size: var(--font-h2);
       line-height: 1.1;
       letter-spacing: -0.02em;
       color: var(--bone);
@@ -1251,15 +1250,15 @@
     .why-card-title {
       font-family: var(--font-serif);
       font-weight: 500;
-      font-size: 23px;
+      font-size: var(--font-h3);
       letter-spacing: -0.01em;
       color: var(--bone);
-      margin-bottom: 12px;
+      margin-bottom: var(--h3-mb);
     }
     .why-card-body {
       font-family: var(--font-sans);
-      font-size: 14.5px;
-      line-height: 1.65;
+      font-size: var(--font-sm);
+      line-height: var(--lh-body);
       color: var(--bone-mute);
     }
     .why-tall {
@@ -1277,7 +1276,7 @@
     .why-tall-title {
       font-family: var(--font-serif);
       font-weight: 500;
-      font-size: 28px; line-height: 1.1;
+      font-size: var(--font-h3); line-height: var(--lh-tight);
       letter-spacing: -0.01em;
       color: var(--bone);
       margin: 26px 0 14px;
@@ -1323,15 +1322,15 @@
     .faq-inner {
       max-width: 1180px;
       margin: 0 auto;
-      padding: 80px 24px;
+      padding: var(--section-standard) var(--gutter);
       display: grid;
       gap: 40px;
     }
     .faq-heading {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(28px, 4vw, 40px);
-      line-height: 1.1;
+      font-size: var(--font-h2);
+      line-height: var(--lh-tight);
       letter-spacing: -0.02em;
       color: var(--bone);
     }
@@ -1402,7 +1401,7 @@
       .faq-inner {
         grid-template-columns: 1fr 2fr;
         gap: 64px;
-        padding: 120px 40px;
+        padding: var(--section-standard) var(--gutter);
         align-items: start;
       }
       .faq-intro { position: sticky; top: 100px; }
@@ -1411,7 +1410,7 @@
     /* ── Final CTA — simple centered ─────────────────────────── */
     .section-cta {
       background: var(--ink);
-      padding: 112px 24px;
+      padding: var(--section-standard) var(--gutter);
     }
     .cta-inner {
       max-width: 640px;
@@ -1433,8 +1432,8 @@
     .cta-heading {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(28px, 3.6vw, 44px);
-      line-height: 1.1;
+      font-size: var(--font-h2);
+      line-height: var(--lh-tight);
       letter-spacing: -0.02em;
       color: var(--bone);
       margin-bottom: 18px;
@@ -1453,13 +1452,13 @@
       font-size: 12px;
       color: var(--bone-faint);
     }
-    @media (max-width: 560px) { .section-cta { padding: 84px 24px; } }
+    @media (max-width: 560px) { .section-cta { padding: var(--section-standard) var(--gutter); } }
 
     /* ── Footer ──────────────────────────────────────────────── */
     .site-footer {
       background: var(--ink);
       border-top: 1px solid var(--hairline);
-      padding: 56px 24px 40px;
+      padding: var(--section-compact) var(--gutter) 40px;
     }
     .footer-inner {
       max-width: 1280px;
@@ -1513,7 +1512,7 @@
     @media (min-width: 640px) {
     }
     @media (min-width: 1024px) {
-      .s-inner { padding: 120px 80px; }
+      .s-inner { padding: var(--section-standard) var(--gutter); }
       .wyg-services {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
@@ -1533,11 +1532,11 @@
         gap: 12px 48px;
       }
       .why-inner {
-        padding: 120px 80px;
+        padding: var(--section-standard) var(--gutter);
       }
-      .testi-content { padding: 240px 80px 200px; }
-      .cta-inner { padding: 120px 80px; }
-      .site-footer { padding: 80px 80px 48px; }
+      .testi-content { padding: var(--section-feature) var(--gutter); }
+      .cta-inner { padding: var(--section-standard) var(--gutter); }
+      .site-footer { padding: var(--section-compact) var(--gutter) 48px; }
       .footer-inner {
         flex-direction: row;
         justify-content: space-between;
@@ -1690,13 +1689,12 @@
     .package-inner {
       max-width: 900px;
       margin: 0 auto;
-      padding: 88px 48px 96px;
+      padding: var(--section-standard) var(--gutter);
       text-align: center;
     }
-    @media (min-width: 1024px) { .package-inner { padding: 100px 120px 108px; } }
     .package-eyebrow {
       font-family: var(--font-sans);
-      font-size: 10px;
+      font-size: var(--font-eyebrow);
       font-weight: 500;
       letter-spacing: 0.22em;
       text-transform: uppercase;
@@ -1733,23 +1731,22 @@
     /* ── Reviews Carousel ─────────────────────────────────────── */
     .section-reviews {
       background: var(--ink);
-      padding: 100px 0 112px;
+      padding: var(--section-standard) 0;
     }
 
     @media (max-width: 1023px) {
-      .section-reviews { padding: 56px 0 64px; }
       .reviews-mobile-split { display: none !important; }
     }
 
     /* ── Venue Testimonials ───────────────────────────────────── */
     .section-venue-testi {
       background: var(--ink);
-      padding: 100px 0 112px;
+      padding: var(--section-standard) 0;
     }
     .vt-inner {
       max-width: 960px;
       margin: 0 auto;
-      padding: 0 40px;
+      padding: 0 var(--gutter);
     }
     .vt-header {
       text-align: center;
@@ -1775,7 +1772,7 @@
     .vt-heading {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(28px, 3.5vw, 48px);
+      font-size: var(--font-h2);
       line-height: 1.1;
       letter-spacing: -0.02em;
       color: var(--bone);
@@ -1827,8 +1824,8 @@
     }
     .vt-card-quote {
       font-family: var(--font-sans);
-      font-size: 13.5px;
-      line-height: 1.65;
+      font-size: 14px;
+      line-height: var(--lh-body);
       color: var(--bone-mute);
       margin-bottom: 22px;
       transition: opacity 0.3s ease;
@@ -1895,8 +1892,8 @@
     .vt-dot.active { background: var(--ember); width: 24px; border-radius: 4px; }
     /* Mobile */
     @media (max-width: 767px) {
-      .section-venue-testi { padding: 56px 0 64px; }
-      .vt-inner { padding: 0 20px; }
+      .section-venue-testi { padding: var(--section-standard) 0; }
+      .vt-inner { padding: 0 var(--gutter); }
       .vt-header { margin-bottom: 36px; }
       .vt-stage { flex-direction: column; align-items: stretch; }
       .vt-photo { width: 100%; height: 260px; border-radius: 16px 16px 0 0; }
@@ -1906,10 +1903,7 @@
     .reviews-container {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 0 80px;
-    }
-    @media (max-width: 720px) {
-      .reviews-container { padding: 0 24px; }
+      padding: 0 var(--gutter);
     }
     .reviews-header {
       text-align: center;
@@ -1932,7 +1926,7 @@
     .reviews-headline {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(28px, 3.5vw, 48px);
+      font-size: var(--font-h2);
       line-height: 1.1;
       letter-spacing: -0.02em;
       color: var(--bone);
@@ -1980,7 +1974,7 @@
     }
     @media (max-width: 639px) {
       .review-card { padding: 22px 20px; gap: 13px; border-radius: 12px; }
-      .card-quote { font-size: 13.5px; line-height: 1.6; }
+      .card-quote { font-size: 14px; line-height: var(--lh-body); }
       .card-stars svg { width: 13px; height: 13px; }
       .card-footer { padding-top: 13px; gap: 10px; }
       .card-avatar { width: 30px; height: 30px; font-size: 13px; }
@@ -2053,7 +2047,7 @@
       display: flex;
       gap: 4px;
       margin-bottom: 20px;
-      color: #f59e0b;
+      color: var(--amber);
       font-size: 16px;
       line-height: 1;
       letter-spacing: 2px;
@@ -2071,7 +2065,7 @@
     .reviews-text {
       font-family: var(--font-sans);
       font-size: 15px;
-      line-height: 1.78;
+      line-height: var(--lh-body);
       color: var(--bone);
       flex: 1;
       margin-bottom: 28px;
@@ -2127,7 +2121,7 @@
     /* ── Mid-page CTA — after bonus section ─────────────────── */
     .section-mid-cta {
       background: var(--ink);
-      padding: 80px 24px;
+      padding: var(--section-standard) var(--gutter);
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -2150,7 +2144,7 @@
     .mid-cta-heading {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(28px, 4vw, 48px);
+      font-size: var(--font-h2);
       line-height: 1.1;
       letter-spacing: -0.02em;
       color: var(--bone);
@@ -2397,7 +2391,7 @@
     .frame-title {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(28px, 4vw, 48px);
+      font-size: var(--font-h2);
       line-height: 1.1;
       letter-spacing: -0.02em;
       margin-bottom: 22px;
@@ -2414,13 +2408,13 @@
     .intro-rule { width: 56px; height: 2px; background: var(--ember); margin: 0 auto 30px; border-radius: 2px; }
     .intro-eyebrow {
       font-family: var(--font-sans);
-      font-size: 12px; font-weight: 600;
+      font-size: var(--font-eyebrow); font-weight: 600;
       letter-spacing: 0.24em; text-transform: uppercase;
       color: var(--ember); margin-bottom: 26px;
     }
     .intro-title {
       font-family: var(--font-serif); font-weight: 400;
-      font-size: clamp(28px, 4vw, 48px);
+      font-size: var(--font-h2);
       line-height: 1.1; letter-spacing: -0.02em;
       color: var(--bone); margin-bottom: 24px;
     }
