@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weddings · Jasper Hawkins Music</title>
+  <!-- Warm up the Bunny CDN connection early — first video tap skips DNS/TLS setup -->
+  <link rel="preconnect" href="https://vz-0620fbe9-cee.b-cdn.net" crossorigin>
+  <link rel="dns-prefetch" href="https://vz-0620fbe9-cee.b-cdn.net">
   <link rel="stylesheet" href="assets/colors_and_type.css">
   <link rel="stylesheet" href="assets/design-system.css">
   <style>
@@ -227,7 +230,7 @@
     .hero-sub {
       font-family: var(--font-sans);
       font-weight: 400;
-      font-size: clamp(13px, 1.1vw, 16px);
+      font-size: clamp(15px, 1.1vw, 16px);   /* floor raised — was rendering smaller than body text below on phones */
       line-height: 1.65;
       color: var(--bone-mute);
       margin-bottom: 32px;
@@ -341,6 +344,17 @@
       max-width: none;
       filter: var(--filter-photo);
     }
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      z-index: 1;
+      filter: var(--filter-photo);
+      pointer-events: none;
+    }
 
     /*
       Gradient overlay — also starts at 25% to match the photo.
@@ -355,12 +369,12 @@
       background: linear-gradient(
         to right,
         var(--ink)            0%,
-        var(--ink)            28%,
-        rgba(0, 0, 0, 0.80)  40%,
-        rgba(0, 0, 0, 0.52)  55%,
-        rgba(0, 0, 0, 0.20)  70%,
-        rgba(0, 0, 0, 0.04)  84%,
-        transparent          95%
+        var(--ink)            37%,   /* stay fully solid past the video's left edge (35%) — no visible seam */
+        rgba(0, 0, 0, 0.86)  46%,
+        rgba(0, 0, 0, 0.58)  58%,
+        rgba(0, 0, 0, 0.28)  72%,
+        rgba(0, 0, 0, 0.07)  86%,
+        transparent          97%
       );
       pointer-events: none;
     }
@@ -402,7 +416,7 @@
         position: relative;
         white-space: nowrap;
       }
-      .nav-pill a::after {
+      .nav-pill a:not(.nav-cta)::after {
         content: "";
         position: absolute;
         left: 4px; right: 4px; bottom: 0;
@@ -412,8 +426,8 @@
         transform-origin: left;
         transition: transform var(--dur) var(--ease);
       }
-      .nav-pill a:hover::after,
-      .nav-pill a[aria-current="page"]::after { transform: scaleX(1); }
+      .nav-pill a:not(.nav-cta):hover::after,
+      .nav-pill a:not(.nav-cta)[aria-current="page"]::after { transform: scaleX(1); }
       .nav-pill .nav-cta {
         background: var(--ember);
         color: var(--ink);
@@ -449,7 +463,7 @@
           transparent 30%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.92) 100%
         );
       }
-      .hero-headline { font-size: clamp(26px, 7vw, 36px); white-space: normal; }
+      .hero-headline { font-size: clamp(29px, 7.8vw, 38px); white-space: normal; }
       .floating-review { display: none; } /* too small on mobile */
     }
 
@@ -503,13 +517,19 @@
     /* Scroll reveal */
     [data-reveal] {
       opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 480ms var(--ease), transform 480ms var(--ease);
+      transform: translateY(18px);
+      /* slower, softer reveal — long ease-out so elements settle gently */
+      transition: opacity 950ms cubic-bezier(0.22, 0.61, 0.36, 1),
+                  transform 950ms cubic-bezier(0.22, 0.61, 0.36, 1);
     }
     [data-reveal].is-visible { opacity: 1; transform: translateY(0); }
-    [data-reveal][data-delay="1"] { transition-delay: 80ms; }
-    [data-reveal][data-delay="2"] { transition-delay: 160ms; }
-    [data-reveal][data-delay="3"] { transition-delay: 240ms; }
+    [data-reveal][data-delay="1"] { transition-delay: 120ms; }
+    [data-reveal][data-delay="2"] { transition-delay: 240ms; }
+    [data-reveal][data-delay="3"] { transition-delay: 360ms; }
+    /* Story-flow intro panel: fade ONLY (no movement) — its parent is driven by
+       GSAP pinning, and two transforms animating at once causes visible jitter */
+    .intro-inner [data-reveal] { transform: none; transition: opacity 1100ms cubic-bezier(0.22, 0.61, 0.36, 1); }
+    .intro-inner [data-reveal].is-visible { transform: none; }
 
     /* Shared CTA buttons */
     .btn-primary {
@@ -656,7 +676,7 @@
     .intro-eyebrow,
     .section-promise .s-eyebrow {
       font-family: var(--font-sans);
-      font-size: 16px;
+      font-size: 11px;
       font-weight: 500;
       letter-spacing: 0.22em;
       text-transform: uppercase;
@@ -665,7 +685,7 @@
       align-items: center;
       justify-content: center;
       text-align: center;
-      gap: 14px;
+      gap: 10px;
       margin-bottom: 28px;
     }
     .fs-eyebrow::before, .fs-eyebrow::after,
@@ -1018,8 +1038,6 @@
 @media(max-width:560px){.fansec{--ph-w:172px;--ph-h:352px;--scr-r:19px}}
 .fansec::before{content:"";position:absolute;top:8%;left:50%;transform:translateX(-50%);width:820px;max-width:120%;height:520px;background:radial-gradient(60% 60% at 50% 40%,rgba(255,113,61,.14),transparent 70%);filter:blur(20px);pointer-events:none}
 .fansec-head{position:relative;text-align:center;max-width:640px;margin:0 auto 10px}
-.fs-eyebrow{font-family:var(--font-sans);font-size:11px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--bone-mute);display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:22px}
-.fs-eyebrow::before,.fs-eyebrow::after{content:"";width:28px;height:1px;background:var(--ember)}
 .fs-heading{font-family:var(--font-serif);font-weight:400;font-size:var(--font-h2);line-height:var(--lh-tight);letter-spacing:-.02em;color:var(--bone);margin-bottom:16px}
 .fs-sub{font-size:clamp(15px,1.3vw,17px);line-height:1.7;color:var(--bone-mute);max-width:48ch;margin:0 auto}
 
@@ -1047,10 +1065,6 @@
 .fp-catch{position:absolute;inset:0;z-index:2;cursor:pointer}
 .fp-vgrad{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(to top,rgba(0,0,0,.85),rgba(0,0,0,.2) 34%,transparent 58%),linear-gradient(to bottom,rgba(0,0,0,.35),transparent 18%)}
 
-.fp-live{position:absolute;top:46px;left:15px;z-index:5;display:inline-flex;align-items:center;gap:7px;font-family:var(--font-sans);font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--bone);background:rgba(0,0,0,.34);border:1px solid rgba(255,255,255,.14);border-radius:100px;padding:4px 10px 4px 9px;backdrop-filter:blur(6px);opacity:0;transition:opacity .3s}
-.fan-phone.is-playing .fp-live{opacity:1}
-.fp-live .dot{position:relative;width:6px;height:6px;border-radius:50%;background:var(--ember)}
-.fp-live .dot::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:1px solid var(--ember);opacity:0;animation:livepulse 2s ease-out infinite}
 @keyframes livepulse{0%{transform:scale(.55);opacity:.85}70%{transform:scale(1.9);opacity:0}100%{opacity:0}}
 
 .fp-cap{position:absolute;left:0;right:0;bottom:0;z-index:5;padding:16px 18px 20px;text-align:left;pointer-events:none;transition:padding .3s}
@@ -1279,6 +1293,24 @@
       max-width: 20ch;
     }
     .why-heading .accent { color: var(--ember); font-style: italic; }
+    /* desktop: header block reads left-aligned */
+    .section-why .why-eyebrow { justify-content: flex-start; text-align: left; }
+    .section-why .why-heading { text-align: left; max-width: none; }
+    .why-sub {
+      max-width: 680px;
+      margin: 18px 0 60px;
+      text-align: left;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--bone-mute);
+    }
+    /* mobile: center the About me header + subtext */
+    @media (max-width: 767px) {
+      .section-why .why-eyebrow { justify-content: center; text-align: center; }
+      .section-why .why-heading { text-align: center; }
+      .why-sub { text-align: center; margin: 18px auto 44px; }
+    }
 
     .why-ic {
       width: 46px; height: 46px; border-radius: 50%;
@@ -1321,12 +1353,26 @@
       border-radius: 16px;
       padding: 38px 34px;
       display: flex; flex-direction: column;
-      background:
-        radial-gradient(120% 90% at 85% 4%, rgba(255,179,138,.28) 0%, transparent 52%),
-        radial-gradient(120% 100% at 4% 100%, rgba(219,102,59,.42) 0%, transparent 58%),
-        linear-gradient(180deg, #241108 0%, #160a05 100%);
+      background: linear-gradient(180deg, #241108 0%, #160a05 100%);
       border: 1px solid rgba(255,113,61,.35);
     }
+    /* Photo layer behind the card content */
+    .why-tall-photo {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 18%;   /* keep the face in the upper part of the card */
+      z-index: 0;
+    }
+    /* Ember wash + dark scrim over the photo — heaviest at the bottom where the text sits */
+    .why-tall::before {
+      content: ""; position: absolute; inset: 0; z-index: 1;
+      background:
+        radial-gradient(120% 90% at 85% 4%, rgba(255,179,138,.22) 0%, transparent 52%),
+        radial-gradient(120% 100% at 4% 100%, rgba(219,102,59,.34) 0%, transparent 58%),
+        linear-gradient(180deg, rgba(36,17,8,.5) 0%, rgba(22,10,5,.82) 62%, rgba(22,10,5,.94) 100%);
+    }
+    .why-tall > :not(.why-tall-photo) { position: relative; z-index: 2; }
     .why-tall .why-ic { border-color: rgba(255,179,138,.5); color: var(--ember-glow); margin-bottom: auto; }
     .why-tall-title {
       font-family: var(--font-serif);
@@ -1464,10 +1510,38 @@
 
     /* ── Final CTA — simple centered ─────────────────────────── */
     .section-cta {
+      position: relative;
+      overflow: hidden;
       background: var(--ink);
-      padding: var(--section-standard) var(--gutter);
+      /* extra top so the content sits lower in the section — balances against the video */
+      padding: clamp(84px, 10vw, 124px) var(--gutter) var(--section-standard);
+    }
+    .cta-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .section-cta::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      /* top starts fully black to blend seamlessly out of the venue testimonials,
+         then dissolves into the video — no hard seam */
+      background: linear-gradient(180deg,
+        var(--ink)            0%,
+        rgba(0, 0, 0, 0.93)  12%,
+        rgba(16, 15, 14, 0.78) 30%,
+        rgba(16, 15, 14, 0.74) 60%,
+        rgba(16, 15, 14, 0.84) 100%);
     }
     .cta-inner {
+      position: relative;
+      z-index: 2;
       max-width: 640px;
       margin: 0 auto;
       text-align: center;
@@ -1723,6 +1797,14 @@
       transition: border-color 200ms, box-shadow 200ms;
     }
     .eq-input::placeholder, .eq-textarea::placeholder { color: var(--bone-faint); opacity: 1; }
+    /* iOS renders date inputs at its own compact size — force it to match the other fields */
+    .eq-input[type="date"] {
+      display: block;
+      width: 100%;
+      min-height: 42px;
+      -webkit-appearance: none;
+    }
+    .eq-input[type="date"]::-webkit-date-and-time-value { text-align: left; }
     .eq-input:focus, .eq-select:focus, .eq-textarea:focus {
       border-color: var(--ember);
       box-shadow: 0 0 0 3px rgba(255,113,61,0.12);
@@ -1733,6 +1815,91 @@
       background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px;
     }
     .eq-select option { background: #1f1f1f; }
+    /* ── Custom dropdown — on-brand replacement for the native select popup ── */
+    .eqdd { position: relative; }
+    .eqdd > select.eq-select { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+    .eqdd-btn {
+      width: 100%; text-align: left; cursor: pointer;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--hairline); border-radius: 8px;
+      padding: 12px 38px 12px 14px;
+      font-family: var(--font-sans); font-size: 14px; color: var(--bone);
+      outline: none; -webkit-appearance: none; appearance: none;
+      transition: border-color 200ms, box-shadow 200ms;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B8AC97' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+    }
+    .eqdd-btn.placeholder { color: var(--bone-faint); }
+    .eqdd.open .eqdd-btn, .eqdd-btn:focus { border-color: var(--ember); box-shadow: 0 0 0 3px rgba(255,113,61,0.12); }
+    .eqdd-list {
+      position: absolute; left: 0; right: 0; top: calc(100% + 6px);
+      z-index: 30;
+      background: #1c1c1c;
+      border: 1px solid var(--hairline); border-radius: 10px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      padding: 6px; margin: 0; list-style: none;
+      max-height: 240px; overflow: auto;
+      opacity: 0; transform: translateY(-6px); pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .eqdd.open .eqdd-list { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .eqdd-opt {
+      padding: 10px 12px; border-radius: 6px; cursor: pointer;
+      font-family: var(--font-sans); font-size: 14px; color: var(--bone-mute);
+      transition: background 140ms, color 140ms;
+    }
+    .eqdd-opt:hover { background: rgba(255,113,61,0.12); color: var(--bone); }
+    .eqdd-opt.selected { color: var(--ember); }
+    /* ── Custom date picker (desktop only — phones keep the native one) ── */
+    .eqcal { position: relative; }
+    .eqcal-panel {
+      position: absolute; left: 0; top: calc(100% + 6px);
+      z-index: 40; width: 292px;
+      background: #1c1c1c;
+      border: 1px solid var(--hairline); border-radius: 12px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      padding: 14px;
+      opacity: 0; transform: translateY(-6px); pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .eqcal.open .eqcal-panel { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    /* flip above the field when there's no room below — panel must never hang off-screen */
+    .eqcal.up .eqcal-panel { top: auto; bottom: calc(100% + 6px); transform: translateY(6px); }
+    .eqcal.up.open .eqcal-panel { transform: translateY(0); }
+    .eqcal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .eqcal-month {
+      font-family: var(--font-serif); font-size: 16px; color: var(--bone);
+      letter-spacing: 0.01em;
+    }
+    .eqcal-nav {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--hairline);
+      color: var(--bone); cursor: pointer; font-size: 14px; line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: border-color 150ms, background 150ms;
+    }
+    .eqcal-nav:hover:not(:disabled) { border-color: var(--ember); background: rgba(255,113,61,0.10); }
+    .eqcal-nav:disabled { opacity: 0.3; cursor: default; }
+    .eqcal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .eqcal-dow {
+      font-family: var(--font-sans); font-size: 9px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--bone-faint); text-align: center; padding: 6px 0 8px;
+    }
+    .eqcal-day {
+      aspect-ratio: 1; border: none; background: none; border-radius: 8px;
+      font-family: var(--font-sans); font-size: 13px; color: var(--bone-mute);
+      cursor: pointer; transition: background 130ms, color 130ms;
+    }
+    .eqcal-day:hover:not(:disabled) { background: rgba(255,113,61,0.14); color: var(--bone); }
+    .eqcal-day.today { color: var(--ember-glow); font-weight: 700; }
+    .eqcal-day.selected { background: var(--ember); color: #000; font-weight: 700; }
+    .eqcal-day:disabled { opacity: 0.22; cursor: default; }
+    .eqcal-day.blank { visibility: hidden; }
+    @media (min-width: 768px) {
+      .eq-input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
+      .eq-input[type="date"] { cursor: pointer; }
+    }
     .eq-textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
     .eq-submit { width: 100%; justify-content: center; padding: 15px; margin-top: 4px; border-radius: 8px; }
 
@@ -1832,128 +1999,159 @@
       letter-spacing: -0.02em;
       color: var(--bone);
     }
-    /* Stage: photo left, card overlapping right */
-    .vt-stage {
-      display: flex;
-      align-items: center;
-      position: relative;
+    /* Stage: photo deck left, text + logos right */
+    .vtd-stage {
+      display: grid;
+      grid-template-columns: 0.85fr 1fr;
+      gap: clamp(36px, 6vw, 80px);
+      align-items: stretch;
     }
-    .vt-photo {
-      width: 360px;
-      height: 500px;
-      flex-shrink: 0;
+    .vtd-deck {
+      position: relative;
+      width: 100%;
+      max-width: 380px;
+      height: 400px;
+      margin: 0 auto;
+      perspective: 1200px;
+    }
+    .vtd-card {
+      position: absolute;
+      inset: 0;
       border-radius: 20px;
       overflow: hidden;
-      position: relative;
-      z-index: 1;
+      box-shadow: 0 24px 60px -20px rgba(0,0,0,0.75), 0 0 0 1px var(--hairline);
+      transition: transform 0.55s cubic-bezier(0.34, 1.2, 0.4, 1), opacity 0.55s ease;
+      will-change: transform, opacity;
+      background: var(--ink-soft);
     }
-    .vt-photo img {
+    .vtd-card img {
       width: 100%; height: 100%;
       object-fit: cover;
-      object-position: var(--vt-pos, center top);
-      opacity: 1;
-      transition: opacity 0.35s ease;
-    }
-    .vt-photo img.vt-fading { opacity: 0; }
-    .vt-card {
-      background: #1c1c1c;
-      border: 1px solid var(--hairline);
-      border-radius: 20px;
-      padding: 34px 34px;
-      margin-left: -80px;
-      position: relative;
-      z-index: 2;
-      flex: 1;
-      min-width: 0;
-      box-shadow: 0 30px 70px rgba(0,0,0,0.6);
-    }
-    .vt-card-deco {
-      font-family: var(--font-serif);
-      font-size: 52px;
-      line-height: 0.7;
-      color: var(--ember);
-      opacity: 0.2;
+      object-position: center 22%;
       display: block;
-      margin-bottom: 10px;
-      user-select: none;
+      filter: var(--filter-photo);
     }
-    .vt-card-quote {
-      font-family: var(--font-sans);
-      font-size: 14px;
-      line-height: var(--lh-body);
-      color: var(--bone-mute);
-      margin-bottom: 22px;
-      transition: opacity 0.3s ease;
-      max-width: 66ch;
-    }
-    .vt-card-quote .vt-lead { color: var(--bone); font-weight: 600; }
-    .vt-card-quote.vt-fading { opacity: 0; }
-    .vt-card-sep {
-      height: 1px;
-      background: var(--hairline);
-      margin-bottom: 20px;
-    }
-    .vt-card-person { transition: opacity 0.3s ease; }
-    .vt-card-person.vt-fading { opacity: 0; }
-    .vt-card-name {
-      font-family: var(--font-sans);
+    .vtd-content { min-height: 260px; display: flex; flex-direction: column; }
+    .vtd-name {
+      font-family: var(--font-serif);
       font-weight: 600;
-      font-size: 14px;
+      font-size: clamp(24px, 3vw, 30px);
       color: var(--bone);
-      line-height: 1.3;
+      margin: 0 0 6px;
+      line-height: 1.1;
     }
-    .vt-card-venue {
+    .vtd-venue {
       font-family: var(--font-sans);
       font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
       color: var(--ember);
-      margin-top: 3px;
-      letter-spacing: 0.04em;
+      font-weight: 600;
+      margin: 0 0 26px;
     }
-    /* Navigation */
-    .vt-nav {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 44px;
-    }
-    .vt-btn {
-      width: 44px; height: 44px;
-      border-radius: 50%;
-      border: 1px solid var(--hairline);
-      background: #1c1c1c;
+    .vtd-lead {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.72;
       color: var(--bone);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 18px;
-      line-height: 1;
-      transition: border-color 0.2s, background 0.2s;
-      flex-shrink: 0;
+      margin: 0;
     }
-    .vt-btn:hover { border-color: var(--ember); background: #242424; }
-    .vt-dots { display: flex; gap: 8px; align-items: center; }
-    .vt-dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: rgba(242,234,216,0.18);
+    .vtd-full {
+      font-family: var(--font-sans);
+      color: var(--bone-mute);
+      line-height: 1.72;
+      font-size: 16px;
+      margin-top: 10px;
+      max-height: 5.2em;          /* ~3 lines of preview always visible */
+      overflow: hidden;
+      transition: max-height 0.55s ease;
+    }
+    .vtd-full.open { max-height: 520px; }
+    .vtd-readmore {
+      appearance: none;
+      background: none;
       border: none;
       padding: 0;
+      margin-top: 18px;
+      color: var(--ember);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 600;
       cursor: pointer;
-      transition: background 0.3s, width 0.3s, border-radius 0.3s;
-      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      align-self: flex-start;
+      transition: color 0.25s ease;
     }
-    .vt-dot.active { background: var(--ember); width: 24px; border-radius: 4px; }
+    .vtd-readmore:hover { color: var(--ember-glow); }
+    .vtd-readmore .vtd-chev { transition: transform 0.35s ease; display: inline-block; }
+    .vtd-readmore[aria-expanded="true"] .vtd-chev { transform: rotate(180deg); }
+    /* Navigation */
+    .vtd-controls { display: flex; align-items: center; gap: 14px; margin-top: 40px; }
+    .vtd-btn {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      background: var(--ink-soft);
+      border: 1px solid var(--hairline);
+      color: var(--bone);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.25s ease, color 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
+    }
+    .vtd-btn:hover { background: var(--ember); color: var(--ink); border-color: var(--ember); transform: translateY(-1px); }
+    .vtd-btn svg { width: 20px; height: 20px; }
+    .vtd-dots { display: flex; gap: 8px; margin-left: 10px; }
+    .vtd-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: var(--bone-faint);
+      opacity: 0.5;
+      border: none; padding: 0; cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .vtd-dot.active { background: var(--ember); opacity: 1; width: 22px; border-radius: 4px; }
+    /* Venue logo strip — pinned to the photo's bottom edge */
+    .vtd-logos {
+      margin-top: auto;
+      padding-top: 18px;
+      border-top: 1px solid var(--hairline);
+    }
+    .vtd-logos-row {
+      display: flex;
+      flex-wrap: nowrap;                 /* desktop: always ONE line, level with the photo */
+      align-items: center;
+      justify-content: space-between;    /* spread evenly across the column width */
+      column-gap: clamp(12px, 1.8vw, 26px);
+    }
+    .vtd-logos-row img {
+      display: block;
+      width: auto;
+      object-fit: contain;
+      filter: invert(1) grayscale(1) brightness(2.2) contrast(1.4);
+      opacity: 0.66;
+      transition: opacity 0.3s ease;
+    }
+    .vtd-logos-row:hover img { opacity: 0.4; }
+    .vtd-logos-row img:hover { opacity: 1; }
+    /* per-logo optical sizing (scaled from the original strip) */
+    img.vtd-logo-mudbrick    { height: 12px; }
+    img.vtd-logo-castaways   { height: 15px; }
+    img.vtd-logo-markovina   { height: 38px; }
+    img.vtd-logo-kumeu       { height: 42px; }
+    img.vtd-logo-stables     { height: 22px; }
+    img.vtd-logo-bridgewater { height: 23px; }
     /* Mobile */
     @media (max-width: 767px) {
       .section-venue-testi { padding: var(--section-standard) 0; }
       .vt-inner { padding: 0 var(--gutter); }
       .vt-header { margin-bottom: 36px; }
-      .vt-stage { flex-direction: column; align-items: stretch; }
-      .vt-photo { width: 100%; height: 260px; border-radius: 16px 16px 0 0; }
-      .vt-photo img { object-position: var(--vt-pos-m, center top); }  /* mobile crop override */
-      .vt-card { margin-left: 0; margin-top: -16px; border-radius: 0 0 16px 16px; padding: 28px 22px 24px; }
+      .vtd-stage { grid-template-columns: 1fr; gap: 40px; }
+      .vtd-deck { height: 380px; max-width: 320px; }
+      .vtd-content { min-height: 0; }
+      .vtd-controls { justify-content: center; }
+      .vtd-logos { display: none; }   /* logo strip is desktop-only — didn't earn its place on mobile */
     }
 
     .reviews-container {
@@ -2197,7 +2395,8 @@
     /* ── Mid-page CTA — after bonus section ─────────────────── */
     .section-mid-cta {
       background: var(--ink);
-      padding: var(--section-standard) var(--gutter);
+      /* a touch more air on top than standard — Jasper's call, this seam breathes */
+      padding: clamp(64px, 8vw, 96px) var(--gutter) var(--section-standard);
       text-align: center;
       position: relative;
       overflow: hidden;
@@ -2640,7 +2839,7 @@
       <a href="#">Music</a>
       <a href="#">Diary</a>
       <a href="#">Contact</a>
-      <a class="nav-cta" href="#" data-enquire>Hold a date</a>
+      <a class="nav-cta" href="#" data-enquire>Check availability</a>
     </div>
   </nav>
 
@@ -2653,7 +2852,7 @@
       <a href="#">Diary</a>
       <a href="#">Contact</a>
     </nav>
-    <a class="nav-menu-cta" href="#">Hold a date</a>
+    <a class="nav-menu-cta" href="#">Check availability</a>
     <div class="nav-menu-note">Booking subject to availability</div>
   </div>
 
@@ -2689,11 +2888,11 @@
             </div>
           </div>
           <div class="action-ctas">
-            <a class="cta-primary" href="#venues">
+            <a class="cta-primary" href="#promise">
               Learn More <span class="arr">→</span>
             </a>
             <a class="cta-secondary" href="#" data-enquire>
-              Hold a date <span class="arr">→</span>
+              Check availability <span class="arr">→</span>
             </a>
           </div>
         </div>
@@ -2705,6 +2904,18 @@
 
     <!-- Full-bleed photo behind everything -->
     <div class="hero-photo">
+      <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/photos/jas-acoustic-markovina.webp">
+        <source src="assets/video/hero-promo.mp4" type="video/mp4">
+      </video>
+      <script>
+        /* Phones get the portrait cut — every shot re-cropped so Jasper stays in frame */
+        (function(){
+          if (window.matchMedia && matchMedia('(max-width: 767px)').matches) {
+            var v = document.querySelector('.hero-video');
+            if (v) { v.src = 'assets/video/hero-promo-mobile.mp4'; v.load(); if (v.play) v.play().catch(function(){}); }
+          }
+        })();
+      </script>
       <img
         src="assets/photos/jas-acoustic-markovina.webp"
         alt="Jasper Hawkins performing acoustic guitar at Markovina Vineyard"
@@ -2722,7 +2933,7 @@
 
       <div class="s-eyebrow" data-reveal>What you can expect</div>
 
-      <div class="promise-pillars">
+      <div class="promise-pillars" data-reveal data-delay="1">
         <div class="promise-pillar">
           <div class="promise-pillar-num">01</div>
           <div class="promise-pillar-heading">Perfect music for<br>every moment.</div>
@@ -2745,12 +2956,12 @@
 
   <!-- ── Hear me play — phone fan (Bunny video) ── -->
 <section class="fansec">
-  <div class="fansec-head">
+  <div class="fansec-head" data-reveal>
     <div class="fs-eyebrow">Hear me play</div>
     <h2 class="fs-heading">Real songs, played live</h2>
     <p class="fs-sub">Tap play on any song — then browse the full acoustic set below.</p>
   </div>
-  <div class="fan-stage" id="fanStage"></div>
+  <div class="fan-stage" id="fanStage" data-reveal data-delay="1"></div>
   <div class="fan-ctrls">
     <button class="fan-arrow" id="fanPrev" type="button" aria-label="Previous">&#8249;</button>
     <div class="fan-dots" id="fanDots"></div>
@@ -2787,9 +2998,9 @@
     <section data-flow-section>
       <div class="flow-inner intro-inner bg-black">
         <div class="intro-rule"></div>
-        <div class="intro-eyebrow">What you get</div>
-        <h2 class="intro-title">Your Entire Wedding Day,<br>Seamlessly Covered.</h2>
-        <p class="intro-sub">From your first steps down the aisle to the last song of the night, here's how the music flows through each part of your wedding day.</p>
+        <div class="intro-eyebrow" data-reveal>What you get</div>
+        <h2 class="intro-title" data-reveal data-delay="1">Your Entire Wedding Day,<br>Seamlessly Covered.</h2>
+        <p class="intro-sub" data-reveal data-delay="2">From your first steps down the aisle to the last song of the night, here's how the music flows through each part of your wedding day.</p>
         <div class="scroll-hint">Scroll ↓</div>
       </div>
     </section>
@@ -2948,7 +3159,7 @@
   <section class="section-reviews">
     <div class="reviews-container">
 
-      <div class="reviews-header">
+      <div class="reviews-header" data-reveal>
         <div class="reviews-eyebrow">
           <svg width="15" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -3028,9 +3239,9 @@
   <!-- ── Why Choose Me — bento grid ────────────────────────── -->
   <section class="section-why">
     <div class="why-inner">
-      <span class="why-eyebrow" data-reveal style="justify-content:flex-start;text-align:left;">About me</span>
-      <h2 class="why-heading" data-reveal data-delay="1" style="text-align:left;max-width:none;">More Than Just A Musician</h2>
-      <p class="why-sub" data-reveal data-delay="1" style="max-width:680px;margin:18px 0 60px;text-align:left;font-family:var(--font-sans);font-size:16px;line-height:1.7;color:var(--bone-mute);">There are plenty of great musicians. There are plenty of great DJs.<br>Finding someone who can take care of your entire wedding day, read the room, adapt as things change, and make everything feel effortless is much harder.</p>
+      <span class="why-eyebrow" data-reveal>About me</span>
+      <h2 class="why-heading" data-reveal data-delay="1">More Than Just A Musician</h2>
+      <p class="why-sub" data-reveal data-delay="1">There are plenty of great musicians. There are plenty of great DJs.<br>Finding someone who can take care of your entire wedding day, read the room, adapt as things change, and make everything feel effortless is much harder.</p>
 
       <div class="why-grid">
         <div class="why-card why-a" data-reveal>
@@ -3054,10 +3265,11 @@
           <p class="why-card-body">Couples, celebrants and venues consistently rate the experience five stars. Read them for yourself on Google.</p>
         </div>
         <div class="why-tall why-e" data-reveal data-delay="2">
+          <img class="why-tall-photo" src="assets/photos/ceremony-markovina.webp" alt="" aria-hidden="true">
           <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-4.35-9.5-8.5C.8 9.6 2.3 6 5.5 6 7.6 6 9 7.3 12 10c3-2.7 4.4-4 6.5-4 3.2 0 4.7 3.6 3 6.5C19 16.65 12 21 12 21z"/></svg></div>
           <h3 class="why-tall-title">Fully Personalized</h3>
           <p class="why-tall-body">Every detail is tailored to you, right down to your custom aisle song and first dance track. Nothing generic, nothing left to chance.</p>
-          <a class="why-cta" href="#" data-enquire>Hold a date <span class="arr">→</span></a>
+          <a class="why-cta" href="#" data-enquire>Check availability <span class="arr">→</span></a>
         </div>
       </div>
     </div>
@@ -3070,7 +3282,7 @@
       <div class="faq-intro">
         <div class="s-eyebrow" data-reveal>FAQ</div>
         <h2 class="faq-heading" data-reveal data-delay="1">A Few Common Questions</h2>
-        <p class="faq-intro-text" data-reveal data-delay="2">Can't find what you're looking for? <a href="#contact">Get in touch</a> — I'm always happy to talk through your day.</p>
+        <p class="faq-intro-text" data-reveal data-delay="2">Still have a question?<br>Every wedding is different, and I'd love to hear more about yours. If there's anything you'd like to ask about, <a href="#" data-enquire>please get in touch</a>.</p>
       </div>
 
       <div class="faq-list" data-reveal data-delay="1">
@@ -3133,17 +3345,8 @@
     </div>
   </section>
 
-  <!-- ── Still Have a Question? — CTA (same design as final CTA) ── -->
-  <section class="section-cta">
-    <div class="cta-inner">
-      <h2 class="cta-heading" data-reveal data-delay="1">Still have a question?</h2>
-      <p class="cta-sub" data-reveal data-delay="2">Every wedding is different, and I'd love to hear more about yours. If there's anything you'd like to ask about your venue, timeline, song choices, or the package itself, get in touch and I'll personally get back to you within 48 hours.</p>
-      <a class="btn-primary" href="#" data-enquire data-reveal data-delay="3">Get in touch</a>
-    </div>
-  </section>
-
   <!-- ── Venue Testimonials ──────────────────────────────────── -->
-  <section class="section-venue-testi">
+  <section class="section-venue-testi" id="venues">
     <div class="vt-inner">
 
       <div class="vt-header" data-reveal>
@@ -3152,25 +3355,38 @@
         <p class="vt-sub" style="max-width:640px;margin:18px auto 0;font-family:var(--font-sans);font-size:16px;line-height:1.65;color:var(--bone-mute);">After performing 100's of weddings, I've built trusted relationships with many of New Zealand's most respected venues. Here's what a few of them have to say.</p>
       </div>
 
-      <div class="vt-stage">
-        <div class="vt-photo">
-          <img id="vtPhoto" src="assets/photos/annette-kumeu-valley.png?v=2" alt="Annette, Kumeu Valley Estate">
-        </div>
-        <div class="vt-card">
-          <span class="vt-card-deco" aria-hidden="true">"</span>
-          <p class="vt-card-quote" id="vtQuote"></p>
-          <div class="vt-card-sep"></div>
-          <div class="vt-card-person" id="vtPerson">
-            <div class="vt-card-name" id="vtName"></div>
-            <div class="vt-card-venue" id="vtVenue"></div>
+      <div class="vtd-stage" data-reveal>
+        <!-- Photo deck -->
+        <div class="vtd-deck" id="vtdDeck" aria-hidden="true"></div>
+
+        <!-- Text, controls, and venue logo strip -->
+        <div class="vtd-content">
+          <h3 class="vtd-name" id="vtdName"></h3>
+          <p class="vtd-venue" id="vtdVenue"></p>
+          <p class="vtd-lead" id="vtdLead"></p>
+          <div class="vtd-full" id="vtdFull"><span id="vtdFullInner"></span></div>
+          <button class="vtd-readmore" id="vtdReadmore" aria-expanded="false">
+            <span id="vtdRmLabel">Read more</span>
+            <span class="vtd-chev" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </button>
+
+          <div class="vtd-controls">
+            <button class="vtd-btn" id="vtdPrev" aria-label="Previous testimonial"><svg viewBox="0 0 24 24" fill="none"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <button class="vtd-btn" id="vtdNext" aria-label="Next testimonial"><svg viewBox="0 0 24 24" fill="none"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <div class="vtd-dots" id="vtdDots"></div>
+          </div>
+
+          <div class="vtd-logos">
+            <div class="vtd-logos-row">
+              <img class="vtd-logo-mudbrick"    src="assets/logos/mudbrick.png"     alt="Mudbrick Vineyard">
+              <img class="vtd-logo-castaways"   src="assets/logos/castaways.png"    alt="Castaways Resort">
+              <img class="vtd-logo-markovina"   src="assets/logos/markovina.jpeg"   alt="Markovina Vineyard Estate">
+              <img class="vtd-logo-kumeu"       src="assets/logos/kumeu.png"        alt="Kumeu Valley Estate">
+              <img class="vtd-logo-stables"     src="assets/logos/stables.webp"     alt="The Stables">
+              <img class="vtd-logo-bridgewater" src="assets/logos/bridgewater.jpeg" alt="Bridgewater Country Estate">
+            </div>
           </div>
         </div>
-      </div>
-
-      <div class="vt-nav">
-        <button class="vt-btn" id="vtPrev" aria-label="Previous">&#8592;</button>
-        <div class="vt-dots" id="vtDots"></div>
-        <button class="vt-btn" id="vtNext" aria-label="Next">&#8594;</button>
       </div>
 
     </div>
@@ -3178,61 +3394,15 @@
 
   <!-- ── Final CTA — simple centered card ───────────────────── -->
   <section class="section-cta" id="contact">
+    <video class="cta-video" autoplay muted loop playsinline preload="auto" poster="assets/photos/dj-roller-poster.jpg?v=2">
+      <source src="assets/video/dj-roller.mp4?v=2" type="video/mp4">
+    </video>
     <div class="cta-inner">
       <span class="cta-eyebrow" data-reveal>Get in touch</span>
       <h2 class="cta-heading" data-reveal data-delay="1">Let's make your day<br>unforgettable</h2>
       <p class="cta-sub" data-reveal data-delay="2">Tell me your date and a little about your wedding — I'll come back to you personally within 48 hours.</p>
       <a class="btn-primary" href="#" data-enquire data-reveal data-delay="3">Enquire now</a>
       <p class="cta-note" data-reveal data-delay="3">Booking subject to availability</p>
-    </div>
-  </section>
-
-  <!-- ── Watch Me Play ────────────────────────────────────── -->
-  <section class="section-wmp">
-    <div class="wmp-grid">
-
-      <!-- Left: eyebrow · headline · sub-copy · tabs · CTA -->
-      <div class="wmp-left" data-reveal>
-        <div class="wmp-eyebrow">Watch me play</div>
-        <h2 class="wmp-heading">See what your day could sound like</h2>
-
-        <div class="wmp-panel active" id="wmpp-acoustic">
-          <p class="wmp-panel-desc">Live acoustic guitar and vocals for your ceremony and canapés. Warm, intimate, and completely tailored to your moments — from the aisle to the last drink before dinner.</p>
-        </div>
-        <div class="wmp-panel" id="wmpp-dj">
-          <p class="wmp-panel-desc">A high-energy DJ set built to fill the dance floor and keep it packed all night. Every track chosen for your crowd, every moment read in real time.</p>
-        </div>
-
-        <div class="wmp-tabs">
-          <button class="wmp-tab active" data-wmp="acoustic">
-            <span class="wmp-tab-dot"></span>
-            <span class="wmp-tab-label">Acoustic</span>
-            <span class="wmp-tab-arr">→</span>
-          </button>
-          <button class="wmp-tab" data-wmp="dj">
-            <span class="wmp-tab-dot"></span>
-            <span class="wmp-tab-label">DJ Set</span>
-            <span class="wmp-tab-arr">→</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Right: right-sized 16:9 video -->
-      <div class="wmp-right">
-        <div class="wmp-vid-panel active" id="wmpv-acoustic">
-          <div class="wmp-vid" data-vimeo="916991360">
-            <img src="assets/photos/watch-me-play-thumbnail.jpg" alt="Jasper Hawkins performing live acoustic guitar at wedding">
-            <div class="wmp-play">▶</div>
-          </div>
-        </div>
-        <div class="wmp-vid-panel" id="wmpv-dj">
-          <div class="wmp-vid" data-vimeo="821542116">
-            <img src="assets/photos/jas-dj.webp" alt="Jasper Hawkins DJ set at wedding reception">
-            <div class="wmp-play">▶</div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </section>
 
@@ -3336,7 +3506,7 @@
             <option value="instagram">Instagram</option>
             <option value="facebook">Facebook</option>
             <option value="referral">Referred by a Friend</option>
-            <option value="attended">Attended an Event</option>
+            <option value="attended">Saw Me Perform Live</option>
             <option value="directory">Wedding Directory</option>
             <option value="other">Other</option>
           </select>
@@ -3366,9 +3536,9 @@
   </aside>
 
   <!-- Floating booking CTA — persists past the hero, even while the nav is hidden -->
-  <a class="float-cta" id="float-cta" href="#" data-enquire aria-label="Hold a date">
+  <a class="float-cta" id="float-cta" href="#" data-enquire aria-label="Check availability">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4.5" width="18" height="17" rx="2"/><path d="M16 2.5v4M8 2.5v4M3 9.5h18"/></svg>
-    Hold a date
+    Check availability
   </a>
 
   <script>
@@ -3781,17 +3951,20 @@
   }());
 
 
-  /* ── Venue Testimonials Carousel ──────────────────────────── */
+  /* ── Venue Testimonials — photo-deck carousel ─────────────── */
   (function () {
-    const photoEl  = document.getElementById('vtPhoto');
-    const quoteEl  = document.getElementById('vtQuote');
-    const nameEl   = document.getElementById('vtName');
-    const venueEl  = document.getElementById('vtVenue');
-    const personEl = document.getElementById('vtPerson');
-    const dotsEl   = document.getElementById('vtDots');
-    const prevBtn  = document.getElementById('vtPrev');
-    const nextBtn  = document.getElementById('vtNext');
-    if (!photoEl || !quoteEl || !dotsEl) return;
+    const deckEl    = document.getElementById('vtdDeck');
+    const nameEl    = document.getElementById('vtdName');
+    const venueEl   = document.getElementById('vtdVenue');
+    const leadEl    = document.getElementById('vtdLead');
+    const fullEl    = document.getElementById('vtdFull');
+    const fullInner = document.getElementById('vtdFullInner');
+    const rmBtn     = document.getElementById('vtdReadmore');
+    const rmLabel   = document.getElementById('vtdRmLabel');
+    const dotsEl    = document.getElementById('vtdDots');
+    const prevBtn   = document.getElementById('vtdPrev');
+    const nextBtn   = document.getElementById('vtdNext');
+    if (!deckEl || !nameEl || !dotsEl) return;
 
     const slides = [
       {
@@ -3825,57 +3998,80 @@
       },
     ];
 
+    // Deterministic rotation angles for the "behind" cards in the deck.
+    const behindAngles = [-7, 6, -5];
+
+    const cards = slides.map(function (s) {
+      const c = document.createElement('div');
+      c.className = 'vtd-card';
+      const img = document.createElement('img');
+      img.src = s.photo;
+      img.alt = s.alt;
+      img.style.objectPosition = s.pos || 'center top';
+      c.appendChild(img);
+      deckEl.appendChild(c);
+      return c;
+    });
+
     let current = 0;
     let autoTimer = null;
 
-    function buildDots() {
-      dotsEl.innerHTML = '';
-      slides.forEach(function(_, i) {
-        const dot = document.createElement('button');
-        dot.className = 'vt-dot' + (i === 0 ? ' active' : '');
-        dot.setAttribute('aria-label', 'Testimonial ' + (i + 1));
-        dot.addEventListener('click', function() { clearInterval(autoTimer); goTo(i); startAuto(); });
-        dotsEl.appendChild(dot);
+    const dots = slides.map(function (_, i) {
+      const b = document.createElement('button');
+      b.className = 'vtd-dot';
+      b.setAttribute('aria-label', 'Testimonial ' + (i + 1));
+      b.addEventListener('click', function () { clearInterval(autoTimer); goTo(i); startAuto(); });
+      dotsEl.appendChild(b);
+      return b;
+    });
+
+    function layoutDeck() {
+      cards.forEach(function (c, i) {
+        const offset = (i - current + cards.length) % cards.length;
+        if (offset === 0) {
+          c.style.transform = 'rotate(0deg) scale(1) translateY(0)';
+          c.style.opacity = '1';
+          c.style.zIndex = '3';
+        } else {
+          const ang = behindAngles[i % behindAngles.length];
+          c.style.transform = 'rotate(' + ang + 'deg) scale(0.92) translateY(14px)';
+          c.style.opacity = '0.4';
+          c.style.zIndex = offset === 1 ? '2' : '1';
+        }
       });
+    }
+
+    function collapseFull() {
+      fullEl.classList.remove('open');
+      rmBtn.setAttribute('aria-expanded', 'false');
+      rmLabel.textContent = 'Read more';
     }
 
     function goTo(i) {
-      current = i;
-      const s = slides[i];
-
-      photoEl.classList.add('vt-fading');
-      quoteEl.classList.add('vt-fading');
-      personEl.classList.add('vt-fading');
-
-      setTimeout(function() {
-        photoEl.src = s.photo;
-        photoEl.alt = s.alt;
-        // desktop crop via --vt-pos; mobile override via --vt-pos-m (see 767px media query)
-        photoEl.style.setProperty('--vt-pos', s.pos || 'center top');
-        photoEl.style.setProperty('--vt-pos-m', s.posM || s.pos || 'center top');
-        quoteEl.innerHTML = '<span class="vt-lead">' + s.lead + '</span> ' + s.quote;
-        nameEl.textContent  = s.name;
-        venueEl.textContent = s.venue;
-        photoEl.classList.remove('vt-fading');
-        quoteEl.classList.remove('vt-fading');
-        personEl.classList.remove('vt-fading');
-      }, 300);
-
-      dotsEl.querySelectorAll('.vt-dot').forEach(function(d, j) {
-        d.classList.toggle('active', j === i);
-      });
+      current = (i + slides.length) % slides.length;
+      const s = slides[current];
+      nameEl.textContent  = s.name;
+      venueEl.textContent = s.venue;
+      leadEl.textContent  = '“' + s.lead + '”';
+      fullInner.textContent = s.quote;
+      collapseFull();
+      layoutDeck();
+      dots.forEach(function (d, j) { d.classList.toggle('active', j === current); });
     }
+
+    rmBtn.addEventListener('click', function () {
+      const open = fullEl.classList.toggle('open');
+      rmBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      rmLabel.textContent = open ? 'Read less' : 'Read more';
+    });
 
     function startAuto() {
-      autoTimer = setInterval(function() {
-        goTo((current + 1) % slides.length);
-      }, 9000);
+      autoTimer = setInterval(function () { goTo(current + 1); }, 5000);
     }
 
-    prevBtn.addEventListener('click', function() { clearInterval(autoTimer); goTo((current - 1 + slides.length) % slides.length); startAuto(); });
-    nextBtn.addEventListener('click', function() { clearInterval(autoTimer); goTo((current + 1) % slides.length); startAuto(); });
+    prevBtn.addEventListener('click', function () { clearInterval(autoTimer); goTo(current - 1); startAuto(); });
+    nextBtn.addEventListener('click', function () { clearInterval(autoTimer); goTo(current + 1); startAuto(); });
 
-    buildDots();
     goTo(0);
     startAuto();
   }());
@@ -3900,9 +4096,10 @@
 
       if (i > 0) {
         gsap.set(inner, { rotation: 30, transformOrigin: 'bottom left' });
-        gsap.to(inner, {
+        gsap.fromTo(inner, { rotation: 30 }, {
           rotation: 0,
           ease: 'none',
+          immediateRender: false,
           scrollTrigger: {
             trigger: section,
             start: 'top bottom',
@@ -3933,6 +4130,29 @@
     }
     // Belt-and-braces: refresh shortly after load in case media pops in late.
     setTimeout(() => ScrollTrigger.refresh(), 600);
+
+    // Self-healing watchdog: after scrolling settles, snap any panel that got
+    // stuck mid-state back to where it belongs. A panel whose top is above the
+    // 25% line must be upright (rotation 0); a panel still below the viewport
+    // must be at its start angle. Runs only when scrolling pauses, so it never
+    // fights the scrub animation — it just repairs rare fast-scroll stuck states
+    // (blank screen / panel behind its neighbour).
+    let healTimer = null;
+    function healFlow() {
+      const vh = window.innerHeight;
+      sections.forEach((section, i) => {
+        if (i === 0) return;
+        const inner = section.querySelector('.flow-inner');
+        if (!inner) return;
+        const top = section.getBoundingClientRect().top;
+        if (top <= vh * 0.25) gsap.set(inner, { rotation: 0 });
+        else if (top >= vh) gsap.set(inner, { rotation: 30 });
+      });
+    }
+    window.addEventListener('scroll', function () {
+      clearTimeout(healTimer);
+      healTimer = setTimeout(healFlow, 200);
+    }, { passive: true });
   }());
   </script>
 
@@ -3947,8 +4167,23 @@
   function loadSource(video, guid){
     const u = HLS(guid);
     if(video.canPlayType('application/vnd.apple.mpegurl')){ video.src = u; }
-    else if(window.Hls && window.Hls.isSupported()){ const h = new Hls({capLevelToPlayerSize:true, abrEwmaDefaultEstimate:5000000, startLevel:-1, maxStarvationDelay:6}); h.loadSource(u); h.attachMedia(video); video._hls = h; }
+    else if(window.Hls && window.Hls.isSupported()){ const h = new Hls({capLevelToPlayerSize:true, abrEwmaDefaultEstimate:5000000, startLevel:-1, maxStarvationDelay:6, testBandwidth:false, startFragPrefetch:true}); h.loadSource(u); h.attachMedia(video); video._hls = h; }
     else { video.src = MP4(guid); }
+  }
+  /* Pre-warm the centre phone's stream: quietly fetch its playlists + first chunk
+     into the browser cache before the user taps, so play starts near-instantly. */
+  const warmed = new Set();
+  function prewarm(guid){
+    if(!guid || warmed.has(guid)) return; warmed.add(guid);
+    const master = HLS(guid);
+    fetch(master).then(r=>r.text()).then(txt=>{
+      const v = txt.split('\n').find(l=>l && !l.startsWith('#')); if(!v) return;
+      const vUrl = new URL(v, master).href;
+      return fetch(vUrl).then(r=>r.text()).then(pt=>{
+        const s = pt.split('\n').find(l=>l && !l.startsWith('#')); if(!s) return;
+        return fetch(new URL(s, vUrl).href);
+      });
+    }).catch(()=>{});
   }
   const SONGS=[
     { title:'Have You Ever Seen the Rain', artist:'CCR', guid:'f30a62f9-68b5-42e7-a0a3-dda23bec153c', hue:18, poster:'assets/photos/hear-me-play-poster.jpg' },
@@ -3978,7 +4213,6 @@
     el.innerHTML='<div class="fp-frame">'+sides+'<div class="fp-screen">'+
       '<div class="fp-media">'+poster(s)+'</div>'+
       '<div class="fp-dim"></div><div class="fp-vgrad"></div><div class="fp-island"></div><div class="fp-sheen"></div>'+
-      '<div class="fp-live"><span class="dot"></span>Live</div>'+
       '<div class="fp-cap"><div class="t">'+s.title+'</div><div class="a">'+s.artist+' · Live</div></div>'+
       '<div class="fp-bar"><button class="fp-toggle" type="button" aria-label="Pause">&#10074;&#10074;</button><div class="fp-scrub"><div class="fp-scrub-fill"></div><div class="fp-scrub-knob"></div></div></div>'+
       '<button class="fp-playbtn" type="button" aria-label="Play '+s.title+'">&#9654;</button>'+
@@ -4038,7 +4272,7 @@
     el.querySelector('.fp-media').innerHTML=poster(s);
     setScrub(0); el.classList.remove('is-playing'); playing=false;
   }
-  function go(i){ stop(); center=((i%N)+N)%N; hovered=null; render(); }
+  function go(i){ stop(); center=((i%N)+N)%N; hovered=null; render(); prewarm(SONGS[center].guid); }
   function selectPlay(i){ if(i!==center){ stop(); center=((i%N)+N)%N; hovered=null; render(); } if(!playing) playCenter(); }
 
   function render(){
@@ -4064,6 +4298,11 @@
   stage.addEventListener('pointerdown',e=>{ dragX=e.clientX; });
   stage.addEventListener('pointerup',e=>{ if(dragX===null)return; const dx=e.clientX-dragX; dragX=null; if(Math.abs(dx)<44)return; if(dx>0)go(center-1); else go(center+1); });
   render();
+  /* warm the centre phone's stream once the fan approaches the viewport */
+  if('IntersectionObserver' in window){
+    const wio = new IntersectionObserver(es=>{ es.forEach(en=>{ if(en.isIntersecting){ prewarm(SONGS[center].guid); wio.disconnect(); } }); },{rootMargin:'500px'});
+    wio.observe(stage);
+  }
 
   /* ── Song-list panel ── */
   const SONGLIST = [
@@ -4304,6 +4543,144 @@
   slFilter.addEventListener('click',()=>{ loveOnly=!loveOnly; slFilter.classList.toggle('on',loveOnly); renderList(); });
   addEventListener('keydown',e=>{ if(e.key==='Escape') closeList(); });
 })();
+  </script>
+
+  <!-- Custom on-brand dropdowns for visible .eq-select fields (native select stays for form submit/validation) -->
+  <script>
+  (function(){
+    document.querySelectorAll('select.eq-select').forEach(function(sel){
+      var field = sel.closest('.eq-field');
+      if (field && field.style.display === 'none') return;   // skip hidden fields
+      var wrap = document.createElement('div'); wrap.className = 'eqdd';
+      var btn  = document.createElement('button'); btn.type = 'button'; btn.className = 'eqdd-btn';
+      btn.setAttribute('aria-haspopup', 'listbox');
+      var list = document.createElement('ul'); list.className = 'eqdd-list'; list.setAttribute('role', 'listbox');
+
+      function sync(){
+        var o = sel.options[sel.selectedIndex];
+        btn.textContent = o ? o.textContent : '';
+        btn.classList.toggle('placeholder', !sel.value);
+        list.querySelectorAll('.eqdd-opt').forEach(function(li){
+          li.classList.toggle('selected', li.dataset.value === sel.value && sel.value !== '');
+        });
+      }
+      Array.prototype.forEach.call(sel.options, function(o){
+        if (o.disabled) return;
+        var li = document.createElement('li');
+        li.className = 'eqdd-opt'; li.textContent = o.textContent;
+        li.dataset.value = o.value; li.setAttribute('role', 'option');
+        li.addEventListener('click', function(){
+          sel.value = o.value;
+          sel.dispatchEvent(new Event('change', { bubbles: true }));
+          wrap.classList.remove('open');
+          sync();
+        });
+        list.appendChild(li);
+      });
+      btn.addEventListener('click', function(e){ e.stopPropagation(); wrap.classList.toggle('open'); });
+      document.addEventListener('click', function(){ wrap.classList.remove('open'); });
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') wrap.classList.remove('open'); });
+
+      sel.parentNode.insertBefore(wrap, sel);
+      wrap.appendChild(btn); wrap.appendChild(list); wrap.appendChild(sel);
+      sel.tabIndex = -1;
+      sync();
+    });
+  })();
+  </script>
+
+  <!-- Custom desktop date picker for the enquiry form (phones keep the native picker) -->
+  <script>
+  (function(){
+    if (!window.matchMedia || !matchMedia('(min-width: 768px)').matches) return;
+    var input = document.getElementById('eq-date');
+    if (!input) return;
+
+    var wrap = document.createElement('div'); wrap.className = 'eqcal';
+    input.parentNode.insertBefore(wrap, input); wrap.appendChild(input);
+    var panel = document.createElement('div'); panel.className = 'eqcal-panel';
+    wrap.appendChild(panel);
+
+    var today = new Date(); today.setHours(0,0,0,0);
+    var view = new Date(today.getFullYear(), today.getMonth(), 1);
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var DOWS = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+    function pad(n){ return (n < 10 ? '0' : '') + n; }
+    function fmt(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+
+    function build(){
+      panel.innerHTML = '';
+      var head = document.createElement('div'); head.className = 'eqcal-head';
+      var prev = document.createElement('button'); prev.type='button'; prev.className='eqcal-nav'; prev.innerHTML='&#8249;'; prev.setAttribute('aria-label','Previous month');
+      var next = document.createElement('button'); next.type='button'; next.className='eqcal-nav'; next.innerHTML='&#8250;'; next.setAttribute('aria-label','Next month');
+      var title = document.createElement('div'); title.className='eqcal-month';
+      title.textContent = MONTHS[view.getMonth()] + ' ' + view.getFullYear();
+      prev.disabled = view.getFullYear() === today.getFullYear() && view.getMonth() === today.getMonth();
+      prev.addEventListener('click', function(e){ e.stopPropagation(); view = new Date(view.getFullYear(), view.getMonth()-1, 1); build(); });
+      next.addEventListener('click', function(e){ e.stopPropagation(); view = new Date(view.getFullYear(), view.getMonth()+1, 1); build(); });
+      head.appendChild(prev); head.appendChild(title); head.appendChild(next);
+      panel.appendChild(head);
+
+      var grid = document.createElement('div'); grid.className = 'eqcal-grid';
+      DOWS.forEach(function(d){ var c = document.createElement('div'); c.className='eqcal-dow'; c.textContent=d; grid.appendChild(c); });
+      var first = new Date(view.getFullYear(), view.getMonth(), 1);
+      var lead = (first.getDay() + 6) % 7;   /* Monday-first */
+      for (var b = 0; b < lead; b++) { var bl = document.createElement('button'); bl.type='button'; bl.className='eqcal-day blank'; bl.disabled=true; grid.appendChild(bl); }
+      var days = new Date(view.getFullYear(), view.getMonth()+1, 0).getDate();
+      for (var d = 1; d <= days; d++) {
+        (function(d){
+          var date = new Date(view.getFullYear(), view.getMonth(), d);
+          var cell = document.createElement('button'); cell.type='button'; cell.className='eqcal-day'; cell.textContent = d;
+          if (date < today) cell.disabled = true;
+          if (fmt(date) === fmt(today)) cell.classList.add('today');
+          if (input.value && fmt(date) === input.value) cell.classList.add('selected');
+          cell.addEventListener('click', function(e){
+            e.stopPropagation();
+            input.value = fmt(date);
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            wrap.classList.remove('open');
+          });
+          grid.appendChild(cell);
+        })(d);
+      }
+      /* pad to a constant 6-week grid so every month is the same height —
+         keeps the nav arrows in one place while flicking through months */
+      var total = lead + days;
+      for (var tr = total; tr < 42; tr++) { var tb = document.createElement('button'); tb.type='button'; tb.className='eqcal-day blank'; tb.disabled=true; grid.appendChild(tb); }
+      panel.appendChild(grid);
+    }
+
+    input.readOnly = true;   /* stops the native popup + typing; picker owns the value */
+    input.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      if (!wrap.classList.contains('open')) {
+        view = input.value ? new Date(input.value + 'T00:00:00') : new Date(today.getFullYear(), today.getMonth(), 1);
+        view = new Date(view.getFullYear(), view.getMonth(), 1);
+        build();
+        /* open upward if the panel would run off the bottom of the screen */
+        var r = wrap.getBoundingClientRect();
+        var spaceBelow = window.innerHeight - r.bottom;
+        wrap.classList.toggle('up', spaceBelow < 370 && r.top > 370);
+      }
+      wrap.classList.toggle('open');
+    });
+    document.addEventListener('click', function(){ wrap.classList.remove('open'); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') wrap.classList.remove('open'); });
+
+    /* readOnly disables native `required` checking — enforce it ourselves */
+    if (input.form) {
+      input.form.addEventListener('submit', function(e){
+        if (!input.value) {
+          e.preventDefault(); e.stopPropagation();
+          view = new Date(today.getFullYear(), today.getMonth(), 1);
+          build();
+          wrap.classList.add('open');
+          input.focus();
+        }
+      }, true);
+    }
+  })();
   </script>
 
 </body>

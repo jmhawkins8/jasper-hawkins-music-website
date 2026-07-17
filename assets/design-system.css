@@ -14,9 +14,9 @@
 
 :root {
   /* — SECTION VERTICAL PADDING — three tiers, nothing in between ————— */
-  --section-compact:  clamp(64px, 8vw, 96px);    /* footers, tight bands */
-  --section-standard: clamp(80px, 10vw, 120px);  /* the default section  */
-  --section-feature:  clamp(96px, 12vw, 160px);  /* hero-weight moments  */
+  --section-compact:  clamp(40px, 5vw, 60px);    /* footers, tight bands */
+  --section-standard: clamp(52px, 6.5vw, 76px);  /* the default section — sections meet at 2x this, so real gap ≈ 104–152px */
+  --section-feature:  clamp(72px, 9vw, 112px);   /* hero-weight moments  */
 
   /* — LAYOUT ————————————————————————————————————————————————————————— */
   --container-wide:   1280px;   /* standard content sections */
