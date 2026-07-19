@@ -1361,7 +1361,7 @@
       position: absolute; inset: 0;
       width: 100%; height: 100%;
       object-fit: cover;
-      object-position: center 18%;   /* keep the face in the upper part of the card */
+      object-position: center 8%;   /* crop sits higher so the face is never clipped */
       z-index: 0;
     }
     /* Ember wash + dark scrim over the photo — heaviest at the bottom where the text sits */
@@ -1513,8 +1513,8 @@
       position: relative;
       overflow: hidden;
       background: var(--ink);
-      /* extra top so the content sits lower in the section — balances against the video */
-      padding: clamp(84px, 10vw, 124px) var(--gutter) var(--section-standard);
+      /* symmetric padding — content balanced against the video */
+      padding: clamp(72px, 8vw, 100px) var(--gutter) clamp(72px, 8vw, 100px);
     }
     .cta-video {
       position: absolute;
@@ -1581,7 +1581,16 @@
       font-size: 12px;
       color: var(--bone-faint);
     }
-    @media (max-width: 560px) { .section-cta { padding: var(--section-standard) var(--gutter); } }
+    @media (max-width: 767px) {
+      /* taller CTA on phones — the roller reads cinematic, not square */
+      .section-cta {
+        min-height: 78vh;
+        display: flex;
+        align-items: center;
+        padding: var(--section-standard) var(--gutter);
+      }
+      .section-cta .cta-inner { width: 100%; }
+    }
 
     /* ── Footer ──────────────────────────────────────────────── */
     .site-footer {
@@ -2004,7 +2013,7 @@
       display: grid;
       grid-template-columns: 0.85fr 1fr;
       gap: clamp(36px, 6vw, 80px);
-      align-items: stretch;
+      align-items: center;
     }
     .vtd-deck {
       position: relative;
@@ -2112,46 +2121,17 @@
       transition: all 0.3s ease;
     }
     .vtd-dot.active { background: var(--ember); opacity: 1; width: 22px; border-radius: 4px; }
-    /* Venue logo strip — pinned to the photo's bottom edge */
-    .vtd-logos {
-      margin-top: auto;
-      padding-top: 18px;
-      border-top: 1px solid var(--hairline);
-    }
-    .vtd-logos-row {
-      display: flex;
-      flex-wrap: nowrap;                 /* desktop: always ONE line, level with the photo */
-      align-items: center;
-      justify-content: space-between;    /* spread evenly across the column width */
-      column-gap: clamp(12px, 1.8vw, 26px);
-    }
-    .vtd-logos-row img {
-      display: block;
-      width: auto;
-      object-fit: contain;
-      filter: invert(1) grayscale(1) brightness(2.2) contrast(1.4);
-      opacity: 0.66;
-      transition: opacity 0.3s ease;
-    }
-    .vtd-logos-row:hover img { opacity: 0.4; }
-    .vtd-logos-row img:hover { opacity: 1; }
-    /* per-logo optical sizing (scaled from the original strip) */
-    img.vtd-logo-mudbrick    { height: 12px; }
-    img.vtd-logo-castaways   { height: 15px; }
-    img.vtd-logo-markovina   { height: 38px; }
-    img.vtd-logo-kumeu       { height: 42px; }
-    img.vtd-logo-stables     { height: 22px; }
-    img.vtd-logo-bridgewater { height: 23px; }
     /* Mobile */
     @media (max-width: 767px) {
       .section-venue-testi { padding: var(--section-standard) 0; }
       .vt-inner { padding: 0 var(--gutter); }
       .vt-header { margin-bottom: 36px; }
       .vtd-stage { grid-template-columns: 1fr; gap: 40px; }
-      .vtd-deck { height: 380px; max-width: 320px; }
+      .vtd-deck { height: 440px; max-width: 100%; }   /* photo matches the text column width — balanced */
       .vtd-content { min-height: 0; }
       .vtd-controls { justify-content: center; }
-      .vtd-logos { display: none; }   /* logo strip is desktop-only — didn't earn its place on mobile */
+      .vtd-full { max-height: none; }                 /* mobile shows the whole testimonial */
+      .vtd-readmore { display: none; }
     }
 
     .reviews-container {
@@ -2680,6 +2660,9 @@
     }
     /* Intro card */
     .intro-inner { flex-direction: column; text-align: center; padding: 0 28px; }
+    /* intro as a normal section (no longer a full-screen card) */
+    .wyg-intro { background: var(--ink); padding: var(--section-standard) var(--gutter); }
+    .wyg-intro .intro-inner { display: flex; align-items: center; }
     .intro-rule { width: 56px; height: 2px; background: var(--ember); margin: 0 auto 30px; border-radius: 2px; }
     .intro-eyebrow {
       font-family: var(--font-sans);
@@ -2905,14 +2888,14 @@
     <!-- Full-bleed photo behind everything -->
     <div class="hero-photo">
       <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/photos/jas-acoustic-markovina.webp">
-        <source src="assets/video/hero-promo.mp4" type="video/mp4">
+        <source src="assets/video/hero-promo.mp4?v=2" type="video/mp4">
       </video>
       <script>
         /* Phones get the portrait cut — every shot re-cropped so Jasper stays in frame */
         (function(){
           if (window.matchMedia && matchMedia('(max-width: 767px)').matches) {
             var v = document.querySelector('.hero-video');
-            if (v) { v.src = 'assets/video/hero-promo-mobile.mp4'; v.load(); if (v.play) v.play().catch(function(){}); }
+            if (v) { v.src = 'assets/video/hero-promo-mobile.mp4?v=2'; v.load(); if (v.play) v.play().catch(function(){}); }
           }
         })();
       </script>
@@ -2994,9 +2977,9 @@
   <!-- ── What You Get — Story Scroll ──────────────────────── -->
   <div class="story-flow" id="storyFlow">
 
-    <!-- 01 — What You Get (intro) -->
-    <section data-flow-section>
-      <div class="flow-inner intro-inner bg-black">
+    <!-- 01 — What You Get (intro) — normal section; the card deck starts at Ceremony -->
+    <section class="wyg-intro">
+      <div class="intro-inner">
         <div class="intro-rule"></div>
         <div class="intro-eyebrow" data-reveal>What you get</div>
         <h2 class="intro-title" data-reveal data-delay="1">Your Entire Wedding Day,<br>Seamlessly Covered.</h2>
@@ -3376,16 +3359,6 @@
             <div class="vtd-dots" id="vtdDots"></div>
           </div>
 
-          <div class="vtd-logos">
-            <div class="vtd-logos-row">
-              <img class="vtd-logo-mudbrick"    src="assets/logos/mudbrick.png"     alt="Mudbrick Vineyard">
-              <img class="vtd-logo-castaways"   src="assets/logos/castaways.png"    alt="Castaways Resort">
-              <img class="vtd-logo-markovina"   src="assets/logos/markovina.jpeg"   alt="Markovina Vineyard Estate">
-              <img class="vtd-logo-kumeu"       src="assets/logos/kumeu.png"        alt="Kumeu Valley Estate">
-              <img class="vtd-logo-stables"     src="assets/logos/stables.webp"     alt="The Stables">
-              <img class="vtd-logo-bridgewater" src="assets/logos/bridgewater.jpeg" alt="Bridgewater Country Estate">
-            </div>
-          </div>
         </div>
       </div>
 
@@ -4094,20 +4067,20 @@
       gsap.set(section, { zIndex: i + 1 });
       const inner = section.querySelector('.flow-inner');
 
-      if (i > 0) {
-        gsap.set(inner, { rotation: 30, transformOrigin: 'bottom left' });
-        gsap.fromTo(inner, { rotation: 30 }, {
-          rotation: 0,
-          ease: 'none',
-          immediateRender: false,
-          scrollTrigger: {
-            trigger: section,
-            start: 'top bottom',
-            end: 'top 25%',
-            scrub: true,
-          },
-        });
-      }
+      /* every card swings in — the intro is a normal section now, so the deck
+         starts (and rotates) from the Ceremony card */
+      gsap.set(inner, { rotation: 30, transformOrigin: 'bottom left' });
+      gsap.fromTo(inner, { rotation: 30 }, {
+        rotation: 0,
+        ease: 'none',
+        immediateRender: false,
+        scrollTrigger: {
+          trigger: section,
+          start: 'top bottom',
+          end: 'top 25%',
+          scrub: true,
+        },
+      });
 
       if (i < sections.length - 1) {
         ScrollTrigger.create({
@@ -4141,7 +4114,6 @@
     function healFlow() {
       const vh = window.innerHeight;
       sections.forEach((section, i) => {
-        if (i === 0) return;
         const inner = section.querySelector('.flow-inner');
         if (!inner) return;
         const top = section.getBoundingClientRect().top;
