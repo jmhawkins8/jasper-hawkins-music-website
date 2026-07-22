@@ -1,0 +1,1653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Parties · Jasper Hawkins Music</title>
+  <meta name="description" content="Award-winning live music for private parties and celebrations — solo acoustic sets and full band options across Auckland and New Zealand.">
+  <link rel="stylesheet" href="assets/colors_and_type.css">
+  <link rel="stylesheet" href="assets/design-system.css">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { background: var(--ink); }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    .site-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      will-change: transform;
+      transition: transform 260ms cubic-bezier(.4,0,.2,1),
+                  opacity 260ms cubic-bezier(.4,0,.2,1),
+                  background var(--dur) var(--ease),
+                  backdrop-filter var(--dur) var(--ease);
+    }
+    .site-nav.scrolled {
+      background: rgba(12, 10, 8, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--hairline);
+    }
+    #site-nav.nav-hidden {
+      transform: translateY(-115%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .site-nav { transition: background var(--dur) var(--ease), backdrop-filter var(--dur) var(--ease); }
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--bone);
+      position: relative;
+      z-index: 101;
+    }
+    .nav-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1;
+      color: var(--bone);
+    }
+    .nav-descriptor {
+      font-family: var(--font-sans);
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+    .nav-hamburger {
+      background: none;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      touch-action: manipulation;
+      position: relative;
+      z-index: 101;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--bone);
+      border-radius: 1px;
+      transition: transform 280ms var(--ease), opacity 200ms var(--ease);
+    }
+    .nav-hamburger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .nav-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: var(--ink);
+      display: flex;
+      flex-direction: column;
+      padding: 108px 32px 56px;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateX(6%);
+      transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+    }
+    .nav-menu.is-open { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .nav-menu-links { display: flex; flex-direction: column; flex: 1; }
+    .nav-menu-links a {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(40px, 11vw, 56px);
+      line-height: 1;
+      color: var(--bone);
+      text-decoration: none;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--hairline);
+      display: block;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 260ms var(--ease), transform 260ms var(--ease), color 160ms var(--ease);
+    }
+    .nav-menu-links a:first-child { border-top: 1px solid var(--hairline); }
+    .nav-menu-links a[aria-current="page"] { color: var(--ember); }
+    .nav-menu.is-open .nav-menu-links a:nth-child(1) { opacity:1; transform:translateY(0); transition-delay:60ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(2) { opacity:1; transform:translateY(0); transition-delay:110ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(3) { opacity:1; transform:translateY(0); transition-delay:160ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(4) { opacity:1; transform:translateY(0); transition-delay:210ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(5) { opacity:1; transform:translateY(0); transition-delay:260ms; }
+    .nav-menu-cta {
+      display: block; background: var(--ember); color: var(--ink);
+      text-align: center; padding: 18px; border-radius: var(--radius-md);
+      font-family: var(--font-sans); font-size: 16px; font-weight: 500;
+      text-decoration: none; margin-top: 32px; touch-action: manipulation;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 260ms var(--ease), transform 260ms var(--ease), background 180ms var(--ease);
+    }
+    .nav-menu.is-open .nav-menu-cta { opacity:1; transform:translateY(0); transition-delay:310ms; }
+    .nav-menu-cta:hover { background: var(--ember-glow); }
+    .nav-menu-note {
+      text-align: center; font-family: var(--font-sans); font-size: 12px;
+      color: var(--bone-faint); margin-top: 12px; opacity: 0;
+      transition: opacity 260ms var(--ease);
+    }
+    .nav-menu.is-open .nav-menu-note { opacity:1; transition-delay:340ms; }
+    .nav-pill { display: none; }
+    /* ── Services dropdown: mobile accordion ── */
+    .nav-menu-group { border-bottom: 1px solid var(--hairline); opacity: 0; transform: translateY(14px); transition: opacity 260ms var(--ease), transform 260ms var(--ease); }
+    .nav-menu.is-open .nav-menu-group { opacity: 1; transform: translateY(0); transition-delay: 110ms; }
+    .nav-menu-group-trigger { width: 100%; background: none; border: 0; cursor: pointer; font-family: var(--font-serif); font-weight: 400; font-size: clamp(34px, 9.5vw, 52px); line-height: 1; color: var(--bone); text-align: left; padding: 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .nav-menu-group-trigger .nmg-caret { font-size: 0.42em; color: var(--ember); transition: transform 260ms var(--ease); }
+    .nav-menu-group.is-open .nav-menu-group-trigger { color: var(--ember); }
+    .nav-menu-group.is-open .nav-menu-group-trigger .nmg-caret { transform: rotate(180deg); }
+    .nav-menu-sub { overflow: hidden; max-height: 0; transition: max-height 340ms var(--ease); }
+    .nav-menu-group.is-open .nav-menu-sub { max-height: 260px; }
+    .nav-menu-sub a { opacity: 1 !important; transform: none !important; font-family: var(--font-serif); font-weight: 400; font-size: clamp(22px, 6vw, 30px); color: var(--bone-mute); padding: 13px 0 13px 22px; border-bottom: 1px solid var(--hairline); display: block; text-decoration: none; }
+    .nav-menu-sub a:last-child { border-bottom: 0; }
+    .nav-menu-sub a[aria-current="page"] { color: var(--ember); }
+
+    /* ── Services dropdown: desktop ── */
+    @media (min-width: 1024px) {
+      .nav-dd { position: relative; display: flex; align-items: center; }
+      .nav-dd-trigger { font-family: var(--font-sans); font-size: 13px; color: var(--bone); letter-spacing: 0.02em; background: none; border: 0; cursor: pointer; padding: 6px 4px; display: inline-flex; align-items: center; gap: 5px; position: relative; white-space: nowrap; }
+      .nav-dd-caret { transition: transform 240ms var(--ease); }
+      .nav-dd:hover .nav-dd-caret, .nav-dd.is-open .nav-dd-caret { transform: rotate(180deg); }
+      .nav-dd-trigger::after { content: ""; position: absolute; left: 4px; right: 20px; bottom: 0; height: 1px; background: var(--ember); transform: scaleX(0); transform-origin: left; transition: transform var(--dur) var(--ease); }
+      .nav-dd:hover .nav-dd-trigger::after, .nav-dd-trigger.is-active::after { transform: scaleX(1); }
+      .nav-dd-trigger.is-active { color: var(--ember); }
+      .nav-dd-menu { position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%) translateY(-6px); min-width: 176px; background: rgba(12, 11, 10, 0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(242, 234, 216, 0.14); border-radius: 14px; padding: 8px; display: flex; flex-direction: column; gap: 2px; opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease), transform 200ms var(--ease); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); }
+      .nav-dd-menu::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+      .nav-dd:hover .nav-dd-menu, .nav-dd.is-open .nav-dd-menu { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+      .nav-dd-menu a { font-family: var(--font-sans); font-size: 13px; color: var(--bone-mute); padding: 9px 14px; border-radius: 8px; white-space: nowrap; text-decoration: none; transition: background 160ms, color 160ms; }
+      .nav-dd-menu a::after { display: none !important; }
+      .nav-dd-menu a:hover { background: rgba(255, 113, 61, 0.12); color: var(--bone); }
+      .nav-dd-menu a[aria-current="page"] { color: var(--ember); }
+    }
+
+    /* ── Desktop nav ─────────────────────────────────────────── */
+    @media (min-width: 1024px) {
+      .site-nav       { padding: 20px 80px; }
+      .nav-hamburger  { display: none; }
+      .nav-wordmark   { font-size: 18px; }
+      .nav-descriptor { font-size: 9px; }
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(242, 234, 216, 0.14);
+        border-radius: 100px;
+        padding: 10px 12px 10px 22px;
+      }
+      .nav-pill a {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        color: var(--bone);
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        padding: 6px 4px;
+        position: relative;
+        white-space: nowrap;
+      }
+      .nav-pill a:not(.nav-cta)::after {
+        content: "";
+        position: absolute;
+        left: 4px; right: 4px; bottom: 0;
+        height: 1px;
+        background: var(--ember);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform var(--dur) var(--ease);
+      }
+      .nav-pill a:not(.nav-cta):hover::after,
+      .nav-pill a:not(.nav-cta)[aria-current="page"]::after { transform: scaleX(1); }
+      .nav-pill .nav-cta {
+        background: var(--ember);
+        color: var(--ink);
+        border: 0;
+        padding: 8px 16px;
+        border-radius: 100px;
+        font-family: var(--font-sans);
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background var(--dur-fast) var(--ease);
+      }
+      .nav-pill .nav-cta:hover { background: var(--ember-glow); }
+    }
+
+    /* ── Page-load sequence (hero text + nav) ────────────────── */
+    [data-load] {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 640ms var(--ease), transform 640ms var(--ease);
+    }
+    [data-load].loaded { opacity: 1; transform: translateY(0); }
+
+    /* ── Scroll reveal ───────────────────────────────────────── */
+    [data-reveal] {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 950ms cubic-bezier(0.22, 0.61, 0.36, 1),
+                  transform 950ms cubic-bezier(0.22, 0.61, 0.36, 1);
+    }
+    [data-reveal].is-visible { opacity: 1; transform: translateY(0); }
+    [data-reveal][data-delay="1"] { transition-delay: 120ms; }
+    [data-reveal][data-delay="2"] { transition-delay: 240ms; }
+    [data-reveal][data-delay="3"] { transition-delay: 360ms; }
+
+    /* ── Shared buttons ──────────────────────────────────────── */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--ember);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
+    }
+    .btn-primary:hover { background: var(--ember-glow); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,113,61,0.28); }
+    .btn-primary:active { background: var(--ember); transform: translateY(1px); box-shadow: none; }
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      color: var(--bone);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 14px 28px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--hairline-strong);
+      text-decoration: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: border-color 180ms var(--ease), background 180ms var(--ease);
+    }
+    .btn-ghost:hover { border-color: var(--bone); }
+    .btn-ghost:active { background: rgba(242,234,216,0.06); }
+
+    /* ── Shared section utilities ────────────────────────────── */
+    .s-inner {
+      max-width: var(--container-wide);
+      padding: var(--section-standard) var(--gutter);
+      margin: 0 auto;
+    }
+    /* Unified section eyebrow — grey, centred, ember lines each side */
+    .sec-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .sec-eyebrow::before, .sec-eyebrow::after {
+      content: "";
+      display: block;
+      width: 28px; height: 1px;
+      background: var(--ember);
+      flex-shrink: 0;
+    }
+    .sec-heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: var(--font-h2);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      text-align: center;
+      margin-bottom: var(--h2-mb);
+    }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .p-hero {
+      position: relative;
+      min-height: 92vh;
+      min-height: 92svh;
+      display: flex;
+      align-items: flex-end;
+      background: var(--ink);
+      overflow: hidden;
+    }
+    .p-hero-photo {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .p-hero-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      filter: var(--filter-photo);
+      opacity: 0;
+      transition: opacity 900ms var(--ease);
+    }
+    .p-hero-photo img.loaded { opacity: 1; }
+    .p-hero-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background:
+        linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.55) 34%, rgba(0,0,0,0.12) 62%, transparent 82%),
+        linear-gradient(to right, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.32) 42%, transparent 72%);
+      pointer-events: none;
+    }
+    /* melt the hero photo into the black section below */
+    .p-hero::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 10%;
+      z-index: 2;
+      background: linear-gradient(to top, var(--ink) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    .p-hero-content {
+      position: relative;
+      z-index: 3;
+      width: 100%;
+      max-width: var(--container-wide);
+      margin: 0 auto;
+      padding: 140px var(--gutter) clamp(64px, 9vh, 110px);
+    }
+    .p-hero-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+    .p-hero-eyebrow::before {
+      content: "";
+      display: block;
+      width: 28px; height: 1px;
+      background: var(--ember);
+      flex-shrink: 0;
+    }
+    .p-hero-headline {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(40px, 6vw, 72px);
+      line-height: 1.06;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      max-width: 15ch;
+      margin-bottom: 22px;
+    }
+    .p-hero-headline .accent { color: var(--ember); }
+    .p-hero-sub {
+      font-family: var(--font-sans);
+      font-size: clamp(15px, 1.6vw, 18px);
+      line-height: 1.6;
+      color: var(--bone-mute);
+      max-width: 52ch;
+      margin-bottom: 34px;
+    }
+    .p-hero-ctas {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+    .p-hero-note {
+      margin-top: 18px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--bone-faint);
+    }
+
+    /* ── Intro + offerings ───────────────────────────────────── */
+    .section-offer { background: var(--ink); }
+    .offer-intro {
+      max-width: 760px;
+      margin: 0 auto 56px;
+      text-align: center;
+      font-family: var(--font-sans);
+      font-size: clamp(16px, 1.5vw, 19px);
+      line-height: 1.7;
+      color: var(--bone-mute);
+    }
+    .offer-intro strong { color: var(--bone); font-weight: 600; }
+    .offer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      max-width: 1060px;
+      margin: 0 auto;
+    }
+    @media (min-width: 768px) {
+      .offer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    .offer-card {
+      background: var(--ink-soft);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: border-color .2s var(--ease), transform .2s var(--ease);
+    }
+    .offer-card:hover { border-color: var(--hairline-strong); transform: translateY(-3px); }
+    /* fixed-height crop hides the pale decorative frame baked into the old photos */
+    .offer-photo {
+      position: relative;
+      height: clamp(220px, 30vw, 300px);
+      overflow: hidden;
+      background: var(--ink);
+    }
+    .offer-photo img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 10%;
+      transform: scale(1.12);
+      filter: var(--filter-photo);
+    }
+    .offer-photo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(20,20,20,0.55) 0%, transparent 36%);
+      pointer-events: none;
+    }
+    .offer-body { padding: 28px 28px 32px; }
+    .offer-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: var(--font-h3);
+      letter-spacing: -0.01em;
+      color: var(--bone);
+      margin-bottom: var(--h3-mb);
+    }
+    .offer-text {
+      font-family: var(--font-sans);
+      font-size: var(--font-sm);
+      line-height: var(--lh-body);
+      color: var(--bone-mute);
+    }
+    .offer-cta-row {
+      display: flex;
+      justify-content: center;
+      margin-top: 44px;
+    }
+
+    /* ── Why choose me ───────────────────────────────────────── */
+    .section-why {
+      background: var(--ink);
+      position: relative;
+      overflow: hidden;
+    }
+    .section-why::before {
+      content: "";
+      position: absolute;
+      width: 560px; height: 400px;
+      top: -80px; right: -120px;
+      background: radial-gradient(ellipse at center, rgba(255, 113, 61, 0.08) 0%, transparent 70%);
+      filter: blur(48px);
+      pointer-events: none;
+    }
+    .why-inner {
+      position: relative;
+      z-index: 1;
+      max-width: var(--container-wide);
+      margin: 0 auto;
+      padding: var(--section-standard) var(--gutter);
+    }
+    .why-head { margin-bottom: 48px; }
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    @media (min-width: 900px) {
+      .why-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .why-card {
+      background: var(--ink-soft);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 30px 28px;
+      transition: border-color .2s var(--ease), transform .2s var(--ease);
+    }
+    .why-card:hover { border-color: var(--hairline-strong); transform: translateY(-3px); }
+    .why-ic {
+      width: 46px; height: 46px; border-radius: 50%;
+      border: 1px solid var(--hairline-strong);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--ember); flex-shrink: 0;
+      margin-bottom: 22px;
+    }
+    .why-ic svg { width: 22px; height: 22px; }
+    .why-card-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: var(--font-h3);
+      letter-spacing: -0.01em;
+      color: var(--bone);
+      margin-bottom: var(--h3-mb);
+    }
+    .why-card-body {
+      font-family: var(--font-sans);
+      font-size: var(--font-sm);
+      line-height: var(--lh-body);
+      color: var(--bone-mute);
+    }
+
+    /* ── Song selection ──────────────────────────────────────── */
+    .section-songs {
+      background: var(--ink);
+      border-top: 1px solid var(--hairline-soft);
+      border-bottom: 1px solid var(--hairline-soft);
+    }
+    .songs-inner {
+      max-width: var(--container-narrow);
+      margin: 0 auto;
+      padding: var(--section-standard) var(--gutter-tight);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .songs-sub {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--bone-mute);
+      max-width: 48ch;
+      margin: 0 auto 32px;
+    }
+
+    /* ── Reviews ─────────────────────────────────────────────── */
+    .section-reviews {
+      background: var(--ink);
+      padding: var(--section-standard) 0;
+    }
+    .reviews-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+    .reviews-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+    .reviews-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 20px;
+    }
+    .reviews-eyebrow span {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+    }
+    .reviews-headline {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: var(--font-h2);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      margin-bottom: 18px;
+    }
+    .reviews-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+    .reviews-stars-row { display: flex; gap: 3px; }
+    .reviews-stars-row svg { width: 16px; height: 16px; }
+    .reviews-score {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--bone-mute);
+    }
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 900px) {
+      .reviews-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .review-card {
+      background: #1c1c1c;
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .card-stars { display: flex; gap: 3px; }
+    .card-stars svg { width: 15px; height: 15px; }
+    .card-quote {
+      font-family: var(--font-sans);
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--bone);
+      flex: 1;
+    }
+    .card-footer {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding-top: 16px;
+      border-top: 1px solid var(--hairline);
+    }
+    .card-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: rgba(255, 113, 61, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-family: var(--font-serif);
+      font-size: 14px;
+      color: var(--ember);
+      font-weight: 500;
+    }
+    .card-reviewer-name {
+      font-family: var(--font-sans);
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--bone);
+      line-height: 1.2;
+    }
+    .card-reviewer-tag {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      color: var(--bone-mute);
+      margin-top: 2px;
+    }
+    .card-google {
+      width: 15px; height: 15px;
+      margin-left: auto;
+      flex-shrink: 0;
+      opacity: 0.45;
+    }
+    @media (max-width: 639px) {
+      .review-card { padding: 22px 20px; gap: 13px; border-radius: 12px; }
+      .card-quote { font-size: 14px; line-height: 1.55; }
+      .card-stars svg { width: 13px; height: 13px; }
+      .card-footer { padding-top: 13px; gap: 10px; }
+      .card-avatar { width: 30px; height: 30px; font-size: 13px; }
+    }
+
+    /* ── Final CTA ───────────────────────────────────────────── */
+    .section-cta {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(8,7,6,0.72), rgba(8,7,6,0.80)),
+        url('assets/photos/oldsite/parties-hero.webp') center 28% / cover no-repeat;
+      padding: clamp(72px, 8vw, 100px) var(--gutter);
+    }
+    .section-cta::before,
+    .section-cta::after {
+      content: "";
+      position: absolute;
+      width: 560px; height: 400px;
+      background: radial-gradient(ellipse at center, rgba(255, 113, 61, 0.10) 0%, transparent 70%);
+      filter: blur(48px);
+      pointer-events: none;
+    }
+    .section-cta::before { top: -80px; right: -120px; }
+    .section-cta::after  { bottom: -80px; left: -120px; }
+    .cta-inner {
+      position: relative;
+      z-index: 2;
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .cta-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--bone-mute);
+      display: inline-flex; align-items: center; gap: 10px;
+      margin-bottom: 20px;
+    }
+    .cta-eyebrow::before, .cta-eyebrow::after { content: ""; width: 28px; height: 1px; background: var(--ember); }
+    .cta-heading {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: var(--font-h2);
+      line-height: var(--lh-tight);
+      letter-spacing: -0.02em;
+      color: var(--bone);
+      margin-bottom: 18px;
+    }
+    .cta-sub {
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--bone-mute);
+      max-width: 46ch;
+      margin: 0 auto 32px;
+    }
+    .cta-note {
+      margin-top: 16px;
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--bone-faint);
+    }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--ink);
+      border-top: 1px solid var(--hairline);
+      padding: var(--section-compact) var(--gutter) 40px;
+    }
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .footer-name {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 20px;
+      color: var(--bone);
+      line-height: 1;
+    }
+    .footer-descriptor {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+      margin-top: 4px;
+    }
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-contact a {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--bone-mute);
+      text-decoration: none;
+      transition: color 180ms var(--ease);
+    }
+    .footer-contact a:hover { color: var(--ember); }
+    .footer-copy {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--bone-faint);
+      padding-top: 24px;
+      border-top: 1px solid var(--hairline);
+    }
+    @media (min-width: 1024px) {
+      .site-footer { padding: var(--section-compact) var(--gutter) 48px; }
+      .footer-inner {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-copy { border-top: none; padding-top: 0; }
+    }
+
+    /* ── Enquiry drawer + song list (ported) ── */
+    .float-cta {
+      position: fixed; bottom: 24px; right: 24px; z-index: 95;
+      display: inline-flex; align-items: center; gap: 8px; padding: 13px 22px;
+      background: var(--ember); color: var(--ink);
+      font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+      border-radius: var(--r-pill);
+      box-shadow: var(--shadow-float, 0 10px 30px rgba(255,113,61,0.42));
+      text-decoration: none; opacity: 0; transform: translateY(14px); pointer-events: none;
+      transition: opacity .32s ease, transform .32s cubic-bezier(.4,0,.2,1), background .18s;
+    }
+    .float-cta.show { opacity: 1; transform: none; pointer-events: auto; }
+    .float-cta:hover { background: var(--ember-glow); }
+    @media (max-width: 600px) { .float-cta { bottom: 18px; right: 18px; padding: 12px 20px; font-size: 13px; } }
+    .eq-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.72); z-index: 400; opacity: 0; pointer-events: none; transition: opacity 360ms ease; }
+    .eq-scrim.is-open { opacity: 1; pointer-events: auto; }
+    .eq-panel { position: fixed; top: 0; right: 0; bottom: 0; width: min(500px, 100vw); background: var(--ink-soft); border-left: 1px solid var(--hairline); z-index: 401; display: flex; flex-direction: column; transform: translateX(100%); transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1); }
+    .eq-panel.is-open { transform: translateX(0); }
+    .eq-panel-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; padding: 28px 28px 22px; border-bottom: 1px solid var(--hairline); flex-shrink: 0; }
+    .eq-eyebrow { font-family: var(--font-sans); font-size: 10px; font-weight: 500; letter-spacing: 0.2em; text-transform: uppercase; color: var(--ember); margin-bottom: 8px; }
+    .eq-heading { font-family: var(--font-serif); font-weight: 400; font-size: 24px; line-height: 1.2; letter-spacing: -0.01em; color: var(--bone); }
+    .eq-close { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid var(--hairline); color: var(--bone-mute); font-size: 20px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; margin-top: 2px; transition: background 180ms, color 180ms; }
+    .eq-close:hover { background: rgba(255,255,255,0.12); color: var(--bone); }
+    .eq-body { flex: 1; overflow-y: auto; padding: 24px 28px 40px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
+    .eq-intro { font-family: var(--font-sans); font-size: 14px; line-height: 1.65; color: var(--bone-mute); margin-bottom: 24px; }
+    .eq-form { color-scheme: dark; }
+    .eq-field { margin-bottom: 16px; }
+    .eq-label { display: block; font-family: var(--font-sans); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bone-mute); margin-bottom: 7px; }
+    .eq-req { color: var(--ember); margin-left: 1px; }
+    .eq-input, .eq-select, .eq-textarea { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--hairline); border-radius: var(--r-input); padding: 12px 14px; font-family: var(--font-sans); font-size: 14px; color: var(--bone); outline: none; -webkit-appearance: none; appearance: none; transition: border-color 200ms, box-shadow 200ms; }
+    .eq-input::placeholder, .eq-textarea::placeholder { color: var(--bone-faint); opacity: 1; }
+    .eq-input:focus, .eq-select:focus, .eq-textarea:focus { border-color: var(--ember); box-shadow: 0 0 0 3px rgba(255,113,61,0.12); }
+    .eq-select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B8AC97' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; }
+    .eq-select option { background: #1f1f1f; }
+    .eq-textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
+    .eq-submit { width: 100%; justify-content: center; padding: 15px; margin-top: 4px; border-radius: var(--r-input); }
+    .eq-success h3 { font-family: var(--font-serif); font-weight: 400; font-size: 22px; color: var(--bone); margin: 8px 0 12px; }
+    .eq-success p { font-family: var(--font-sans); font-size: 14px; line-height: 1.7; color: var(--bone-mute); }
+    .sl-scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .35s;z-index:400;backdrop-filter:blur(3px)}
+    .sl-scrim.open{opacity:1;pointer-events:auto}
+    .sl-panel{position:fixed;top:0;right:0;height:100%;width:min(470px,94vw);background:#131313;border-left:1px solid var(--hairline);transform:translateX(100%);transition:transform .42s cubic-bezier(.22,.61,.36,1);z-index:401;display:flex;flex-direction:column;box-shadow:-30px 0 80px rgba(0,0,0,.6)}
+    .sl-panel.open{transform:none}
+    .sl-head{padding:30px 28px 20px;border-bottom:1px solid var(--hairline);position:relative}
+    .sl-eyebrow{font-family:var(--font-mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ember)}
+    .sl-title{font-family:var(--font-serif);font-weight:400;font-size:27px;margin:9px 0 6px;color:var(--bone)}
+    .sl-sub{font-size:13px;line-height:1.55;color:var(--bone-mute);max-width:36ch}
+    .sl-close{position:absolute;top:24px;right:22px;width:34px;height:34px;border-radius:50%;background:rgba(242,234,216,.06);border:1px solid var(--hairline-strong);color:var(--bone-mute);font-size:20px;line-height:1;cursor:pointer;transition:color .18s,border-color .18s}
+    .sl-close:hover{color:var(--ember);border-color:var(--ember)}
+    .sl-controls{display:flex;gap:10px;margin-top:20px}
+    .sl-search{flex:1;min-width:0;background:#0c0c0c;border:1px solid var(--hairline-strong);border-radius:9px;padding:11px 13px;color:var(--bone);font-family:var(--font-sans);font-size:14px}
+    .sl-search:focus{outline:none;border-color:var(--ember)}
+    .sl-search::placeholder{color:var(--bone-faint)}
+    .sl-body{overflow-y:auto;padding:22px 28px 44px;flex:1}
+    .sl-group{margin-bottom:26px}
+    .sl-group-h{font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone-faint);margin-bottom:10px;display:flex;justify-content:space-between;align-items:baseline}
+    .sl-group-h .n{color:var(--ember)}
+    .sl-row{padding:9px 0;border-bottom:1px solid rgba(242,234,216,.06);display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+    .sl-row .st{font-family:var(--font-sans);font-size:15px;color:var(--bone);line-height:1.3}
+    .sl-row .sa{font-family:var(--font-sans);font-size:12px;color:var(--bone-faint);text-align:right;flex-shrink:0}
+    .sl-empty{color:var(--bone-faint);font-size:14px;padding:24px 0;text-align:center}
+  </style>
+</head>
+<body>
+
+  <!-- ── Nav ────────────────────────────────────────────────── -->
+  <nav class="site-nav" id="site-nav" data-load="120">
+    <a class="nav-brand" href="/">
+      <svg width="34" height="34" viewBox="0 0 80 80" role="img" aria-label="Jasper Hawkins" style="flex-shrink:0">
+        <circle cx="40" cy="40" r="38" fill="#FF713D"/>
+        <circle cx="40" cy="40" r="34" fill="none" stroke="#B3411C" stroke-width="0.8"/>
+        <circle cx="40" cy="40" r="30" fill="#000000"/>
+        <circle cx="40" cy="40" r="28" fill="none" stroke="#FF713D" stroke-width="0.6" opacity="0.5"/>
+        <text x="40" y="49" text-anchor="middle"
+          font-family="'Playfair Display', Georgia, serif"
+          font-weight="400" font-size="24"
+          fill="#F2EAD8" letter-spacing="-0.02em">JH</text>
+      </svg>
+      <div>
+        <div class="nav-wordmark">Jasper Hawkins</div>
+        <div class="nav-descriptor">Singer · Guitarist · DJ</div>
+      </div>
+    </a>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-pill">
+      <a href="/">Home</a>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-trigger is-active" aria-haspopup="true" aria-expanded="false">Services
+          <svg class="nav-dd-caret" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dd-menu">
+          <a href="/weddings.html">Weddings</a>
+          <a href="/parties.html" aria-current="page">Parties</a>
+          <a href="/corporate.html">Corporate</a>
+        </div>
+      </div>
+      <a href="#" data-songlist>Song List</a>
+      <a href="#" data-enquire>Contact</a>
+      <a class="nav-cta" href="#" data-enquire>Check availability</a>
+    </div>
+  </nav>
+
+  <!-- ── Mobile menu ──────────────────────────────────────── -->
+  <div class="nav-menu" id="nav-menu" aria-hidden="true">
+    <nav class="nav-menu-links">
+      <a href="/">Home</a>
+      <div class="nav-menu-group is-open">
+        <button type="button" class="nav-menu-group-trigger" aria-expanded="true">Services <span class="nmg-caret">&#9662;</span></button>
+        <div class="nav-menu-sub">
+          <a href="/weddings.html">Weddings</a>
+          <a href="/parties.html" aria-current="page">Parties</a>
+          <a href="/corporate.html">Corporate</a>
+        </div>
+      </div>
+      <a href="#" data-songlist>Song List</a>
+      <a href="#" data-enquire>Contact</a>
+    </nav>
+    <a class="nav-menu-cta" href="#" data-enquire>Check availability</a>
+    <div class="nav-menu-note">Booking subject to availability</div>
+  </div>
+
+  <!-- ── Hero ─────────────────────────────────────────────── -->
+  <section class="p-hero">
+    <div class="p-hero-photo">
+      <img src="assets/photos/oldsite/parties-hero.webp" alt="Jasper Hawkins performing live acoustic music with vocalist at an outdoor celebration">
+    </div>
+    <div class="p-hero-overlay"></div>
+    <div class="p-hero-content">
+      <div class="p-hero-eyebrow" data-load="280">Private Parties &amp; Celebrations</div>
+      <h1 class="p-hero-headline" data-load="380">Live Music for <span class="accent">unforgettable</span> parties</h1>
+      <p class="p-hero-sub" data-load="540">Award Winning Acoustic Sets And Full Band Options To Bring Every Celebration To Life</p>
+      <div class="p-hero-ctas" data-load="700">
+        <a class="btn-primary" href="#" data-enquire>Enquire Now</a>
+        <a class="btn-ghost" href="#" data-enquire>Check availability</a>
+      </div>
+      <div class="p-hero-note" data-load="880">Booking subject to availability</div>
+    </div>
+  </section>
+
+  <!-- ── Intro + offerings ────────────────────────────────── -->
+  <section class="section-offer">
+    <div class="s-inner">
+      <div data-reveal>
+        <div class="sec-eyebrow">Professional. Versatile. Unforgettable.</div>
+        <p class="offer-intro">With over a decade of experience and more than 800 successful performances, I specialise in providing exceptional live music tailored to private parties and celebrations. Whether you're planning an intimate gathering or a grand celebration, I offer:</p>
+      </div>
+      <div class="offer-grid">
+        <div class="offer-card" data-reveal>
+          <div class="offer-photo">
+            <img src="assets/photos/oldsite/acoustic-corporate.png" alt="Jasper Hawkins performing a solo acoustic set">
+          </div>
+          <div class="offer-body">
+            <h3 class="offer-title">Solo Acoustic Performances</h3>
+            <p class="offer-text">Soulful, feel-good tunes that move with your party. From laid-back vibes to classic singalongs, it's the perfect live soundtrack for birthdays, backyard celebrations, and everything in between.</p>
+          </div>
+        </div>
+        <div class="offer-card" data-reveal data-delay="1">
+          <div class="offer-photo">
+            <img src="assets/photos/oldsite/band-corporate.png" alt="Full band performing live at a celebration">
+          </div>
+          <div class="offer-body">
+            <h3 class="offer-title">Full Band Experience</h3>
+            <p class="offer-text">High-energy performances designed to get everyone on the dance floor, ideal for birthdays, anniversaries and milestone celebrations of every kind.</p>
+          </div>
+        </div>
+      </div>
+      <div class="offer-cta-row" data-reveal>
+        <a class="btn-primary" href="#" data-enquire>Enquire Now</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Why choose me ────────────────────────────────────── -->
+  <section class="section-why">
+    <div class="why-inner">
+      <div class="why-head" data-reveal>
+        <div class="sec-eyebrow">About me</div>
+        <h2 class="sec-heading">Why Choose Me?</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card" data-reveal>
+          <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+          <h3 class="why-card-title">Tailored Musical Experience</h3>
+          <p class="why-card-body">I work closely with you to curate a setlist that aligns with your party's theme and audience preferences.</p>
+        </div>
+        <div class="why-card" data-reveal data-delay="1">
+          <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z"/><path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1"/></svg></div>
+          <h3 class="why-card-title">Professionalism</h3>
+          <p class="why-card-body">Punctual, well-presented, and committed to delivering a seamless experience from setup to the final note.</p>
+        </div>
+        <div class="why-card" data-reveal data-delay="2">
+          <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg></div>
+          <h3 class="why-card-title">Experienced</h3>
+          <p class="why-card-body">Having performed over 800 gigs I know exactly what it takes to make a standout celebration and how to tailor the music to suit.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Song selection ───────────────────────────────────── -->
+  <section class="section-songs">
+    <div class="songs-inner" data-reveal>
+      <div class="sec-eyebrow">The Songbook</div>
+      <h2 class="sec-heading">Song Selection Is Everything</h2>
+      <p class="songs-sub">From laid-back acoustic sets to packed dance floors — browse the full song list to hear what your party could sound like.</p>
+      <a class="btn-ghost" href="#" data-songlist>Browse the song list <span style="color:var(--ember)">→</span></a>
+    </div>
+  </section>
+
+  <!-- ── See the band live — video gallery (click-to-play, lazy Vimeo) ── -->
+  <style>
+    .vg-section { background: var(--ink); padding: var(--section-standard) var(--gutter); }
+    .vg-head { text-align: center; max-width: 640px; margin: 0 auto clamp(36px, 5vw, 56px); }
+    .vg-eyebrow { display:flex; align-items:center; justify-content:center; gap:10px; font-family: var(--font-sans); font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: var(--bone-mute); margin-bottom: 16px; }
+    .vg-eyebrow::before, .vg-eyebrow::after { content:""; width:28px; height:1px; background:var(--ember); }
+    .vg-heading { font-family: var(--font-serif); font-weight: 400; font-size: var(--font-h2); line-height: 1.1; letter-spacing: -0.02em; color: var(--bone); }
+    .vg-grid { max-width: var(--container-wide); margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(14px, 1.6vw, 22px); }
+    @media (max-width: 900px) { .vg-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 560px) { .vg-grid { grid-template-columns: 1fr; } }
+    .vg-item { position: relative; aspect-ratio: 16/9; border-radius: 14px; overflow: hidden; border: 1px solid var(--hairline); background: var(--ink-soft); cursor: pointer; padding: 0; display: block; width: 100%; }
+    .vg-item img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 500ms var(--ease), opacity 300ms ease; filter: var(--filter-photo); }
+    .vg-item:hover img { transform: scale(1.04); }
+    .vg-item::after { content:""; position:absolute; inset:0; background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 45%); pointer-events:none; transition: opacity 300ms; }
+    .vg-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 56px; height: 56px; border-radius: 50%; background: var(--ember); color: var(--ink); display:flex; align-items:center; justify-content:center; font-size: 20px; padding-left: 3px; box-shadow: 0 8px 30px rgba(0,0,0,0.4); transition: transform 250ms var(--ease), background 250ms; z-index: 2; }
+    .vg-item:hover .vg-play { transform: translate(-50%,-50%) scale(1.08); background: var(--ember-glow); }
+    .vg-title { position: absolute; left: 16px; right: 16px; bottom: 14px; z-index: 2; font-family: var(--font-sans); font-size: 13px; font-weight: 600; color: var(--bone); text-align: left; text-shadow: 0 2px 8px rgba(0,0,0,0.6); }
+    .vg-item.vg-playing::after, .vg-item.vg-playing .vg-play, .vg-item.vg-playing .vg-title, .vg-item.vg-playing img { opacity: 0; pointer-events: none; }
+    .vg-item iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; z-index: 3; }
+  </style>
+  <section class="vg-section">
+    <div class="vg-head">
+      <div class="vg-eyebrow">See it live</div>
+      <h2 class="vg-heading">Watch the music in action</h2>
+    </div>
+    <div class="vg-grid">
+      <button class="vg-item" type="button" data-vid="1060248233"><img src="assets/video-thumbs/1060248233.jpg" alt="Smells Like Teen Spirit — live" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Smells Like Teen Spirit</span></button>
+      <button class="vg-item" type="button" data-vid="1060276192"><img src="assets/video-thumbs/1060276192.jpg" alt="Don't Look Back In Anger — live" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Don't Look Back In Anger</span></button>
+      <button class="vg-item" type="button" data-vid="1059956074"><img src="assets/video-thumbs/1059956074.jpg" alt="Angels — Robbie Williams cover" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Angels — Robbie Williams</span></button>
+      <button class="vg-item" type="button" data-vid="1067515784"><img src="assets/video-thumbs/1067515784.jpg" alt="Can't Take My Eyes Off You — live" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Can't Take My Eyes Off You</span></button>
+      <button class="vg-item" type="button" data-vid="1060246533"><img src="assets/video-thumbs/1060246533.jpg" alt="Heart Of Gold — live" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Heart Of Gold</span></button>
+      <button class="vg-item" type="button" data-vid="1069787578"><img src="assets/video-thumbs/1069787578.jpg" alt="Angels — live" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Angels — Live</span></button>
+    </div>
+  </section>
+  <script>
+    document.querySelectorAll('.vg-item').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        if (btn.classList.contains('vg-playing')) return;
+        var id = btn.getAttribute('data-vid');
+        var f = document.createElement('iframe');
+        f.src = 'https://player.vimeo.com/video/' + id + '?autoplay=1&title=0&byline=0&portrait=0';
+        f.allow = 'autoplay; fullscreen; picture-in-picture';
+        f.setAttribute('allowfullscreen', '');
+        btn.appendChild(f);
+        btn.classList.add('vg-playing');
+      });
+    });
+  </script>
+
+  <!-- ── Reviews ──────────────────────────────────────────── -->
+  <section class="section-reviews">
+    <div class="reviews-container">
+
+      <div class="reviews-header" data-reveal>
+        <div class="reviews-eyebrow">
+          <svg width="15" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <span>Google Reviews</span>
+        </div>
+        <h2 class="reviews-headline">Trusted By Hundreds</h2>
+        <div class="reviews-meta">
+          <div class="reviews-stars-row"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+          <span class="reviews-score">5.0 on Google</span>
+        </div>
+      </div>
+
+      <div class="reviews-grid" data-reveal data-delay="1">
+
+        <div class="review-card">
+          <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+          <p class="card-quote">"You were the life of the party! Every guest we've spoken to since the wedding has mentioned how incredible you were. You have an amazing ability to read the room and keep the energy just right. We're convinced you're the best in the business."</p>
+          <div class="card-footer"><div class="card-avatar">K</div><div><div class="card-reviewer-name">Koshina</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
+        </div>
+
+        <div class="review-card">
+          <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+          <p class="card-quote">"I cannot rate him highly enough — he absolutely nailed the brief. Dance floor was never empty. His live music was the real star of the show. He learned 2 songs very particular to us and gave us the genuine impression that he really cared for our celebration."</p>
+          <div class="card-footer"><div class="card-avatar">G</div><div><div class="card-reviewer-name">Gregor MacDonald</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
+        </div>
+
+        <div class="review-card">
+          <div class="card-stars"><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg><svg viewBox="0 0 20 20" fill="#FF713D"><path d="M10 1l2.39 4.84 5.34.78-3.86 3.76.91 5.32L10 13.27l-4.78 2.51.91-5.32-3.86-3.76 5.34-.78L10 1z"/></svg></div>
+          <p class="card-quote">"Absolutely incredible DJ and musician! His live acoustic songs as we walked down the aisle added a personal touch to the ceremony. He read the room and kept the dance floor packed all night for every age group. We couldn't recommend him more highly."</p>
+          <div class="card-footer"><div class="card-avatar">E</div><div><div class="card-reviewer-name">Emma Fox</div><div class="card-reviewer-tag">Google Review</div></div><svg class="card-google" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg></div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ── Final CTA ────────────────────────────────────────── -->
+  <section class="section-cta">
+    <div class="cta-inner">
+      <span class="cta-eyebrow" data-reveal>Get in touch</span>
+      <h2 class="cta-heading" data-reveal data-delay="1">Let's Make Your Party Unforgettable</h2>
+      <p class="cta-sub" data-reveal data-delay="2">Whether you're aiming for an elegant background ambiance or a lively party atmosphere, I have the versatility and experience to deliver. Let's discuss how we can make your celebration unforgettable.</p>
+      <a class="btn-primary" href="#" data-enquire data-reveal data-delay="3">Enquire Now</a>
+      <p class="cta-note" data-reveal data-delay="3">Booking subject to availability</p>
+    </div>
+  </section>
+
+  <!-- ── Footer ───────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg width="36" height="36" viewBox="0 0 80 80" role="img" aria-label="Jasper Hawkins" style="flex-shrink:0">
+          <circle cx="40" cy="40" r="38" fill="#FF713D"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#B3411C" stroke-width="0.8"/>
+          <circle cx="40" cy="40" r="30" fill="#000000"/>
+          <circle cx="40" cy="40" r="28" fill="none" stroke="#FF713D" stroke-width="0.6" opacity="0.5"/>
+          <text x="40" y="49" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-weight="400" font-size="24" fill="#F2EAD8" letter-spacing="-0.02em">JH</text>
+        </svg>
+        <div>
+          <div class="footer-name">Jasper Hawkins</div>
+          <div class="footer-descriptor">Singer · Guitarist · DJ</div>
+        </div>
+      </div>
+      <div class="footer-contact">
+        <a href="tel:+64220805085">+64 22 080 5085</a>
+        <a href="mailto:hello@jasperhawkinsmusic.co.nz">hello@jasperhawkinsmusic.co.nz</a>
+      </div>
+      <div class="footer-copy">© 2026 Jasper Hawkins Music</div>
+    </div>
+  </footer>
+
+  <!-- ── Enquiry Off-Canvas ── -->
+  <div class="eq-scrim" id="eqScrim"></div>
+  <aside class="eq-panel" id="eqPanel" role="dialog" aria-modal="true" aria-label="Make an enquiry">
+    <div class="eq-panel-head">
+      <div>
+        <p class="eq-eyebrow">Check your date</p>
+        <h2 class="eq-heading">Let's talk about your celebration.</h2>
+      </div>
+      <button class="eq-close" id="eqClose" aria-label="Close">&times;</button>
+    </div>
+    <div class="eq-body">
+      <p class="eq-intro">Fill in your details and I'll get back to you within 48 hours.</p>
+      <form class="eq-form" id="eqForm" novalidate>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-name">First Name <span class="eq-req">*</span></label>
+          <input class="eq-input" type="text" id="eq-name" name="firstName" required autocomplete="given-name" placeholder="Your first name">
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-email">Email <span class="eq-req">*</span></label>
+          <input class="eq-input" type="email" id="eq-email" name="email" required autocomplete="email" placeholder="your@email.com">
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-phone">Phone <span class="eq-req">*</span></label>
+          <input class="eq-input" type="tel" id="eq-phone" name="phone" required autocomplete="tel" placeholder="+64 21 000 0000">
+        </div>
+
+        <!-- party page: event type is preset and hidden. Still submits eventType=party. -->
+        <div class="eq-field" style="display:none">
+          <label class="eq-label" for="eq-type">Event Type</label>
+          <select class="eq-select" id="eq-type" name="eventType">
+            <option value="party" selected>Party</option>
+          </select>
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-date">Event Date <span class="eq-req">*</span></label>
+          <input class="eq-input" type="date" id="eq-date" name="eventDate" required>
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-location">Event Location <span class="eq-req">*</span></label>
+          <input class="eq-input" type="text" id="eq-location" name="eventLocation" required placeholder="Venue or City/Town">
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-source">How Did You Hear About Me? <span class="eq-req">*</span></label>
+          <select class="eq-select" id="eq-source" name="source" required>
+            <option value="" disabled selected>Select an option</option>
+            <option value="google">Google Search</option>
+            <option value="instagram">Instagram</option>
+            <option value="facebook">Facebook</option>
+            <option value="referral">Referred by a Friend</option>
+            <option value="attended">Attended an Event</option>
+            <option value="directory">Directory Listing</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <div class="eq-field">
+          <label class="eq-label" for="eq-message">Your Message <span class="eq-req">*</span></label>
+          <textarea class="eq-textarea" id="eq-message" name="message" required placeholder="Tell me a bit about your event..."></textarea>
+        </div>
+
+        <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">
+          <label>Company<input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+        </div>
+
+        <p class="eq-error" id="eqError" role="alert" hidden style="color:#c0392b;margin:0 0 .5rem">Something went wrong — please try again, or email me directly.</p>
+
+        <button type="submit" class="btn-primary eq-submit">Send enquiry &nbsp;&rarr;</button>
+
+      </form>
+
+      <div class="eq-success" id="eqSuccess" hidden>
+        <h3>Thank you — your enquiry's on its way.</h3>
+        <p>I'll be in touch within 48 hours. Keep an eye on your inbox (and your spam folder, just in case). Cheers, Jasper</p>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── Song list off-canvas ── -->
+  <div class="sl-scrim" id="slScrim"></div>
+  <aside class="sl-panel" id="slPanel" aria-label="Full song list">
+    <div class="sl-head">
+      <div class="sl-eyebrow">Song List</div>
+      <h3 class="sl-title">The full set</h3>
+      <p class="sl-sub">190+ songs, all hand-learned. Can't spot one? Just ask — I'm always adding.</p>
+      <button class="sl-close" id="slClose" aria-label="Close">&times;</button>
+      <div class="sl-controls">
+        <input class="sl-search" id="slSearch" type="search" placeholder="Search song or artist…">
+      </div>
+    </div>
+    <div class="sl-body" id="slBody"></div>
+  </aside>
+
+  <!-- Floating enquiry CTA -->
+  <a class="float-cta" id="float-cta" href="#" data-enquire aria-label="Enquire now">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4.5" width="18" height="17" rx="2"/><path d="M16 2.5v4M8 2.5v4M3 9.5h18"/></svg>
+    Enquire now
+  </a>
+
+
+  <script>
+    /* ── Nav: scrolled state + auto-hide on scroll down ─────── */
+    const nav = document.getElementById('site-nav');
+    const navMenuEl = document.getElementById('nav-menu');
+    let navLastY = window.scrollY, navTick = false;
+    function navOnScroll() {
+      const y = Math.max(0, window.scrollY);
+      nav.classList.toggle('scrolled', y > 10);
+      const menuOpen = navMenuEl && navMenuEl.classList.contains('is-open');
+      const navFocused = nav.contains(document.activeElement);
+      if (y < 150 || menuOpen || navFocused) nav.classList.remove('nav-hidden');
+      else if (y > navLastY + 8) nav.classList.add('nav-hidden');
+      else if (y < navLastY - 8) nav.classList.remove('nav-hidden');
+      navLastY = y;
+      navTick = false;
+    }
+    window.addEventListener('scroll', () => {
+      if (!navTick) { requestAnimationFrame(navOnScroll); navTick = true; }
+    }, { passive: true });
+    navOnScroll();
+
+    /* ── Mobile menu ─────────────────────────────────────────── */
+    const hamburger = document.getElementById('nav-hamburger');
+    const navMenu   = document.getElementById('nav-menu');
+    function openMenu()  { hamburger.classList.add('is-open'); navMenu.classList.add('is-open'); hamburger.setAttribute('aria-expanded','true'); navMenu.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+    function closeMenu() { hamburger.classList.remove('is-open'); navMenu.classList.remove('is-open'); hamburger.setAttribute('aria-expanded','false'); navMenu.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+    hamburger.addEventListener('click', () => hamburger.classList.contains('is-open') ? closeMenu() : openMenu());
+    navMenu.querySelectorAll('a').forEach(l => l.addEventListener('click', closeMenu));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+
+    /* ── Page load sequence ──────────────────────────────────── */
+    document.addEventListener('DOMContentLoaded', () => {
+      const heroImg = document.querySelector('.p-hero-photo img');
+      if (heroImg) {
+        if (heroImg.complete) requestAnimationFrame(() => requestAnimationFrame(() => heroImg.classList.add('loaded')));
+        else heroImg.addEventListener('load', () => heroImg.classList.add('loaded'), { once: true });
+      }
+      document.querySelectorAll('[data-load]').forEach(el => {
+        const delay = parseInt(el.dataset.load) || 0;
+        setTimeout(() => el.classList.add('loaded'), delay);
+      });
+    });
+
+    /* ── Scroll reveal — one-shot IntersectionObserver ───────── */
+    const ro = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const delay = (parseInt(e.target.dataset.delay) || 0) * 90;
+          setTimeout(() => e.target.classList.add('is-visible'), delay);
+          ro.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('[data-reveal]').forEach(el => ro.observe(el));
+  </script>
+
+  <script>
+    /* ── Services dropdown: desktop ── */
+    document.querySelectorAll('.nav-dd').forEach(function(dd){
+      var trig = dd.querySelector('.nav-dd-trigger');
+      if(!trig) return;
+      trig.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); var open = dd.classList.toggle('is-open'); trig.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+      document.addEventListener('click', function(e){ if(!dd.contains(e.target)){ dd.classList.remove('is-open'); trig.setAttribute('aria-expanded','false'); } });
+    });
+    /* ── Services accordion: mobile ── */
+    document.querySelectorAll('.nav-menu-group-trigger').forEach(function(t){
+      t.addEventListener('click', function(){ var g = t.closest('.nav-menu-group'); var open = g.classList.toggle('is-open'); t.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+    });
+
+    /* ── Floating CTA: reveal past the hero ── */
+    (function(){
+      var floatCta = document.getElementById('float-cta');
+      var heroEl = document.querySelector('section[class*="hero"]');
+      if (!floatCta) return;
+      var tick = false;
+      function onScroll(){ var y = Math.max(0, window.scrollY); var h = heroEl ? heroEl.offsetHeight : 600; floatCta.classList.toggle('show', y > h - 120); tick = false; }
+      window.addEventListener('scroll', function(){ if(!tick){ requestAnimationFrame(onScroll); tick = true; } }, { passive: true });
+      onScroll();
+    }());
+
+    /* ── Enquiry drawer ── */
+    (function () {
+      var panel = document.getElementById('eqPanel');
+      var scrim = document.getElementById('eqScrim');
+      var closeBtn = document.getElementById('eqClose');
+      if (!panel) return;
+      function openPanel(){ panel.classList.add('is-open'); scrim.classList.add('is-open'); document.body.style.overflow='hidden'; setTimeout(function(){ var i=panel.querySelector('input'); if(i) i.focus(); }, 420); }
+      window.openEnquiry = openPanel;
+      function closePanel(){ panel.classList.remove('is-open'); scrim.classList.remove('is-open'); document.body.style.overflow=''; }
+      document.querySelectorAll('[data-enquire]').forEach(function(el){ el.addEventListener('click', function(e){ e.preventDefault(); openPanel(); }); });
+      closeBtn.addEventListener('click', closePanel);
+      scrim.addEventListener('click', closePanel);
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape' && panel.classList.contains('is-open')) closePanel(); });
+      document.getElementById('eqForm').addEventListener('submit', async function(e){
+        e.preventDefault();
+        var form = e.target;
+        var btn = form.querySelector('.eq-submit');
+        var errEl = document.getElementById('eqError');
+        var okEl = document.getElementById('eqSuccess');
+        if (errEl) errEl.hidden = true;
+        if (!form.reportValidity()) return;
+        var payload = {
+          firstName: form.firstName.value,
+          email: form.email.value,
+          phone: form.phone.value,
+          eventType: form.eventType ? form.eventType.value : 'party',
+          eventDate: form.eventDate.value,
+          eventLocation: form.eventLocation.value,
+          source: form.source.value,
+          message: form.message.value,
+          company: form.company ? form.company.value : ''
+        };
+        var orig = btn.textContent; btn.disabled = true; btn.textContent = 'Sending…';
+        try {
+          var res = await fetch('/api/enquiry', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+          if (!res.ok) throw new Error('Request failed');
+          form.hidden = true; if (okEl) okEl.hidden = false;
+        } catch (err) { btn.disabled = false; btn.textContent = orig; if (errEl) errEl.hidden = false; }
+      });
+    }());
+
+    /* ── Song list off-canvas (no ceremony filter / hearts) ── */
+    (function(){
+      const SONGLIST = [
+    { t:"The A-Team", a:"Ed Sheeran", c:"upbeat", love:false },
+    { t:"Africa", a:"Toto", c:"upbeat", love:false },
+    { t:"All My Love", a:"Coldplay", c:"acoustic", love:true },
+    { t:"All of Me", a:"John Legend", c:"acoustic", love:true },
+    { t:"All You Need Is Love", a:"The Beatles", c:"acoustic", love:true },
+    { t:"Always On My Mind", a:"Tiki Taane", c:"acoustic", love:true },
+    { t:"Amazed", a:"Lonestar", c:"acoustic", love:true },
+    { t:"Angels", a:"Robbie Williams", c:"upbeat", love:false },
+    { t:"Angie", a:"The Rolling Stones", c:"acoustic", love:false },
+    { t:"April Sun In Cuba", a:"Dragon", c:"upbeat", love:false },
+    { t:"Bad Moon Rising", a:"CCR", c:"upbeat", love:false },
+    { t:"Beautiful Crazy", a:"Luke Combs", c:"acoustic", love:true },
+    { t:"Belong Together", a:"Mark Ambor", c:"upbeat", love:true },
+    { t:"The Best", a:"Tina Turner", c:"upbeat", love:false },
+    { t:"Best Day Of My Life", a:"American Authors", c:"upbeat", love:true },
+    { t:"Better Be Home Soon", a:"Crowded House", c:"acoustic", love:false },
+    { t:"Better Together", a:"Jack Johnson", c:"acoustic", love:true },
+    { t:"Beyond", a:"Leon Bridges", c:"acoustic", love:true },
+    { t:"Big Jet Plane", a:"Angus & Julia Stone", c:"acoustic", love:false },
+    { t:"Bittersweet Symphony", a:"The Verve", c:"acoustic", love:false },
+    { t:"Blackbird", a:"The Beatles", c:"acoustic", love:false },
+    { t:"Blister In The Sun", a:"Violent Femmes", c:"upbeat", love:false },
+    { t:"Bohemian Rhapsody", a:"Queen", c:"upbeat", love:false },
+    { t:"Born To Love", a:"Ray LaMontagne", c:"acoustic", love:true },
+    { t:"The Boxer", a:"Simon & Garfunkel", c:"acoustic", love:false },
+    { t:"Brown Eyed Girl", a:"Van Morrison", c:"upbeat", love:false },
+    { t:"Bubbly", a:"Colbie Caillat", c:"acoustic", love:true },
+    { t:"Build Me Up Buttercup", a:"The Foundations", c:"upbeat", love:false },
+    { t:"Can't Help Falling In Love", a:"Elvis Presley", c:"acoustic", love:true },
+    { t:"Can't Hurry Love", a:"Diana Ross & The Supremes", c:"upbeat", love:false },
+    { t:"Can't Take My Eyes Off You", a:"Frankie Valli", c:"acoustic", love:true },
+    { t:"Carry You Home", a:"Alex Warren", c:"acoustic", love:true },
+    { t:"Cecilia", a:"Simon & Garfunkel", c:"upbeat", love:false },
+    { t:"The Chain", a:"Fleetwood Mac", c:"upbeat", love:false },
+    { t:"Chateau", a:"Angus & Julia Stone", c:"acoustic", love:true },
+    { t:"Coastline", a:"Hollow Coves", c:"acoustic", love:true },
+    { t:"Come Away With Me", a:"Norah Jones", c:"acoustic", love:true },
+    { t:"Controller", a:"L.A.B", c:"acoustic", love:false },
+    { t:"Crazy Love", a:"Van Morrison", c:"acoustic", love:true },
+    { t:"Creep", a:"Radiohead", c:"acoustic", love:false },
+    { t:"Crocodile Rock", a:"Elton John", c:"upbeat", love:false },
+    { t:"Dancing In The Dark", a:"Bruce Springsteen", c:"upbeat", love:false },
+    { t:"Dancing In The Moonlight", a:"Toploader", c:"upbeat", love:false },
+    { t:"Dancing Queen", a:"ABBA", c:"upbeat", love:false },
+    { t:"December 1963 (Oh What A Night)", a:"Frankie Valli", c:"upbeat", love:false },
+    { t:"Desperado", a:"Eagles", c:"acoustic", love:false },
+    { t:"Disarm", a:"Smashing Pumpkins", c:"acoustic", love:false },
+    { t:"Do You Remember", a:"Jack Johnson", c:"acoustic", love:true },
+    { t:"Don't Go Breaking My Heart", a:"Elton John & Kiki Dee", c:"upbeat", love:false },
+    { t:"Don't Look Back In Anger", a:"Oasis", c:"upbeat", love:false },
+    { t:"Don't Stop Me Now", a:"Queen", c:"upbeat", love:false },
+    { t:"Don't Think Twice It's Alright", a:"Bob Dylan", c:"acoustic", love:false },
+    { t:"Dreams", a:"The Cranberries", c:"acoustic", love:true },
+    { t:"Drops Of Jupiter", a:"Train", c:"acoustic", love:false },
+    { t:"Everlong", a:"Foo Fighters", c:"acoustic", love:true },
+    { t:"Everything", a:"Michael Bublé", c:"upbeat", love:true },
+    { t:"Everything I Wanted", a:"Billie Eilish", c:"acoustic", love:false },
+    { t:"Everywhere", a:"Fleetwood Mac", c:"acoustic", love:true },
+    { t:"Faith", a:"George Michael", c:"upbeat", love:false },
+    { t:"Fake Plastic Trees", a:"Radiohead", c:"acoustic", love:false },
+    { t:"Falling Slowly", a:"Glen Hansard", c:"acoustic", love:false },
+    { t:"Fast Car", a:"Tracy Chapman", c:"acoustic", love:false },
+    { t:"Flake", a:"Jack Johnson", c:"upbeat", love:false },
+    { t:"Forever You & Me", a:"Teskey Brothers", c:"acoustic", love:true },
+    { t:"Free Fallin'", a:"Tom Petty", c:"acoustic", love:false },
+    { t:"From This Moment / You're Still The One", a:"Shania Twain", c:"acoustic", love:true },
+    { t:"The Gambler", a:"Kenny Rogers", c:"upbeat", love:false },
+    { t:"The Girl", a:"City & Colour", c:"acoustic", love:true },
+    { t:"Girls Like You", a:"Maroon 5", c:"acoustic", love:false },
+    { t:"Hallelujah", a:"Jeff Buckley", c:"acoustic", love:true },
+    { t:"Have You Ever Seen The Rain", a:"CCR", c:"upbeat", love:false },
+    { t:"Heart Of Gold", a:"Neil Young", c:"upbeat", love:true },
+    { t:"Heartbeats", a:"José González", c:"acoustic", love:true },
+    { t:"Help!", a:"The Beatles", c:"acoustic", love:false },
+    { t:"Here Comes The Sun", a:"The Beatles", c:"acoustic", love:true },
+    { t:"Hey Ya", a:"Outkast", c:"upbeat", love:false },
+    { t:"Ho Hey", a:"The Lumineers", c:"upbeat", love:false },
+    { t:"Home", a:"Edward Sharpe & The Magnetic Zeros", c:"acoustic", love:true },
+    { t:"Hotel California", a:"Eagles", c:"upbeat", love:false },
+    { t:"How Deep Is Your Love", a:"Bee Gees", c:"upbeat", love:false },
+    { t:"How Long Will I Love You", a:"Ellie Goulding", c:"acoustic", love:true },
+    { t:"How Sweet It Is To Be Loved By You", a:"James Taylor", c:"acoustic", love:true },
+    { t:"I Get To Love You", a:"Ruelle", c:"acoustic", love:true },
+    { t:"I Kissed A Girl", a:"Katy Perry", c:"upbeat", love:false },
+    { t:"I Love You Always Forever", a:"Donna Lewis", c:"acoustic", love:true },
+    { t:"I Still Haven't Found What I'm Looking For / Stand By Me", a:"U2 & Ben E. King", c:"upbeat", love:false },
+    { t:"I Took A Pill In Ibiza", a:"Mike Posner", c:"acoustic", love:false },
+    { t:"I Wanna Dance With Somebody", a:"Whitney Houston", c:"upbeat", love:false },
+    { t:"I Want It That Way", a:"Backstreet Boys", c:"upbeat", love:false },
+    { t:"I Won't Give Up", a:"Jason Mraz", c:"acoustic", love:false },
+    { t:"I'll Follow You Into The Dark", a:"Death Cab For Cutie", c:"acoustic", love:false },
+    { t:"I'm Gonna Be (500 Miles)", a:"The Proclaimers", c:"upbeat", love:false },
+    { t:"I'm On Fire", a:"Bruce Springsteen", c:"acoustic", love:false },
+    { t:"I'm Yours", a:"Jason Mraz", c:"upbeat", love:false },
+    { t:"I've Got You (And You've Got Me)", a:"Nashville Cast", c:"acoustic", love:true },
+    { t:"Iris", a:"Goo Goo Dolls", c:"acoustic", love:true },
+    { t:"Islands In The Stream", a:"Dolly Parton & Kenny Rogers", c:"upbeat", love:false },
+    { t:"Isn't She Lovely", a:"Stevie Wonder", c:"upbeat", love:false },
+    { t:"Jackson", a:"Johnny Cash", c:"upbeat", love:false },
+    { t:"Jolene", a:"Dolly Parton", c:"upbeat", love:false },
+    { t:"Joy Of My Life", a:"Chris Stapleton", c:"acoustic", love:true },
+    { t:"Just The Two Of Us", a:"Grover Washington Jr. ft. Bill Withers", c:"acoustic", love:true },
+    { t:"Just The Way You Are", a:"Bruno Mars", c:"upbeat", love:false },
+    { t:"Kiss Me", a:"Sixpence None The Richer", c:"acoustic", love:true },
+    { t:"Landslide", a:"Fleetwood Mac", c:"acoustic", love:false },
+    { t:"Lazy Song", a:"Bruno Mars", c:"upbeat", love:false },
+    { t:"Lego House", a:"Ed Sheeran", c:"acoustic", love:false },
+    { t:"Let Her Go", a:"Passenger", c:"acoustic", love:false },
+    { t:"Let It Be", a:"The Beatles", c:"acoustic", love:false },
+    { t:"Little Blue", a:"Josh Garrels", c:"acoustic", love:true },
+    { t:"Little Lion Man", a:"Mumford & Sons", c:"upbeat", love:false },
+    { t:"Lonely Boy", a:"The Black Keys", c:"upbeat", love:false },
+    { t:"Love Story", a:"Taylor Swift", c:"upbeat", love:false },
+    { t:"Love Yourself", a:"Justin Bieber", c:"acoustic", love:false },
+    { t:"Lovely Day", a:"Bill Withers", c:"acoustic", love:true },
+    { t:"Loyal", a:"Dave Dobbyn", c:"upbeat", love:false },
+    { t:"Lucky", a:"Jason Mraz & Colbie Caillat", c:"acoustic", love:true },
+    { t:"Make You Feel My Love", a:"Adele", c:"acoustic", love:true },
+    { t:"Marry Me", a:"Train", c:"acoustic", love:true },
+    { t:"Marry You", a:"Bruno Mars", c:"acoustic", love:true },
+    { t:"Memories", a:"Maroon 5", c:"acoustic", love:false },
+    { t:"Miles Away", a:"Years Around The Sun", c:"acoustic", love:true },
+    { t:"More Than Words", a:"Extreme", c:"acoustic", love:false },
+    { t:"Mr Brightside", a:"The Killers", c:"upbeat", love:false },
+    { t:"Mrs Robinson", a:"Simon & Garfunkel", c:"upbeat", love:false },
+    { t:"My Way", a:"Frank Sinatra", c:"acoustic", love:false },
+    { t:"Never Going Back Again", a:"Fleetwood Mac", c:"acoustic", love:false },
+    { t:"Never Tear Us Apart", a:"INXS", c:"acoustic", love:true },
+    { t:"No Woman No Cry", a:"Bob Marley", c:"upbeat", love:false },
+    { t:"Old Man", a:"Neil Young", c:"acoustic", love:false },
+    { t:"One Life", a:"Ed Sheeran", c:"acoustic", love:true },
+    { t:"One Love", a:"Bob Marley", c:"upbeat", love:false },
+    { t:"The One That I Want", a:"Alex & Sierra", c:"acoustic", love:true },
+    { t:"The One You Love", a:"Passenger & Kate Miller-Heidke", c:"acoustic", love:true },
+    { t:"Only You", a:"Yazoo", c:"acoustic", love:true },
+    { t:"Paradise", a:"Coldplay", c:"acoustic", love:true },
+    { t:"Peaceful Easy Feeling", a:"Eagles", c:"acoustic", love:true },
+    { t:"Perfect", a:"Ed Sheeran", c:"acoustic", love:true },
+    { t:"Promise", a:"Ben Howard", c:"acoustic", love:true },
+    { t:"The Promise", a:"Tracy Chapman", c:"acoustic", love:true },
+    { t:"Proud Mary", a:"CCR", c:"upbeat", love:false },
+    { t:"Rain", a:"Dragon", c:"upbeat", love:false },
+    { t:"Red Wine", a:"UB40", c:"upbeat", love:false },
+    { t:"Redemption Song", a:"Bob Marley", c:"acoustic", love:false },
+    { t:"Rhythm Of Love", a:"Plain White T's", c:"acoustic", love:true },
+    { t:"Riptide", a:"Vance Joy", c:"upbeat", love:false },
+    { t:"Romeo & Juliet", a:"Dire Straits", c:"acoustic", love:true },
+    { t:"Rude", a:"Magic", c:"upbeat", love:false },
+    { t:"Santeria", a:"Sublime", c:"upbeat", love:false },
+    { t:"The Scientist", a:"Coldplay", c:"acoustic", love:true },
+    { t:"September", a:"Earth, Wind & Fire", c:"upbeat", love:false },
+    { t:"Sex On Fire", a:"Kings Of Leon", c:"upbeat", love:false },
+    { t:"Señorita", a:"Shawn Mendes & Camila Cabello", c:"upbeat", love:false },
+    { t:"Shallow", a:"Lady Gaga & Bradley Cooper", c:"acoustic", love:true },
+    { t:"She Burns", a:"Foy Vance", c:"acoustic", love:false },
+    { t:"She Will Be Loved", a:"Maroon 5", c:"upbeat", love:false },
+    { t:"Signed, Sealed, Delivered", a:"Stevie Wonder", c:"upbeat", love:true },
+    { t:"Simple Things", a:"Ziggy Alberts", c:"acoustic", love:true },
+    { t:"Sky Full Of Stars", a:"Coldplay", c:"acoustic", love:true },
+    { t:"Slice Of Heaven", a:"Dave Dobbyn", c:"upbeat", love:true },
+    { t:"Smells Like Teen Spirit", a:"Nirvana", c:"upbeat", love:false },
+    { t:"So True", a:"The Black Seeds", c:"upbeat", love:true },
+    { t:"Solsbury Hill", a:"Peter Gabriel", c:"acoustic", love:false },
+    { t:"Someone Like You", a:"Adele", c:"upbeat", love:false },
+    { t:"Somewhere Over The Rainbow", a:"Israel Kamakawiwo'ole", c:"acoustic", love:true },
+    { t:"The Sound Of Silence", a:"Simon & Garfunkel", c:"acoustic", love:false },
+    { t:"Steal My Kisses", a:"Ben Harper", c:"upbeat", love:false },
+    { t:"Still Into You", a:"Paramore", c:"upbeat", love:false },
+    { t:"Stop This Train", a:"John Mayer", c:"acoustic", love:false },
+    { t:"The Story", a:"Brandi Carlile", c:"acoustic", love:true },
+    { t:"Summer Of '69", a:"Bryan Adams", c:"upbeat", love:false },
+    { t:"Sunday Morning", a:"Maroon 5", c:"upbeat", love:false },
+    { t:"Sweet Caroline", a:"Neil Diamond", c:"upbeat", love:false },
+    { t:"Sweet Home Alabama", a:"Lynyrd Skynyrd", c:"upbeat", love:false },
+    { t:"Swing Life Away", a:"Rise Against", c:"acoustic", love:false },
+    { t:"Take It Easy", a:"Eagles", c:"upbeat", love:false },
+    { t:"Take Me Home, Country Roads", a:"John Denver", c:"upbeat", love:false },
+    { t:"Taylor", a:"Jack Johnson", c:"acoustic", love:false },
+    { t:"Teenage Dirtbag", a:"Wheatus", c:"upbeat", love:false },
+    { t:"Tennessee Whiskey", a:"Chris Stapleton & Stan Walker", c:"upbeat", love:true },
+    { t:"Tequila Sunrise", a:"Eagles", c:"acoustic", love:false },
+    { t:"Thinking Out Loud", a:"Ed Sheeran", c:"acoustic", love:true },
+    { t:"A Thousand Years", a:"Christina Perri", c:"acoustic", love:true },
+    { t:"Tiny Dancer", a:"Elton John", c:"acoustic", love:false },
+    { t:"Truly Madly Deeply", a:"Savage Garden", c:"acoustic", love:true },
+    { t:"Until I Found You", a:"Stephen Sanchez", c:"acoustic", love:true },
+    { t:"Valerie", a:"Amy Winehouse", c:"upbeat", love:false },
+    { t:"Wagon Wheel", a:"Old Crow Medicine Show", c:"upbeat", love:false },
+    { t:"Wake Me Up Before You Go-Go", a:"Wham!", c:"upbeat", love:false },
+    { t:"Wasn't Me", a:"Shaggy", c:"upbeat", love:false },
+    { t:"The Way You Make Me Feel", a:"Michael Jackson", c:"upbeat", love:true },
+    { t:"When The Party's Over", a:"Billie Eilish", c:"acoustic", love:false },
+    { t:"When You Say Nothing At All", a:"Ronan Keating", c:"acoustic", love:true },
+    { t:"Where Do The Children Play", a:"Cat Stevens", c:"acoustic", love:false },
+    { t:"White Blank Page", a:"Mumford & Sons", c:"acoustic", love:false },
+    { t:"Who Says", a:"John Mayer", c:"acoustic", love:false },
+    { t:"Why Does Love Do This To Me", a:"The Exponents", c:"upbeat", love:false },
+    { t:"Wild World", a:"Cat Stevens", c:"upbeat", love:false },
+    { t:"The Wind", a:"Cat Stevens", c:"acoustic", love:false },
+    { t:"Wish You Well", a:"Bernard Fanning", c:"acoustic", love:false },
+    { t:"Wish You Were Here", a:"Pink Floyd", c:"upbeat", love:false },
+    { t:"Wonderwall", a:"Oasis", c:"upbeat", love:false },
+    { t:"Yellow", a:"Coldplay", c:"acoustic", love:true },
+    { t:"Yes I Do", a:"L.A.B", c:"acoustic", love:true },
+    { t:"Yesterday", a:"The Beatles", c:"acoustic", love:false },
+    { t:"You And Me", a:"Lifehouse", c:"acoustic", love:true },
+    { t:"You Are The Reason", a:"Calum Scott & Leona Lewis", c:"acoustic", love:true },
+    { t:"You Can't Always Get What You Want", a:"The Rolling Stones", c:"acoustic", love:false },
+    { t:"You Make My Dreams", a:"Hall & Oates", c:"upbeat", love:true },
+    { t:"You're My Best Friend", a:"Queen", c:"acoustic", love:true },
+    { t:"Young & Beautiful", a:"Lana Del Rey", c:"acoustic", love:true },
+    { t:"Zombie", a:"The Cranberries", c:"upbeat", love:false },
+  ];
+      var slScrim=document.getElementById('slScrim'), slPanel=document.getElementById('slPanel'), slBody=document.getElementById('slBody'), slSearch=document.getElementById('slSearch'), slClose=document.getElementById('slClose');
+      if(!slPanel) return;
+      function renderList(){
+        var q=(slSearch.value||'').trim().toLowerCase();
+        var match=function(s){ return (!q||(s.t+' '+s.a).toLowerCase().indexOf(q)>-1); };
+        var html='';
+        [['Upbeat \u00b7 Dance Floor','upbeat'],['Acoustic \u00b7 Chilled','acoustic']].forEach(function(pair){
+          var label=pair[0], cat=pair[1];
+          var items=SONGLIST.filter(function(s){ return s.c===cat&&match(s); });
+          if(!items.length) return;
+          html+='<div class="sl-group"><div class="sl-group-h"><span>'+label+'</span><span class="n">'+items.length+'</span></div>';
+          items.forEach(function(s){ html+='<div class="sl-row"><span class="st">'+s.t+'</span><span class="sa">'+s.a+'</span></div>'; });
+          html+='</div>';
+        });
+        slBody.innerHTML = html || '<div class="sl-empty">No songs match — try a different search.</div>';
+      }
+      function openList(){ renderList(); slScrim.classList.add('open'); slPanel.classList.add('open'); document.body.style.overflow='hidden'; }
+      function closeList(){ slScrim.classList.remove('open'); slPanel.classList.remove('open'); document.body.style.overflow=''; }
+      document.querySelectorAll('[data-songlist]').forEach(function(el){ el.addEventListener('click', function(e){ e.preventDefault(); openList(); }); });
+      slClose.addEventListener('click',closeList);
+      slScrim.addEventListener('click',closeList);
+      slSearch.addEventListener('input',renderList);
+      addEventListener('keydown',function(e){ if(e.key==='Escape') closeList(); });
+    })();
+  </script>
+
+</body>
+</html>

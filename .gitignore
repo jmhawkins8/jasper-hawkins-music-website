@@ -1,0 +1,8 @@
+.safety/
+*.bak
+index.html.bak
+mock-*.html
+mockup-*.html
+venue-options.html
+fable-preview.html
+_bunny-videos.md

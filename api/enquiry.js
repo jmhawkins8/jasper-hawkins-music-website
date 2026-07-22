@@ -1,4 +1,4 @@
-// Wedding-page enquiry handler.
+// Website enquiry handler (weddings / parties / corporate / home).
 // Flow: website form POSTs here -> we save the enquiry into the dashboard's
 // Supabase `clients` table (stage = 'enquiry') FIRST, then send Jasper a
 // notification email via Resend. The DB write is the source of truth: if the
@@ -53,12 +53,19 @@ export default async function handler(req, res) {
   }
 
   const location = clean(body.eventLocation, 200);
+  // Derive the dashboard gig type from the event type submitted by the page the
+  // enquiry came from (weddings/parties/corporate preset it; home lets them choose).
+  const eventType = clean(body.eventType, 40) || 'wedding';
+  const GIG_MAP = { wedding: 'wedding', corporate: 'corporate', party: 'party', birthday: 'party', function: 'party', other: 'party' };
+  const gigType  = GIG_MAP[eventType] || 'wedding';
+  // Friendly label for the notification email only (not stored).
+  const LABELS = { wedding: 'wedding', corporate: 'corporate', party: 'party', birthday: 'birthday', function: 'private function', other: 'event' };
+  const evLabel = LABELS[eventType] || 'event';
   const record = {
     id: randomUUID(),                                // clients.id is NOT NULL with no default
     user_id: OWNER,
     stage: 'enquiry',
-    gig_type: 'wedding',
-    event_type: clean(body.eventType, 40) || 'wedding',
+    gig_type: gigType,
     name,
     email,
     phone: clean(body.phone, 60),
@@ -97,7 +104,7 @@ export default async function handler(req, res) {
     if (process.env.RESEND_API_KEY && process.env.NOTIFY_EMAIL && process.env.FROM_EMAIL) {
       const rows = [
         ['Name', name], ['Email', email], ['Phone', record.phone],
-        ['Event date', record.event_date || '—'], ['Location', location || '—'],
+        ['Event type', evLabel], ['Event date', record.event_date || '—'], ['Location', location || '—'],
         ['Heard via', record.source || '—'], ['Message', record.enquiry_message || '—'],
       ].map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#888;vertical-align:top">${k}</td><td style="padding:4px 0">${String(v).replace(/</g, '&lt;')}</td></tr>`).join('');
       await fetch('https://api.resend.com/emails', {
@@ -107,8 +114,8 @@ export default async function handler(req, res) {
           from: process.env.FROM_EMAIL,
           to: process.env.NOTIFY_EMAIL,
           reply_to: email,
-          subject: `New wedding enquiry — ${name}${record.event_date ? ' · ' + record.event_date : ''}`,
-          html: `<h2 style="font-family:sans-serif">New wedding enquiry</h2><p style="font-family:sans-serif;color:#555">It's already in your dashboard Enquiry tab.</p><table style="font-family:sans-serif;font-size:14px">${rows}</table>`,
+          subject: `New ${evLabel} enquiry — ${name}${record.event_date ? ' · ' + record.event_date : ''}`,
+          html: `<h2 style="font-family:sans-serif">New ${evLabel} enquiry</h2><p style="font-family:sans-serif;color:#555">It's already in your dashboard Enquiry tab.</p><table style="font-family:sans-serif;font-size:14px">${rows}</table>`,
         }),
       });
     }
