@@ -2081,9 +2081,9 @@
       object-fit: cover;
       object-position: center 22%;
       display: block;
-      /* Slightly darker than the base photo filter so the brighter venue shots
-         sit back and match the rest of the site. */
-      filter: var(--filter-photo) brightness(0.86) saturate(0.98);
+      /* Darker than the base photo filter so the brighter venue shots sit back
+         and match the rest of the site. */
+      filter: var(--filter-photo) brightness(0.72) saturate(0.96);
     }
     .vtd-content { min-height: 260px; display: flex; flex-direction: column; }
     .vtd-name {
@@ -2950,7 +2950,7 @@
         (function(){
           if (window.matchMedia && matchMedia('(max-width: 767px)').matches) {
             var v = document.querySelector('.hero-video');
-            if (v) { v.src = 'assets/video/hero-promo-mobile-hd.mp4?v=3'; v.load(); if (v.play) v.play().catch(function(){}); }
+            if (v) { v.src = 'assets/video/hero-promo-mobile-hd.mp4?v=4'; v.load(); if (v.play) v.play().catch(function(){}); }
           }
         })();
       </script>
