@@ -3429,7 +3429,7 @@
       <span class="cta-eyebrow" data-reveal>Get in touch</span>
       <h2 class="cta-heading" data-reveal data-delay="1">Let's make your day<br>unforgettable</h2>
       <p class="cta-sub" data-reveal data-delay="2">Tell me your date and a little about your wedding — I'll come back to you personally within 48 hours.</p>
-      <a class="btn-primary" href="#" data-enquire data-reveal data-delay="3">Enquire now</a>
+      <a class="btn-primary" href="#" data-enquire data-eq-eyebrow="Contact me now" data-eq-heading="Submit your enquiry below" data-reveal data-delay="3">Enquire now</a>
       <p class="cta-note" data-reveal data-delay="3">Booking subject to availability</p>
     </div>
   </section>
@@ -3479,13 +3479,13 @@
   <aside class="eq-panel" id="eqPanel" role="dialog" aria-modal="true" aria-label="Make an enquiry">
     <div class="eq-panel-head">
       <div>
-        <p class="eq-eyebrow">Check your date</p>
+        <p class="eq-eyebrow">Submit Enquiry</p>
         <h2 class="eq-heading">Check if your date's available.</h2>
       </div>
       <button class="eq-close" id="eqClose" aria-label="Close">&times;</button>
     </div>
     <div class="eq-body">
-      <p class="eq-intro">Fill in your details and I'll get back to you within 48 hours.</p>
+      <p class="eq-intro">Fill in your details below, and I'll get back to you and confirm availability within 48 hours.</p>
       <form class="eq-form" id="eqForm" novalidate>
 
         <div class="eq-field">
@@ -3721,6 +3721,17 @@
     const close = document.getElementById('eqClose');
     if (!panel) return;
 
+    // Per-button drawer copy: a trigger may override the eyebrow/heading via
+    // data-eq-eyebrow / data-eq-heading; every other trigger uses the defaults.
+    const eqEyebrowEl = panel.querySelector('.eq-eyebrow');
+    const eqHeadingEl = panel.querySelector('.eq-heading');
+    const eqDefEyebrow = eqEyebrowEl ? eqEyebrowEl.textContent : '';
+    const eqDefHeading = eqHeadingEl ? eqHeadingEl.textContent : '';
+    function applyEqCopy(trigger) {
+      if (eqEyebrowEl) eqEyebrowEl.textContent = (trigger && trigger.dataset.eqEyebrow) || eqDefEyebrow;
+      if (eqHeadingEl) eqHeadingEl.textContent = (trigger && trigger.dataset.eqHeading) || eqDefHeading;
+    }
+
     function openPanel(prefillDate) {
       if (prefillDate) {
         // Opened from the availability calendar — it's a wedding date, so set both.
@@ -3735,7 +3746,7 @@
       setTimeout(() => panel.querySelector('input')?.focus(), 420);
     }
     // Exposed so the availability calendar can open the form with a date pre-filled.
-    window.openEnquiry = openPanel;
+    window.openEnquiry = function (prefillDate) { applyEqCopy(null); openPanel(prefillDate); };
     function closePanel() {
       panel.classList.remove('is-open');
       scrim.classList.remove('is-open');
@@ -3743,7 +3754,7 @@
     }
 
     document.querySelectorAll('[data-enquire]').forEach(el =>
-      el.addEventListener('click', e => { e.preventDefault(); openPanel(); })
+      el.addEventListener('click', e => { e.preventDefault(); applyEqCopy(el); openPanel(); })
     );
     close.addEventListener('click', closePanel);
     scrim.addEventListener('click', closePanel);
