@@ -131,7 +131,7 @@
     .nav-menu-links a {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(40px, 11vw, 56px);
+      font-size: clamp(30px, 8vw, 44px);
       line-height: 1;
       color: var(--bone);
       text-decoration: none;
@@ -169,7 +169,7 @@
     /* ── Services dropdown: mobile accordion ── */
     .nav-menu-group { border-bottom: 1px solid var(--hairline); opacity: 0; transform: translateY(14px); transition: opacity 260ms var(--ease), transform 260ms var(--ease); }
     .nav-menu.is-open .nav-menu-group { opacity: 1; transform: translateY(0); transition-delay: 110ms; }
-    .nav-menu-group-trigger { width: 100%; background: none; border: 0; cursor: pointer; font-family: var(--font-serif); font-weight: 400; font-size: clamp(34px, 9.5vw, 52px); line-height: 1; color: var(--bone); text-align: left; padding: 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .nav-menu-group-trigger { width: 100%; background: none; border: 0; cursor: pointer; font-family: var(--font-serif); font-weight: 400; font-size: clamp(30px, 8vw, 44px); line-height: 1; color: var(--bone); text-align: left; padding: 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .nav-menu-group-trigger .nmg-caret { font-size: 0.42em; color: var(--ember); transition: transform 260ms var(--ease); }
     .nav-menu-group.is-open .nav-menu-group-trigger { color: var(--ember); }
     .nav-menu-group.is-open .nav-menu-group-trigger .nmg-caret { transform: rotate(180deg); }
@@ -1436,6 +1436,12 @@
     .why-cta .arr { transition: transform .18s var(--ease); }
     .why-cta:hover .arr { transform: translateX(4px); }
 
+    /* Mobile: give the "Fully Personalised" photo card more height so the crop of
+       Jasper has room and the headline sits clear of his head, not over it. */
+    @media (max-width: 699px) {
+      .why-tall { min-height: 500px; }
+    }
+
     @media (min-width: 700px) {
       .why-grid {
         grid-template-columns: 1fr 1fr;
@@ -1549,8 +1555,8 @@
       position: relative;
       overflow: hidden;
       background: var(--ink);
-      /* symmetric padding — content balanced against the video */
-      padding: clamp(72px, 8vw, 100px) var(--gutter) clamp(72px, 8vw, 100px);
+      /* top-weighted padding so the content sits a touch lower / better balanced */
+      padding: clamp(104px, 11vw, 148px) var(--gutter) clamp(56px, 6vw, 84px);
     }
     .cta-video {
       position: absolute;
@@ -1623,7 +1629,8 @@
         min-height: 78vh;
         display: flex;
         align-items: center;
-        padding: var(--section-standard) var(--gutter);
+        /* extra top padding nudges the centred content down so it reads balanced */
+        padding: calc(var(--section-standard) + 7vh) var(--gutter) var(--section-standard);
       }
       .section-cta .cta-inner { width: 100%; }
     }
@@ -2074,7 +2081,9 @@
       object-fit: cover;
       object-position: center 22%;
       display: block;
-      filter: var(--filter-photo);
+      /* Slightly darker than the base photo filter so the brighter venue shots
+         sit back and match the rest of the site. */
+      filter: var(--filter-photo) brightness(0.86) saturate(0.98);
     }
     .vtd-content { min-height: 260px; display: flex; flex-direction: column; }
     .vtd-name {
@@ -2941,7 +2950,7 @@
         (function(){
           if (window.matchMedia && matchMedia('(max-width: 767px)').matches) {
             var v = document.querySelector('.hero-video');
-            if (v) { v.src = 'assets/video/hero-promo-mobile.mp4?v=2'; v.load(); if (v.play) v.play().catch(function(){}); }
+            if (v) { v.src = 'assets/video/hero-promo-mobile-hd.mp4?v=3'; v.load(); if (v.play) v.play().catch(function(){}); }
           }
         })();
       </script>
@@ -3069,7 +3078,7 @@
 
     <!-- 04 — Reception -->
     <section data-flow-section>
-      <div class="flow-inner bg-warm">
+      <div class="flow-inner bg-soft">
         <div class="frame-grid photo-right">
           <div class="frame-text">
             <div class="frame-num">03 / Reception</div>
@@ -3296,7 +3305,7 @@
         <div class="why-tall why-e" data-reveal data-delay="2">
           <img class="why-tall-photo" src="assets/photos/ceremony-markovina.webp" alt="" aria-hidden="true">
           <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-4.35-9.5-8.5C.8 9.6 2.3 6 5.5 6 7.6 6 9 7.3 12 10c3-2.7 4.4-4 6.5-4 3.2 0 4.7 3.6 3 6.5C19 16.65 12 21 12 21z"/></svg></div>
-          <h3 class="why-tall-title">Fully Personalized</h3>
+          <h3 class="why-tall-title">Fully Personalised</h3>
           <p class="why-tall-body">Every detail is tailored to you, right down to your custom aisle song and first dance track. Nothing generic, nothing left to chance.</p>
           <a class="why-cta" href="#" data-enquire>Check availability <span class="arr">→</span></a>
         </div>
