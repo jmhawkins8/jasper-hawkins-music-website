@@ -246,6 +246,10 @@
       /* No max-width — let the headline fill the column naturally */
     }
 
+    /* Extra hero line-breaks — phones only: keeps desktop as two lines but
+       splits the headline into four so "One Booking." can't overflow. */
+    .hl-br { display: none; }
+    @media (max-width: 600px) { .hl-br { display: inline; } }
     .hero-headline {
       font-family: var(--font-serif);
       font-weight: 400;
@@ -309,6 +313,8 @@
     .action-ctas {
       display: grid;
       grid-template-columns: 1fr 1fr;
+      border-radius: var(--radius-md);
+      overflow: hidden;
     }
     .cta-primary {
       display: flex;
@@ -2725,11 +2731,8 @@
     .flow-inner.bg-soft  { background: var(--ink-soft); color: var(--bone); }
     .flow-inner.bg-warm  { background: var(--ink-warm); color: var(--bone); }
     .bg-canapes {
-      background-color: var(--ember);
-      background-image:
-        radial-gradient(130% 90% at 82% 6%, rgba(255,179,138,0.55) 0%, transparent 52%),
-        radial-gradient(120% 100% at 4% 100%, rgba(150,55,26,0.6) 0%, transparent 58%);
-      color: #1a0d06;
+      background: var(--ink-warm);
+      color: var(--bone);
     }
     .canapes-grain {
       position: absolute; inset: 0;
@@ -2739,10 +2742,8 @@
       pointer-events: none;
     }
     .bg-canapes .frame-grid { position: relative; z-index: 1; }
-    .bg-canapes .frame-num { color: #1a0d06; opacity: 0.72; }
-    .bg-canapes .frame-title { color: #000; }
-    .bg-canapes .frame-text::before { background: #1a0d06; opacity: 0.5; }
-    .bg-canapes .frame-desc { color: #1a0d06; opacity: 0.85; }
+    /* Canapés now uses a dark background like the other cards, so its text
+       inherits the same light treatment (frame-num ember, title/desc on bone). */
     .frame-photo-warm img { filter: saturate(1.12) contrast(1.06) brightness(0.96); }
     /* Bonus stack */
     .bonus-stack {
@@ -2891,7 +2892,7 @@
     <div class="hero-panel">
       <div class="hero-panel-inner">
 
-        <h1 class="hero-headline" data-load="380">One Artist. <span style="color:var(--ember)">One Booking.</span><br>Your Entire Wedding Covered.</h1>
+        <h1 class="hero-headline" data-load="380">One Artist.<br class="hl-br"> <span style="color:var(--ember)">One Booking.</span><br>Your Entire Wedding<br class="hl-br"> Covered.</h1>
         <p class="hero-sub" data-load="540">
           Beautiful live acoustic music for your ceremony and canapés, followed by an epic DJ set that has the dance floor pumping right to the final song, all handled seamlessly by one experienced performer.
         </p>
