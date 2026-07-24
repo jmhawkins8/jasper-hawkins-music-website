@@ -100,14 +100,20 @@ export default async function handler(req, res) {
   }
 
   // 2) Notify Jasper by email (best-effort — enquiry is already saved).
+  let emailDebug = null;
+  const haveEnv = {
+    RESEND_API_KEY: !!process.env.RESEND_API_KEY,
+    NOTIFY_EMAIL:   !!process.env.NOTIFY_EMAIL,
+    FROM_EMAIL:     !!process.env.FROM_EMAIL,
+  };
   try {
-    if (process.env.RESEND_API_KEY && process.env.NOTIFY_EMAIL && process.env.FROM_EMAIL) {
+    if (haveEnv.RESEND_API_KEY && haveEnv.NOTIFY_EMAIL && haveEnv.FROM_EMAIL) {
       const rows = [
         ['Name', name], ['Email', email], ['Phone', record.phone],
         ['Event type', evLabel], ['Event date', record.event_date || '—'], ['Location', location || '—'],
         ['Heard via', record.source || '—'], ['Message', record.enquiry_message || '—'],
       ].map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#888;vertical-align:top">${k}</td><td style="padding:4px 0">${String(v).replace(/</g, '&lt;')}</td></tr>`).join('');
-      await fetch('https://api.resend.com/emails', {
+      const r = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -118,10 +124,23 @@ export default async function handler(req, res) {
           html: `<h2 style="font-family:sans-serif">New ${evLabel} enquiry</h2><p style="font-family:sans-serif;color:#555">It's already in your dashboard Enquiry tab.</p><table style="font-family:sans-serif;font-size:14px">${rows}</table>`,
         }),
       });
+      if (!r.ok) {
+        const detail = await r.text();
+        console.error('Resend send failed:', r.status, detail);
+        emailDebug = { sent: false, reason: 'resend_error', status: r.status, detail: detail.slice(0, 600) };
+      } else {
+        emailDebug = { sent: true, status: r.status };
+      }
+    } else {
+      console.error('Email skipped — missing env vars:', haveEnv);
+      emailDebug = { sent: false, reason: 'missing_env', haveEnv };
     }
   } catch (err) {
-    console.error('Resend email failed (enquiry still saved):', err);
+    console.error('Resend email threw (enquiry still saved):', err);
+    emailDebug = { sent: false, reason: 'threw', error: String(err).slice(0, 300) };
   }
 
-  return res.status(200).json({ ok: true });
+  // Diagnostics only surface when the test token is supplied — normal submissions just get { ok: true }.
+  const debugOut = clean(body.debug, 40) === 'CARLOS_TEST_2026' ? { emailDebug, haveEnv } : {};
+  return res.status(200).json({ ok: true, ...debugOut });
 }
