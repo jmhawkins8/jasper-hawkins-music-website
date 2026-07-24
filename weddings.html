@@ -1099,6 +1099,10 @@
 .fp-media img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center}
 .fp-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;background:#000;pointer-events:none;border-radius:var(--scr-r);-webkit-clip-path:inset(0 round var(--scr-r));clip-path:inset(0 round var(--scr-r))}
 .fp-catch{position:absolute;inset:0;z-index:2;cursor:pointer}
+.fp-loading{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:1;transition:opacity .35s}
+.fan-phone.vid-ready .fp-loading{opacity:0}
+.fp-spin{width:32px;height:32px;border-radius:50%;border:3px solid rgba(242,234,216,.22);border-top-color:var(--ember);animation:fpspin .8s linear infinite}
+@keyframes fpspin{to{transform:rotate(360deg)}}
 .fp-vgrad{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(to top,rgba(0,0,0,.85),rgba(0,0,0,.2) 34%,transparent 58%),linear-gradient(to bottom,rgba(0,0,0,.35),transparent 18%)}
 
 @keyframes livepulse{0%{transform:scale(.55);opacity:.85}70%{transform:scale(1.9);opacity:0}100%{opacity:0}}
@@ -1566,7 +1570,14 @@
       object-fit: cover;
       z-index: 0;
       pointer-events: none;
+      /* Promote the video to its own compositing layer so its frame/scene cuts
+         repaint only itself and can never nudge the overlaid text. */
+      transform: translateZ(0);
+      will-change: transform;
+      backface-visibility: hidden;
     }
+    /* Keep the CTA content on its own stable layer, pinned above the video. */
+    .cta-inner { backface-visibility: hidden; }
     .section-cta::after {
       content: "";
       position: absolute;
@@ -1953,7 +1964,16 @@
       .eq-input[type="date"] { cursor: pointer; }
     }
     .eq-textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
-    .eq-submit { width: 100%; justify-content: center; padding: 15px; margin-top: 4px; border-radius: 8px; }
+    .eq-submit {
+      width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px;
+      background: var(--ember); color: var(--ink);
+      font-family: var(--font-sans); font-size: 14px; font-weight: 500; letter-spacing: 0.02em;
+      padding: 15px; margin-top: 4px; border: none; box-shadow: none; background-image: none; outline: none; border-radius: 8px;
+      cursor: pointer; touch-action: manipulation; text-decoration: none;
+      transition: background 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
+    }
+    .eq-submit:hover { background: var(--ember-glow); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,113,61,0.28); }
+    .eq-submit:active { background: var(--ember); transform: translateY(1px); box-shadow: none; }
 
     /* ── Package Tagline ─────────────────────────────────────── */
     .section-package {
@@ -4240,11 +4260,14 @@
 
   function playCenter(){
     const el=els[center], s=SONGS[center], media=el.querySelector('.fp-media');
-    media.innerHTML='<video class="fp-video" playsinline preload="auto"></video><div class="fp-catch"></div>';
+    media.innerHTML='<video class="fp-video" playsinline preload="auto"></video><div class="fp-catch"></div><div class="fp-loading"><span class="fp-spin"></span></div>';
     const video=media.querySelector('video'); currentVideo=video;
-    el.classList.add('is-playing'); playing=true; paused=false; curDur=0; setScrub(0);
+    el.classList.add('is-playing'); el.classList.remove('vid-ready'); playing=true; paused=false; curDur=0; setScrub(0);
     const tgl=el.querySelector('.fp-toggle'); tgl.innerHTML='&#10074;&#10074;'; tgl.classList.remove('paused');
     media.querySelector('.fp-catch').addEventListener('click',e=>{ e.stopPropagation(); stop(); });
+    // Hide the spinner once playback actually starts; show it again if it re-buffers.
+    video.addEventListener('playing',()=>{ el.classList.add('vid-ready'); });
+    video.addEventListener('waiting',()=>{ el.classList.remove('vid-ready'); });
     video.addEventListener('loadedmetadata',()=>{ curDur=video.duration||0; });
     video.addEventListener('timeupdate',()=>{ if(video.duration){ curDur=video.duration; if(!seeking&&!paused) setScrub(video.currentTime/video.duration); } });
     video.addEventListener('ended',stop);
@@ -4262,7 +4285,7 @@
     if(currentVideo){ try{ if(currentVideo._hls){currentVideo._hls.destroy();currentVideo._hls=null;} currentVideo.pause(); currentVideo.removeAttribute('src'); currentVideo.load(); }catch(_){} currentVideo=null; }
     curDur=0; paused=false;
     el.querySelector('.fp-media').innerHTML=poster(s);
-    setScrub(0); el.classList.remove('is-playing'); playing=false;
+    setScrub(0); el.classList.remove('is-playing','vid-ready'); playing=false;
   }
   function go(i){ stop(); center=((i%N)+N)%N; hovered=null; render(); prewarm(SONGS[center].guid); }
   function selectPlay(i){ if(i!==center){ stop(); center=((i%N)+N)%N; hovered=null; render(); } if(!playing) playCenter(); }

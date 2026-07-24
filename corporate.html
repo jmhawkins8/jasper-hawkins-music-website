@@ -660,8 +660,8 @@
       position: relative;
       overflow: hidden;
       background:
-        linear-gradient(rgba(8,7,6,0.74), rgba(8,7,6,0.82)),
-        url('assets/photos/oldsite/corporate-hero.webp') center 30% / cover no-repeat;
+        linear-gradient(rgba(8,7,6,0.80), rgba(8,7,6,0.88)),
+        url('assets/photos/corp-blacktie.jpg') center 40% / cover no-repeat;
       border-top: 1px solid var(--hairline);
     }
     .cta-inner {
@@ -803,11 +803,28 @@
     .eq-req { color: var(--ember); margin-left: 1px; }
     .eq-input, .eq-select, .eq-textarea { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--hairline); border-radius: var(--r-input); padding: 12px 14px; font-family: var(--font-sans); font-size: 14px; color: var(--bone); outline: none; -webkit-appearance: none; appearance: none; transition: border-color 200ms, box-shadow 200ms; }
     .eq-input::placeholder, .eq-textarea::placeholder { color: var(--bone-faint); opacity: 1; }
+    /* iOS renders date inputs at its own compact size — force it to match the other fields */
+    .eq-input[type="date"] {
+      display: block;
+      width: 100%;
+      min-height: 42px;
+      -webkit-appearance: none;
+    }
+    .eq-input[type="date"]::-webkit-date-and-time-value { text-align: left; }
     .eq-input:focus, .eq-select:focus, .eq-textarea:focus { border-color: var(--ember); box-shadow: 0 0 0 3px rgba(255,113,61,0.12); }
     .eq-select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B8AC97' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px; }
     .eq-select option { background: #1f1f1f; }
     .eq-textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
-    .eq-submit { width: 100%; justify-content: center; padding: 15px; margin-top: 4px; border-radius: var(--r-input); }
+    .eq-submit {
+      width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px;
+      background: var(--ember); color: var(--ink);
+      font-family: var(--font-sans); font-size: 14px; font-weight: 500; letter-spacing: 0.02em;
+      padding: 15px; margin-top: 4px; border: none; box-shadow: none; background-image: none; outline: none; border-radius: 8px;
+      cursor: pointer; touch-action: manipulation; text-decoration: none;
+      transition: background 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
+    }
+    .eq-submit:hover { background: var(--ember-glow); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,113,61,0.28); }
+    .eq-submit:active { background: var(--ember); transform: translateY(1px); box-shadow: none; }
     .eq-success h3 { font-family: var(--font-serif); font-weight: 400; font-size: 22px; color: var(--bone); margin: 8px 0 12px; }
     .eq-success p { font-family: var(--font-sans); font-size: 14px; line-height: 1.7; color: var(--bone-mute); }
     .sl-scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);opacity:0;pointer-events:none;transition:opacity .35s;z-index:400;backdrop-filter:blur(3px)}
@@ -832,6 +849,91 @@
     .sl-row .st{font-family:var(--font-sans);font-size:15px;color:var(--bone);line-height:1.3}
     .sl-row .sa{font-family:var(--font-sans);font-size:12px;color:var(--bone-faint);text-align:right;flex-shrink:0}
     .sl-empty{color:var(--bone-faint);font-size:14px;padding:24px 0;text-align:center}
+    /* ── Custom dropdown — on-brand replacement for the native select popup ── */
+    .eqdd { position: relative; }
+    .eqdd > select.eq-select { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+    .eqdd-btn {
+      width: 100%; text-align: left; cursor: pointer;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--hairline); border-radius: 8px;
+      padding: 12px 38px 12px 14px;
+      font-family: var(--font-sans); font-size: 14px; color: var(--bone);
+      outline: none; -webkit-appearance: none; appearance: none;
+      transition: border-color 200ms, box-shadow 200ms;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B8AC97' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+    }
+    .eqdd-btn.placeholder { color: var(--bone-faint); }
+    .eqdd.open .eqdd-btn, .eqdd-btn:focus { border-color: var(--ember); box-shadow: 0 0 0 3px rgba(255,113,61,0.12); }
+    .eqdd-list {
+      position: absolute; left: 0; right: 0; top: calc(100% + 6px);
+      z-index: 30;
+      background: #1c1c1c;
+      border: 1px solid var(--hairline); border-radius: 10px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      padding: 6px; margin: 0; list-style: none;
+      max-height: 240px; overflow: auto;
+      opacity: 0; transform: translateY(-6px); pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .eqdd.open .eqdd-list { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .eqdd-opt {
+      padding: 10px 12px; border-radius: 6px; cursor: pointer;
+      font-family: var(--font-sans); font-size: 14px; color: var(--bone-mute);
+      transition: background 140ms, color 140ms;
+    }
+    .eqdd-opt:hover { background: rgba(255,113,61,0.12); color: var(--bone); }
+    .eqdd-opt.selected { color: var(--ember); }
+    /* ── Custom date picker (desktop only — phones keep the native one) ── */
+    .eqcal { position: relative; }
+    .eqcal-panel {
+      position: absolute; left: 0; top: calc(100% + 6px);
+      z-index: 40; width: 292px;
+      background: #1c1c1c;
+      border: 1px solid var(--hairline); border-radius: 12px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      padding: 14px;
+      opacity: 0; transform: translateY(-6px); pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .eqcal.open .eqcal-panel { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    /* flip above the field when there's no room below — panel must never hang off-screen */
+    .eqcal.up .eqcal-panel { top: auto; bottom: calc(100% + 6px); transform: translateY(6px); }
+    .eqcal.up.open .eqcal-panel { transform: translateY(0); }
+    .eqcal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .eqcal-month {
+      font-family: var(--font-serif); font-size: 16px; color: var(--bone);
+      letter-spacing: 0.01em;
+    }
+    .eqcal-nav {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--hairline);
+      color: var(--bone); cursor: pointer; font-size: 14px; line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: border-color 150ms, background 150ms;
+    }
+    .eqcal-nav:hover:not(:disabled) { border-color: var(--ember); background: rgba(255,113,61,0.10); }
+    .eqcal-nav:disabled { opacity: 0.3; cursor: default; }
+    .eqcal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .eqcal-dow {
+      font-family: var(--font-sans); font-size: 9px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--bone-faint); text-align: center; padding: 6px 0 8px;
+    }
+    .eqcal-day {
+      aspect-ratio: 1; border: none; background: none; border-radius: 8px;
+      font-family: var(--font-sans); font-size: 13px; color: var(--bone-mute);
+      cursor: pointer; transition: background 130ms, color 130ms;
+    }
+    .eqcal-day:hover:not(:disabled) { background: rgba(255,113,61,0.14); color: var(--bone); }
+    .eqcal-day.today { color: var(--ember-glow); font-weight: 700; }
+    .eqcal-day.selected { background: var(--ember); color: #000; font-weight: 700; }
+    .eqcal-day:disabled { opacity: 0.22; cursor: default; }
+    .eqcal-day.blank { visibility: hidden; }
+    @media (min-width: 768px) {
+      .eq-input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
+      .eq-input[type="date"] { cursor: pointer; }
+    }
   </style>
 </head>
 <body>
@@ -1044,7 +1146,7 @@
       <h2 class="vg-heading">Watch the music in action</h2>
     </div>
     <div class="vg-grid">
-      <button class="vg-item" type="button" data-vid="1060248233"><img src="assets/video-thumbs/1060248233.jpg" alt="Smells Like Teen Spirit — live" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Smells Like Teen Spirit</span></button>
+      <button class="vg-item" type="button" data-vid="1077774963"><img src="assets/video-thumbs/1077774963.jpg" alt="Teenage Dirtbag — live" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Teenage Dirtbag</span></button>
       <button class="vg-item" type="button" data-vid="1060276192"><img src="assets/video-thumbs/1060276192.jpg" alt="Don't Look Back In Anger — live" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Don't Look Back In Anger</span></button>
       <button class="vg-item" type="button" data-vid="1059956074"><img src="assets/video-thumbs/1059956074.jpg" alt="Angels — Robbie Williams cover" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Angels — Robbie Williams</span></button>
       <button class="vg-item" type="button" data-vid="1067515784"><img src="assets/video-thumbs/1067515784.jpg" alt="Can't Take My Eyes Off You — live" loading="lazy"><span class="vg-play">&#9654;</span><span class="vg-title">Can't Take My Eyes Off You</span></button>
@@ -1216,7 +1318,7 @@
 
         <p class="eq-error" id="eqError" role="alert" hidden style="color:#c0392b;margin:0 0 .5rem">Something went wrong — please try again, or email me directly.</p>
 
-        <button type="submit" class="btn-primary eq-submit">Send enquiry &nbsp;&rarr;</button>
+        <button type="submit" class="btn-primary eq-submit">Send enquiry &nbsp;→</button>
 
       </form>
 
@@ -1605,6 +1707,144 @@
       slSearch.addEventListener('input',renderList);
       addEventListener('keydown',function(e){ if(e.key==='Escape') closeList(); });
     })();
+  </script>
+
+  <!-- Custom on-brand dropdowns for visible .eq-select fields (native select stays for form submit/validation) -->
+  <script>
+  (function(){
+    document.querySelectorAll('select.eq-select').forEach(function(sel){
+      var field = sel.closest('.eq-field');
+      if (field && field.style.display === 'none') return;   // skip hidden fields
+      var wrap = document.createElement('div'); wrap.className = 'eqdd';
+      var btn  = document.createElement('button'); btn.type = 'button'; btn.className = 'eqdd-btn';
+      btn.setAttribute('aria-haspopup', 'listbox');
+      var list = document.createElement('ul'); list.className = 'eqdd-list'; list.setAttribute('role', 'listbox');
+
+      function sync(){
+        var o = sel.options[sel.selectedIndex];
+        btn.textContent = o ? o.textContent : '';
+        btn.classList.toggle('placeholder', !sel.value);
+        list.querySelectorAll('.eqdd-opt').forEach(function(li){
+          li.classList.toggle('selected', li.dataset.value === sel.value && sel.value !== '');
+        });
+      }
+      Array.prototype.forEach.call(sel.options, function(o){
+        if (o.disabled) return;
+        var li = document.createElement('li');
+        li.className = 'eqdd-opt'; li.textContent = o.textContent;
+        li.dataset.value = o.value; li.setAttribute('role', 'option');
+        li.addEventListener('click', function(){
+          sel.value = o.value;
+          sel.dispatchEvent(new Event('change', { bubbles: true }));
+          wrap.classList.remove('open');
+          sync();
+        });
+        list.appendChild(li);
+      });
+      btn.addEventListener('click', function(e){ e.stopPropagation(); wrap.classList.toggle('open'); });
+      document.addEventListener('click', function(){ wrap.classList.remove('open'); });
+      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') wrap.classList.remove('open'); });
+
+      sel.parentNode.insertBefore(wrap, sel);
+      wrap.appendChild(btn); wrap.appendChild(list); wrap.appendChild(sel);
+      sel.tabIndex = -1;
+      sync();
+    });
+  })();
+  </script>
+
+  <!-- Custom desktop date picker for the enquiry form (phones keep the native picker) -->
+  <script>
+  (function(){
+    if (!window.matchMedia || !matchMedia('(min-width: 768px)').matches) return;
+    var input = document.getElementById('eq-date');
+    if (!input) return;
+
+    var wrap = document.createElement('div'); wrap.className = 'eqcal';
+    input.parentNode.insertBefore(wrap, input); wrap.appendChild(input);
+    var panel = document.createElement('div'); panel.className = 'eqcal-panel';
+    wrap.appendChild(panel);
+
+    var today = new Date(); today.setHours(0,0,0,0);
+    var view = new Date(today.getFullYear(), today.getMonth(), 1);
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var DOWS = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+    function pad(n){ return (n < 10 ? '0' : '') + n; }
+    function fmt(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+
+    function build(){
+      panel.innerHTML = '';
+      var head = document.createElement('div'); head.className = 'eqcal-head';
+      var prev = document.createElement('button'); prev.type='button'; prev.className='eqcal-nav'; prev.innerHTML='&#8249;'; prev.setAttribute('aria-label','Previous month');
+      var next = document.createElement('button'); next.type='button'; next.className='eqcal-nav'; next.innerHTML='&#8250;'; next.setAttribute('aria-label','Next month');
+      var title = document.createElement('div'); title.className='eqcal-month';
+      title.textContent = MONTHS[view.getMonth()] + ' ' + view.getFullYear();
+      prev.disabled = view.getFullYear() === today.getFullYear() && view.getMonth() === today.getMonth();
+      prev.addEventListener('click', function(e){ e.stopPropagation(); view = new Date(view.getFullYear(), view.getMonth()-1, 1); build(); });
+      next.addEventListener('click', function(e){ e.stopPropagation(); view = new Date(view.getFullYear(), view.getMonth()+1, 1); build(); });
+      head.appendChild(prev); head.appendChild(title); head.appendChild(next);
+      panel.appendChild(head);
+
+      var grid = document.createElement('div'); grid.className = 'eqcal-grid';
+      DOWS.forEach(function(d){ var c = document.createElement('div'); c.className='eqcal-dow'; c.textContent=d; grid.appendChild(c); });
+      var first = new Date(view.getFullYear(), view.getMonth(), 1);
+      var lead = (first.getDay() + 6) % 7;   /* Monday-first */
+      for (var b = 0; b < lead; b++) { var bl = document.createElement('button'); bl.type='button'; bl.className='eqcal-day blank'; bl.disabled=true; grid.appendChild(bl); }
+      var days = new Date(view.getFullYear(), view.getMonth()+1, 0).getDate();
+      for (var d = 1; d <= days; d++) {
+        (function(d){
+          var date = new Date(view.getFullYear(), view.getMonth(), d);
+          var cell = document.createElement('button'); cell.type='button'; cell.className='eqcal-day'; cell.textContent = d;
+          if (date < today) cell.disabled = true;
+          if (fmt(date) === fmt(today)) cell.classList.add('today');
+          if (input.value && fmt(date) === input.value) cell.classList.add('selected');
+          cell.addEventListener('click', function(e){
+            e.stopPropagation();
+            input.value = fmt(date);
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            wrap.classList.remove('open');
+          });
+          grid.appendChild(cell);
+        })(d);
+      }
+      /* pad to a constant 6-week grid so every month is the same height —
+         keeps the nav arrows in one place while flicking through months */
+      var total = lead + days;
+      for (var tr = total; tr < 42; tr++) { var tb = document.createElement('button'); tb.type='button'; tb.className='eqcal-day blank'; tb.disabled=true; grid.appendChild(tb); }
+      panel.appendChild(grid);
+    }
+
+    input.readOnly = true;   /* stops the native popup + typing; picker owns the value */
+    input.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      if (!wrap.classList.contains('open')) {
+        view = input.value ? new Date(input.value + 'T00:00:00') : new Date(today.getFullYear(), today.getMonth(), 1);
+        view = new Date(view.getFullYear(), view.getMonth(), 1);
+        build();
+        /* open upward if the panel would run off the bottom of the screen */
+        var r = wrap.getBoundingClientRect();
+        var spaceBelow = window.innerHeight - r.bottom;
+        wrap.classList.toggle('up', spaceBelow < 370 && r.top > 370);
+      }
+      wrap.classList.toggle('open');
+    });
+    document.addEventListener('click', function(){ wrap.classList.remove('open'); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') wrap.classList.remove('open'); });
+
+    /* readOnly disables native `required` checking — enforce it ourselves */
+    if (input.form) {
+      input.form.addEventListener('submit', function(e){
+        if (!input.value) {
+          e.preventDefault(); e.stopPropagation();
+          view = new Date(today.getFullYear(), today.getMonth(), 1);
+          build();
+          wrap.classList.add('open');
+          input.focus();
+        }
+      }, true);
+    }
+  })();
   </script>
 
 </body>
