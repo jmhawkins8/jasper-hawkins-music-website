@@ -18,6 +18,58 @@ import { randomUUID } from 'crypto';
 
 const clean = (v, max = 500) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 
+// ── Abuse guards ──────────────────────────────────────────────────────────
+// Deliberately tuned to never block a real couple. A genuine enquirer sends
+// one form, once. Everything here only trips on volume or obvious bot markers.
+
+// Per-IP rate limit, in-memory. Serverless instances are short-lived and not
+// shared, so this won't stop a determined distributed flood — it stops the
+// common case (one script hammering the form) at no cost to real visitors.
+const RATE_LIMIT = 5;                 // submissions...
+const RATE_WINDOW_MS = 10 * 60 * 1000; // ...per IP per 10 minutes
+const hits = new Map();
+
+function rateLimited(ip) {
+  const now = Date.now();
+  const recent = (hits.get(ip) ?? []).filter(t => now - t < RATE_WINDOW_MS);
+  recent.push(now);
+  hits.set(ip, recent);
+  // Keep the map from growing unbounded across a warm instance's lifetime.
+  if (hits.size > 500) {
+    for (const [k, v] of hits) if (!v.some(t => now - t < RATE_WINDOW_MS)) hits.delete(k);
+  }
+  return recent.length > RATE_LIMIT;
+}
+
+// Signals that a submission is automated rather than a person. Each one alone
+// is weak, so we only reject on two or more — a real enquiry never hits two.
+function spamScore(body, name, email, message) {
+  let score = 0;
+  const text = `${name} ${message}`;
+
+  // Bots paste links; couples describing their wedding almost never do.
+  const links = (text.match(/https?:\/\/|www\.|\[url|<a\s/gi) ?? []).length;
+  if (links >= 1) score++;
+  if (links >= 3) score++;
+
+  // Classic spam vocabulary — deliberately narrow to avoid false positives.
+  if (/\b(seo|backlink|crypto|casino|viagra|loan offer|bitcoin|forex|rank higher|web traffic)\b/i.test(text)) score++;
+
+  // Cyrillic/CJK blocks in an English-language NZ enquiry form.
+  if (/[Ѐ-ӿ一-鿿]/.test(text)) score++;
+
+  // Submitted implausibly fast — the form stamps when it was opened. A real
+  // person takes longer than 3 seconds to fill this in.
+  const elapsed = Number(body.formTime);
+  if (Number.isFinite(elapsed) && elapsed > 0 && elapsed < 3000) score++;
+
+  // Malformed address, or the name field stuffed with a URL.
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) score++;
+  if (/https?:\/\//i.test(name)) score++;
+
+  return score;
+}
+
 // NZ-local YYYY-MM-DD for the enquiry_date stamp.
 function nzToday() {
   const parts = new Intl.DateTimeFormat('en-CA', {
@@ -42,6 +94,25 @@ export default async function handler(req, res) {
   const email = clean(body.email, 200);
   if (!name || !email) {
     return res.status(400).json({ ok: false, error: 'Name and email are required.' });
+  }
+
+  // Too many submissions from one address in a short window — almost certainly
+  // a script. Say so plainly, so a real person retrying knows to wait or email.
+  const ip = (req.headers['x-forwarded-for'] ?? '').split(',')[0].trim() || 'unknown';
+  if (rateLimited(ip)) {
+    console.warn('Rate limit hit:', ip);
+    return res.status(429).json({
+      ok: false,
+      error: "That's a few enquiries in a short space of time — please wait a few minutes, or email hello@jasperhawkinsmusic.co.nz directly.",
+    });
+  }
+
+  // Two or more bot signals: drop it silently (a 200 keeps bots from probing
+  // for what tripped the filter). Logged so genuine misses can be reviewed.
+  const score = spamScore(body, name, clean(body.email, 200), clean(body.message, 4000));
+  if (score >= 2) {
+    console.warn('Spam filtered:', { score, ip, name, email });
+    return res.status(200).json({ ok: true });
   }
 
   const SB = process.env.SUPABASE_URL;

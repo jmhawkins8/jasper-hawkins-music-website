@@ -798,6 +798,12 @@
     .eq-close:hover { background: rgba(255,255,255,0.12); color: var(--bone); }
     .eq-body { flex: 1; overflow-y: auto; padding: 24px 28px 40px; scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent; }
     .eq-intro { font-family: var(--font-sans); font-size: 14px; line-height: 1.65; color: var(--bone-mute); margin-bottom: 24px; }
+    .eq-privacy {
+      font-family: var(--font-sans); font-size: 12px; line-height: 1.6;
+      color: var(--bone-faint); margin: 14px 0 0;
+    }
+    .eq-privacy a { color: var(--bone-mute); text-decoration: underline; text-underline-offset: 2px; }
+    .eq-privacy a:hover { color: var(--ember); }
     .eq-form { color-scheme: dark; }
     .eq-field { margin-bottom: 16px; }
     .eq-label { display: block; font-family: var(--font-sans); font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--bone-mute); margin-bottom: 7px; }
@@ -1243,7 +1249,7 @@
         <a href="tel:+64220805085">+64 22 080 5085</a>
         <a href="mailto:hello@jasperhawkinsmusic.co.nz">hello@jasperhawkinsmusic.co.nz</a>
       </div>
-      <div class="footer-copy">© 2026 Jasper Hawkins Music</div>
+      <div class="footer-copy">© 2026 Jasper Hawkins Music &nbsp;·&nbsp; <a href="/privacy" style="color:inherit">Privacy Policy</a></div>
     </div>
   </footer>
 
@@ -1320,6 +1326,12 @@
         <p class="eq-error" id="eqError" role="alert" hidden style="color:#c0392b;margin:0 0 .5rem">Something went wrong — please try again, or email me directly.</p>
 
         <button type="submit" class="btn-primary eq-submit">Send enquiry &nbsp;→</button>
+
+        <!-- Privacy Act 2020 (IPP3) collection notice — must sit at the point of collection. -->
+        <p class="eq-privacy">
+          I'll only use your details to reply to your enquiry and look after your booking —
+          never sold, never passed on. See my <a href="/privacy">Privacy Policy</a>.
+        </p>
 
       </form>
 
@@ -1440,6 +1452,10 @@
       closeBtn.addEventListener('click', closePanel);
       scrim.addEventListener('click', closePanel);
       document.addEventListener('keydown', function(e){ if(e.key==='Escape' && panel.classList.contains('is-open')) closePanel(); });
+      // Stamped when the script loads; used only to tell a human apart from
+      // a script that fills and submits in milliseconds.
+      var EQ_FORM_OPENED = Date.now();
+
       document.getElementById('eqForm').addEventListener('submit', async function(e){
         e.preventDefault();
         var form = e.target;
@@ -1449,6 +1465,7 @@
         if (errEl) errEl.hidden = true;
         if (!form.reportValidity()) return;
         var payload = {
+          formTime: Date.now() - EQ_FORM_OPENED,  // bot signal: instant submits
           firstName: form.firstName.value,
           email: form.email.value,
           phone: form.phone.value,
@@ -1462,7 +1479,11 @@
         var orig = btn.textContent; btn.disabled = true; btn.textContent = 'Sending…';
         try {
           var res = await fetch('/api/enquiry', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload) });
-          if (!res.ok) throw new Error('Request failed');
+          if (!res.ok) {
+            var info = await res.json().catch(function(){ return null; });
+            if (info && info.error && errEl) errEl.textContent = info.error;
+            throw new Error('Request failed');
+          }
           form.hidden = true; if (okEl) okEl.hidden = false;
         } catch (err) { btn.disabled = false; btn.textContent = orig; if (errEl) errEl.hidden = false; }
       });

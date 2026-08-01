@@ -922,6 +922,12 @@
       font-family: var(--font-sans); font-size: 14px; line-height: 1.65;
       color: var(--bone-mute); margin-bottom: 24px;
     }
+    .eq-privacy {
+      font-family: var(--font-sans); font-size: 12px; line-height: 1.6;
+      color: var(--bone-faint); margin: 14px 0 0;
+    }
+    .eq-privacy a { color: var(--bone-mute); text-decoration: underline; text-underline-offset: 2px; }
+    .eq-privacy a:hover { color: var(--ember); }
     .eq-form { color-scheme: dark; }
     .eq-field { margin-bottom: 16px; }
     .eq-label {
@@ -1320,7 +1326,7 @@
         <a href="tel:+64220805085">+64 22 080 5085</a>
         <a href="mailto:hello@jasperhawkinsmusic.co.nz">hello@jasperhawkinsmusic.co.nz</a>
       </div>
-      <div class="footer-copy">© 2026 Jasper Hawkins Music</div>
+      <div class="footer-copy">© 2026 Jasper Hawkins Music &nbsp;·&nbsp; <a href="/privacy" style="color:inherit">Privacy Policy</a></div>
     </div>
   </footer>
 
@@ -1403,6 +1409,12 @@
         <p class="eq-error" id="eqError" role="alert" hidden style="color:#c0392b;margin:0 0 .5rem">Something went wrong — please try again, or email me directly.</p>
 
         <button type="submit" class="btn-primary eq-submit">Send enquiry &nbsp;→</button>
+
+        <!-- Privacy Act 2020 (IPP3) collection notice — must sit at the point of collection. -->
+        <p class="eq-privacy">
+          I'll only use your details to reply to your enquiry and look after your booking —
+          never sold, never passed on. See my <a href="/privacy">Privacy Policy</a>.
+        </p>
 
       </form>
 
@@ -1502,6 +1514,10 @@
       scrim.addEventListener('click', closePanel);
       document.addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('is-open')) closePanel(); });
 
+      // Stamped when the script loads; used only to tell a human apart from a
+      // script that fills and submits in milliseconds.
+      const EQ_FORM_OPENED = Date.now();
+
       document.getElementById('eqForm').addEventListener('submit', async e => {
         e.preventDefault();
         const form = e.target;
@@ -1512,6 +1528,7 @@
         if (!form.reportValidity()) return;
 
         const payload = {
+          formTime:      Date.now() - EQ_FORM_OPENED,  // bot signal: instant submits
           firstName:     form.firstName.value,
           email:         form.email.value,
           phone:         form.phone.value,
@@ -1532,7 +1549,12 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload),
           });
-          if (!res.ok) throw new Error('Request failed');
+          if (!res.ok) {
+            // Show the server's own wording when it has some (e.g. rate limit).
+            const info = await res.json().catch(() => null);
+            if (info && info.error && errEl) errEl.textContent = info.error;
+            throw new Error('Request failed');
+          }
           form.hidden = true;
           if (okEl) okEl.hidden = false;
         } catch (err) {
