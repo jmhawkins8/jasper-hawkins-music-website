@@ -171,7 +171,6 @@ export default async function handler(req, res) {
   }
 
   // 2) Notify Jasper by email (best-effort — enquiry is already saved).
-  let emailDebug = null;
   const haveEnv = {
     RESEND_API_KEY: !!process.env.RESEND_API_KEY,
     NOTIFY_EMAIL:   !!process.env.NOTIFY_EMAIL,
@@ -198,20 +197,13 @@ export default async function handler(req, res) {
       if (!r.ok) {
         const detail = await r.text();
         console.error('Resend send failed:', r.status, detail);
-        emailDebug = { sent: false, reason: 'resend_error', status: r.status, detail: detail.slice(0, 600) };
-      } else {
-        emailDebug = { sent: true, status: r.status };
       }
     } else {
       console.error('Email skipped — missing env vars:', haveEnv);
-      emailDebug = { sent: false, reason: 'missing_env', haveEnv };
     }
   } catch (err) {
     console.error('Resend email threw (enquiry still saved):', err);
-    emailDebug = { sent: false, reason: 'threw', error: String(err).slice(0, 300) };
   }
 
-  // Diagnostics only surface when the test token is supplied — normal submissions just get { ok: true }.
-  const debugOut = clean(body.debug, 40) === 'CARLOS_TEST_2026' ? { emailDebug, haveEnv } : {};
-  return res.status(200).json({ ok: true, ...debugOut });
+  return res.status(200).json({ ok: true });
 }
