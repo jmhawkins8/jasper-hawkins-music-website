@@ -11,8 +11,15 @@
 //   SUPABASE_SERVICE_ROLE_KEY   service_role key (SECRET — server-side only, never in the browser)
 //   OWNER_USER_ID               Jasper's Supabase auth user id (so enquiries attach to his account)
 //   RESEND_API_KEY              from resend.com
-//   NOTIFY_EMAIL                where the alert lands, e.g. jmhawkins8@gmail.com
-//   FROM_EMAIL                  verified sender, e.g. "Enquiries <enquiries@jasperhawkinsmusic.co.nz>"
+//   NOTIFY_EMAIL                where the alert lands, e.g. hello@jasperhawkinsmusic.co.nz
+//   FROM_EMAIL                  verified sender, e.g. "Jasper Hawkins Music <hello@jasperhawkinsmusic.co.nz>"
+//
+// Optional — ActiveCampaign follow-up sequence (all three needed, else skipped):
+//   AC_API_URL                  e.g. https://jasperhawkins.api-us1.com  (Settings → Developer)
+//   AC_API_KEY                  the API key from that same screen (SECRET)
+//   AC_TAG_NAME                 tag that starts the follow-up automation, e.g. "Automation for contact form"
+//   AC_TAG_EVENT_TYPES          optional CSV of event types to tag; defaults to "wedding" only,
+//                               because the follow-up copy is wedding-specific. Use "all" for every enquiry.
 
 import { randomUUID } from 'crypto';
 
@@ -77,6 +84,71 @@ function nzToday() {
   }).formatToParts(new Date());
   const p = Object.fromEntries(parts.map(x => [x.type, x.value]));
   return `${p.year}-${p.month}-${p.day}`;
+}
+
+// ── ActiveCampaign ────────────────────────────────────────────────────────
+// Adds the enquirer as a contact and applies the tag that starts Jasper's
+// follow-up sequence. Entirely best-effort: the enquiry is already saved in
+// Supabase before this runs, so any failure here is logged and swallowed —
+// a wobbly third party must never cost Jasper a lead.
+
+// Don't let a slow AC hold the visitor's browser waiting.
+async function acFetch(url, opts, ms = 5000) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  try {
+    return await fetch(url, { ...opts, signal: ctrl.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function addToActiveCampaign({ name, email, phone, eventType }) {
+  const base = (process.env.AC_API_URL || '').replace(/\/+$/, '');
+  const key = process.env.AC_API_KEY;
+  const tagName = process.env.AC_TAG_NAME;
+  if (!base || !key || !tagName) return { skipped: 'not configured' };
+
+  // The follow-up copy asks about wedding music, so by default only wedding
+  // enquiries get tagged. AC_TAG_EVENT_TYPES=all opts everyone in.
+  const allowed = (process.env.AC_TAG_EVENT_TYPES || 'wedding').toLowerCase();
+  if (allowed !== 'all' && !allowed.split(',').map(s => s.trim()).includes(eventType)) {
+    return { skipped: `event type ${eventType} not tagged` };
+  }
+
+  const headers = { 'Api-Token': key, 'Content-Type': 'application/json' };
+
+  // 1) Create or update the contact. contact/sync is idempotent, so a repeat
+  //    enquirer updates rather than duplicating.
+  const [firstName, ...rest] = name.split(/\s+/);
+  const syncRes = await acFetch(`${base}/api/3/contact/sync`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({
+      contact: { email, firstName, lastName: rest.join(' '), phone },
+    }),
+  });
+  if (!syncRes.ok) throw new Error(`contact/sync ${syncRes.status}: ${(await syncRes.text()).slice(0, 200)}`);
+  const contactId = (await syncRes.json())?.contact?.id;
+  if (!contactId) throw new Error('contact/sync returned no id');
+
+  // 2) Resolve the tag name to its id. Jasper supplies the name he sees in
+  //    AC; search is a partial match, so confirm the exact name back.
+  const tagRes = await acFetch(`${base}/api/3/tags?search=${encodeURIComponent(tagName)}`, { headers });
+  if (!tagRes.ok) throw new Error(`tags lookup ${tagRes.status}`);
+  const tags = (await tagRes.json())?.tags ?? [];
+  const tag = tags.find(t => t.tag?.toLowerCase() === tagName.toLowerCase()) ?? tags[0];
+  if (!tag?.id) throw new Error(`no tag matching "${tagName}"`);
+
+  // 3) Apply it — this is what trips the automation.
+  const applyRes = await acFetch(`${base}/api/3/contactTags`, {
+    method: 'POST',
+    headers,
+    body: JSON.stringify({ contactTag: { contact: contactId, tag: tag.id } }),
+  });
+  if (!applyRes.ok) throw new Error(`contactTags ${applyRes.status}: ${(await applyRes.text()).slice(0, 200)}`);
+
+  return { contactId, tag: tag.tag };
 }
 
 export default async function handler(req, res) {
@@ -203,6 +275,17 @@ export default async function handler(req, res) {
     }
   } catch (err) {
     console.error('Resend email threw (enquiry still saved):', err);
+  }
+
+  // 3) Start the ActiveCampaign follow-up sequence (best-effort).
+  try {
+    const acResult = await addToActiveCampaign({
+      name, email, phone: record.phone, eventType,
+    });
+    if (acResult.skipped) console.log('ActiveCampaign skipped:', acResult.skipped);
+    else console.log('ActiveCampaign tagged:', acResult.tag);
+  } catch (err) {
+    console.error('ActiveCampaign failed (enquiry still saved + emailed):', String(err).slice(0, 300));
   }
 
   return res.status(200).json({ ok: true });
