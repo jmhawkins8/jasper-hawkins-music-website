@@ -61,9 +61,9 @@
 
   <div class="pp-wrap">
 
-    <a class="pp-back" href="/">
+    <a class="pp-back" id="ppBack" href="/">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
-      Back to site
+      <span id="ppBackLabel">Back to site</span>
     </a>
 
     <h1 class="pp-title">Privacy Policy</h1>
@@ -139,10 +139,48 @@
     <p>If I update this page, I'll change the date at the top. Any significant change affecting current clients, I'll email you about.</p>
 
     <div class="pp-foot">
-      © 2026 Jasper Hawkins Music &nbsp;·&nbsp; <a href="/">Back to site</a>
+      © 2026 Jasper Hawkins Music &nbsp;·&nbsp; <a id="ppBackFoot" href="/">Back to site</a>
     </div>
 
   </div>
+
+  <script>
+    // Return people to the page they came from, not always the home page —
+    // someone reading this from the weddings enquiry form should land back
+    // on weddings. Falls back to home for direct hits and search traffic.
+    (function () {
+      var PAGES = {
+        'weddings':  'Weddings',
+        'parties':   'Parties',
+        'corporate': 'Corporate',
+        'songlist':  'Song List'
+      };
+
+      var from = null;
+      try {
+        if (document.referrer) {
+          var r = new URL(document.referrer);
+          // Same site only — never bounce someone back out to Google.
+          if (r.origin === window.location.origin && r.pathname !== window.location.pathname) {
+            from = r;
+          }
+        }
+      } catch (e) { /* malformed referrer — fall through to the default */ }
+
+      if (!from) return;
+
+      var slug = from.pathname.replace(/^\/|\.html$|\/$/g, '');
+      var label = PAGES[slug] ? 'Back to ' + PAGES[slug] : 'Back to site';
+      var href = from.pathname + from.search + from.hash;
+
+      var top = document.getElementById('ppBack');
+      var topLabel = document.getElementById('ppBackLabel');
+      var foot = document.getElementById('ppBackFoot');
+      if (top) top.href = href;
+      if (topLabel) topLabel.textContent = label;
+      if (foot) { foot.href = href; foot.textContent = label; }
+    }());
+  </script>
 
 </body>
 </html>
