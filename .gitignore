@@ -6,3 +6,5 @@ mockup-*.html
 venue-options.html
 fable-preview.html
 _bunny-videos.md
+.vercel
+.env*
