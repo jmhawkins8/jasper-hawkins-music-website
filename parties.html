@@ -371,13 +371,13 @@
       object-fit: cover;
       object-position: 22% 30%;
       filter: var(--filter-photo);
-      /* Was opacity:0 until JS added .loaded. That made the largest element on
-         the page invisible at first paint, so Google could not identify a
-         Largest Contentful Paint at all and refused to score Performance.
-         It now paints immediately and fades via CSS, needing no JS. */
+      /* Simply visible. It was opacity:0 until JS added .loaded, which made the
+         largest element on the page invisible at first paint — Google could
+         not identify a Largest Contentful Paint and refused to score
+         Performance at all. A fade was tried first, but anything that defers
+         the paint (a CSS animation included) risks the same failure, and a
+         700ms fade on a background photo is not worth that. */
       opacity: 1;
-      animation: heroFadeIn 700ms var(--ease) both;
-      transition: opacity 900ms var(--ease);
     }
     .p-hero-photo img.loaded { opacity: 1; }
     .p-hero-overlay {
@@ -2014,5 +2014,4 @@
   </script>
 
 </body>
-</html>    @keyframes heroFadeIn { from { opacity: 0; } to { opacity: 1; } }
-
+</html>
