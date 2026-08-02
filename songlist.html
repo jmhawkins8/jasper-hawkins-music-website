@@ -21,8 +21,8 @@
   <!-- Warm up the Bunny CDN connection early — first video tap skips DNS/TLS setup -->
   <link rel="preconnect" href="https://vz-0620fbe9-cee.b-cdn.net" crossorigin>
   <link rel="dns-prefetch" href="https://vz-0620fbe9-cee.b-cdn.net">
-  <link rel="stylesheet" href="assets/colors_and_type.css?v=3">
-  <link rel="stylesheet" href="assets/design-system.css?v=3">
+  <link rel="stylesheet" href="assets/colors_and_type.css?v=4">
+  <link rel="stylesheet" href="assets/design-system.css?v=4">
   <style>
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1869,6 +1869,26 @@
       transition: border-color 200ms, box-shadow 200ms;
     }
     .eq-input::placeholder, .eq-textarea::placeholder { color: var(--bone-faint); opacity: 1; }
+    /* Autofill: Safari/Chrome paint their own white background over the field,
+       which broke the dark panel the moment a saved name or email was filled.
+       Background colour can't be overridden directly — an inset shadow the
+       full height of the field is the only way — and the near-infinite
+       transition stops the white flashing in before the shadow lands. */
+    .eq-input:-webkit-autofill,
+    .eq-input:-webkit-autofill:hover,
+    .eq-input:-webkit-autofill:focus,
+    .eq-input:-webkit-autofill:active,
+    .eq-textarea:-webkit-autofill,
+    .eq-select:-webkit-autofill {
+      -webkit-box-shadow: 0 0 0 1000px #202020 inset !important;
+      box-shadow: 0 0 0 1000px #202020 inset !important;
+      -webkit-text-fill-color: var(--bone) !important;
+      caret-color: var(--bone);
+      border: 1px solid var(--hairline);
+      transition: background-color 600000s 0s, color 600000s 0s;
+    }
+    .eq-input:-webkit-autofill::first-line { font-family: var(--font-sans); font-size: 14px; color: var(--bone); }
+
     /* iOS renders date inputs at its own compact size — force it to match the other fields */
     .eq-input[type="date"] {
       display: block;
