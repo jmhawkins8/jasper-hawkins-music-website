@@ -3678,9 +3678,8 @@
           <select class="eq-select" id="eq-type" name="eventType" required>
             <option value="" disabled>Select event type</option>
             <option value="wedding" selected>Wedding</option>
-            <option value="birthday">Birthday</option>
+            <option value="party">Party</option>
             <option value="corporate">Corporate Event</option>
-            <option value="function">Private Function</option>
             <option value="other">Other</option>
           </select>
         </div>
@@ -4389,14 +4388,17 @@
   const warmed = new Set();
   function prewarm(guid){
     if(!guid || warmed.has(guid)) return; warmed.add(guid);
+    // Fetch the playlists only — NOT the first media segment. That segment is
+    // the highest-quality rendition (~2.7MB) and was downloaded on every visit
+    // whether or not anyone pressed play: billed to a pay-as-you-go CDN, spent
+    // from the visitor's mobile data, and it dominated the page's load time.
+    // The playlists are tiny and still give play a head start.
+    const c = navigator.connection;
+    if (c && (c.saveData || /2g/.test(c.effectiveType || ''))) return;
     const master = HLS(guid);
     fetch(master).then(r=>r.text()).then(txt=>{
       const v = txt.split('\n').find(l=>l && !l.startsWith('#')); if(!v) return;
-      const vUrl = new URL(v, master).href;
-      return fetch(vUrl).then(r=>r.text()).then(pt=>{
-        const s = pt.split('\n').find(l=>l && !l.startsWith('#')); if(!s) return;
-        return fetch(new URL(s, vUrl).href);
-      });
+      return fetch(new URL(v, master).href);
     }).catch(()=>{});
   }
   const SONGS=[
