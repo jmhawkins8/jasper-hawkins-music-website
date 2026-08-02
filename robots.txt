@@ -1,4 +1,44 @@
 User-agent: *
 Allow: /
 
+# AI assistants are named explicitly so there is no ambiguity about being
+# allowed to read and cite this site. Couples increasingly ask ChatGPT,
+# Claude, Gemini or Perplexity for supplier recommendations, and a crawler
+# that is unsure will simply leave the site out.
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Applebot-Extended
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
 Sitemap: https://www.jasperhawkinsmusic.co.nz/sitemap.xml
