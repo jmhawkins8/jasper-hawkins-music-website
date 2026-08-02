@@ -3939,17 +3939,15 @@
       for (let d = 1; d <= daysInMonth; d++) {
         const date = new Date(y, m, d);
         const key = iso(date);
-        const status = STATUS[key];
+        // Deliberately every future date is enquirable, including ones already
+        // booked. Jasper would rather have the conversation than turn someone
+        // away at the calendar — couples often shift their date, and a blocked
+        // cell is a lead that never arrives. STATUS is still fetched so this
+        // can be switched back to showing booked/in-demand states if wanted.
         if (date < today) {
           html += `<div class="cal-cell is-past">${d}</div>`;
-        } else if (status === 'booked') {
-          // Already taken — not a button, so nobody can enquire for it.
-          html += `<div class="cal-cell is-booked" aria-label="${key} — already booked">${d}</div>`;
-        } else if (status === 'enquiry') {
-          // Someone's asked about this date but hasn't confirmed — still winnable.
-          html += `<button type="button" class="cal-cell is-open is-enquiry" data-iso="${key}" aria-label="${key} — in demand, still available, enquire">${d}</button>`;
         } else {
-          html += `<button type="button" class="cal-cell is-open" data-iso="${key}" aria-label="${key} — available, enquire">${d}</button>`;
+          html += `<button type="button" class="cal-cell is-open" data-iso="${key}" aria-label="${key} — enquire about this date">${d}</button>`;
         }
       }
       grid.innerHTML = html;
