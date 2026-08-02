@@ -1776,12 +1776,26 @@
     }
 
     /* — Page-load sequence (hero text + nav) ————————————————— */
+    /* The staggered entrance used to wait for JS to add .loaded. That left
+       everything above the fold unpainted until the main script had run,
+       which is how the page ended up with no Largest Contentful Paint
+       candidate at all. Same effect, driven by CSS, with each element's
+       delay set inline from its original data-load value. */
+    @keyframes loadIn { to { transform: translateY(0); } }
     [data-load] {
-      opacity: 0;
+      /* Deliberately NOT opacity:0. Anything above the fold that starts
+         invisible cannot be a Largest Contentful Paint candidate, and if
+         nothing above the fold qualifies, Google reports NO_LCP and refuses
+         to score Performance at all. The slide is kept; the fade is not
+         worth an unmeasurable page. */
+      opacity: 1;
       transform: translateY(16px);
-      transition: opacity 640ms var(--ease), transform 640ms var(--ease);
+      animation: loadIn 640ms var(--ease) forwards;
     }
     [data-load].loaded { opacity: 1; transform: translateY(0); }
+    @media (prefers-reduced-motion: reduce) {
+      [data-load] { animation: none; opacity: 1; transform: none; }
+    }
 
     /* — Directional scroll reveal ——————————————————————————— */
     [data-reveal-left] {
@@ -2970,7 +2984,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
 
   <!-- ── Nav ─────────────────────────────────────────────── -->
-  <nav class="site-nav" id="site-nav" data-load="120">
+  <nav class="site-nav" id="site-nav" data-load="120" style="animation-delay:120ms">
     <a class="nav-brand" href="/">
       <svg width="34" height="34" viewBox="0 0 80 80" role="img" aria-label="Jasper Hawkins" style="flex-shrink:0">
         <circle cx="40" cy="40" r="38" fill="#FF713D"/>
@@ -3036,8 +3050,8 @@
     <div class="hero-panel">
       <div class="hero-panel-inner">
 
-        <h1 class="hero-headline" data-load="380">One Artist.<br class="hl-br"> <span style="color:var(--ember)">One Booking.</span><br>Your Entire Wedding<br class="hl-br"> Covered.</h1>
-        <p class="hero-sub" data-load="540">
+        <h1 class="hero-headline" data-load="380" style="animation-delay:380ms">One Artist.<br class="hl-br"> <span style="color:var(--ember)">One Booking.</span><br>Your Entire Wedding<br class="hl-br"> Covered.</h1>
+        <p class="hero-sub" data-load="540" style="animation-delay:540ms">
           Beautiful live acoustic music for your ceremony and canapés, followed by an epic DJ set that has the dance floor pumping right to the final song, all handled seamlessly by one experienced performer.
         </p>
 
@@ -3045,7 +3059,7 @@
           Action block — stats + CTAs as one unified module.
           Social proof is immediate; the CTA sits right below it.
         -->
-        <div class="action-block" data-load="700">
+        <div class="action-block" data-load="700" style="animation-delay:700ms">
           <div class="action-stats">
             <div class="action-stat">
               <div class="stat-value">1,000+</div>
@@ -3070,7 +3084,7 @@
           </div>
         </div>
 
-        <div class="hero-note" data-load="880">Booking subject to availability</div>
+        <div class="hero-note" data-load="880" style="animation-delay:880ms">Booking subject to availability</div>
 
       </div>
     </div>
