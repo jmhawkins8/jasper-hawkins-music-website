@@ -1,6 +1,33 @@
 {
   "cleanUrls": true,
   "trailingSlash": false,
+  "redirects": [
+    { "source": "/song-list", "destination": "/songlist", "permanent": true },
+
+    { "source": "/weddings-2025", "destination": "/weddings", "permanent": true },
+    { "source": "/weddings-copy", "destination": "/weddings", "permanent": true },
+    { "source": "/weddings-off-peak", "destination": "/weddings", "permanent": true },
+    { "source": "/wedding-guide", "destination": "/weddings", "permanent": true },
+    { "source": "/wedding-celebrant", "destination": "/weddings", "permanent": true },
+    { "source": "/faqs", "destination": "/weddings", "permanent": true },
+
+    { "source": "/party-band", "destination": "/parties", "permanent": true },
+    { "source": "/party-band-for-hire", "destination": "/parties", "permanent": true },
+    { "source": "/parties-old-page", "destination": "/parties", "permanent": true },
+
+    { "source": "/video", "destination": "/songlist", "permanent": true },
+    { "source": "/making-the-music", "destination": "/songlist", "permanent": true },
+
+    { "source": "/contact", "destination": "/", "permanent": true },
+    { "source": "/testimonials", "destination": "/", "permanent": true },
+    { "source": "/spring-promotion", "destination": "/", "permanent": true },
+    { "source": "/march-promotion", "destination": "/", "permanent": true },
+    { "source": "/march-april-special", "destination": "/", "permanent": true },
+
+    { "source": "/wp-admin/:path*", "destination": "/", "permanent": false },
+    { "source": "/wp-content/:path*", "destination": "/", "permanent": false },
+    { "source": "/wp-login.php", "destination": "/", "permanent": false }
+  ],
   "headers": [
     {
       "source": "/(.*)",
