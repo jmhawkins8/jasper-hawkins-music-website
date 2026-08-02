@@ -18,8 +18,8 @@
   <meta name="twitter:image" content="https://www.jasperhawkinsmusic.co.nz/assets/photos/jas-acoustic-mudbrick.webp">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <meta name="description" content="Award-winning live music for private parties and celebrations — solo acoustic sets and full band options across Auckland and New Zealand.">
-  <link rel="stylesheet" href="assets/colors_and_type.css?v=2">
-  <link rel="stylesheet" href="assets/design-system.css?v=2">
+  <link rel="stylesheet" href="assets/colors_and_type.css?v=3">
+  <link rel="stylesheet" href="assets/design-system.css?v=3">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     .skip-link {
@@ -1529,7 +1529,8 @@
       // a script that fills and submits in milliseconds.
       var EQ_FORM_OPENED = Date.now();
 
-      document.getElementById('eqForm').addEventListener('submit', async function(e){
+      var eqFormEl = document.getElementById('eqForm');
+      if (eqFormEl) eqFormEl.addEventListener('submit', async function(e){
         e.preventDefault();
         var form = e.target;
         var btn = form.querySelector('.eq-submit');

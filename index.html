@@ -18,8 +18,8 @@
   <meta name="twitter:description" content="Live wedding and event music across Auckland and New Zealand — solo acoustic, guitar and vocals, plus DJ sets to keep the dance floor full. Check your date.">
   <meta name="twitter:image" content="https://www.jasperhawkinsmusic.co.nz/assets/photos/jas-acoustic-mudbrick.webp">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="assets/colors_and_type.css?v=2">
-  <link rel="stylesheet" href="assets/design-system.css?v=2">
+  <link rel="stylesheet" href="assets/colors_and_type.css?v=3">
+  <link rel="stylesheet" href="assets/design-system.css?v=3">
   <style>
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1570,7 +1570,8 @@
       // script that fills and submits in milliseconds.
       const EQ_FORM_OPENED = Date.now();
 
-      document.getElementById('eqForm').addEventListener('submit', async e => {
+      var eqFormEl = document.getElementById('eqForm');
+      if (eqFormEl) eqFormEl.addEventListener('submit', async e => {
         e.preventDefault();
         const form = e.target;
         const btn = form.querySelector('.eq-submit');

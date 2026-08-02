@@ -21,8 +21,8 @@
   <!-- Warm up the Bunny CDN connection early — first video tap skips DNS/TLS setup -->
   <link rel="preconnect" href="https://vz-0620fbe9-cee.b-cdn.net" crossorigin>
   <link rel="dns-prefetch" href="https://vz-0620fbe9-cee.b-cdn.net">
-  <link rel="stylesheet" href="assets/colors_and_type.css?v=2">
-  <link rel="stylesheet" href="assets/design-system.css?v=2">
+  <link rel="stylesheet" href="assets/colors_and_type.css?v=3">
+  <link rel="stylesheet" href="assets/design-system.css?v=3">
   <style>
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -3200,7 +3200,8 @@
       // a script that fills and submits in milliseconds.
       const EQ_FORM_OPENED = Date.now();
 
-      document.getElementById('eqForm').addEventListener('submit', async e => {
+      var eqFormEl = document.getElementById('eqForm');
+      if (eqFormEl) eqFormEl.addEventListener('submit', async e => {
         e.preventDefault();
         const form = e.target;
         const btn = form.querySelector('.eq-submit');
@@ -3404,8 +3405,10 @@
     });
     dots.forEach((dd,i)=>dd.classList.toggle('on', i===center));
   }
-  document.getElementById('fanNext').addEventListener('click',()=>go(center+1));
-  document.getElementById('fanPrev').addEventListener('click',()=>go(center-1));
+  var fanNextEl = document.getElementById('fanNext');
+  var fanPrevEl = document.getElementById('fanPrev');
+  if (fanNextEl) fanNextEl.addEventListener('click',()=>go(center+1));
+  if (fanPrevEl) fanPrevEl.addEventListener('click',()=>go(center-1));
   addEventListener('keydown',e=>{ if(e.key==='ArrowLeft')go(center-1); if(e.key==='ArrowRight')go(center+1); if(e.key==='Escape')stop(); });
   var _fanW=window.innerWidth; addEventListener('resize',function(){ if(window.innerWidth===_fanW) return; _fanW=window.innerWidth; render(); });
   let dragX=null;
@@ -3650,7 +3653,8 @@
   }
   function openList(){ renderList(); slScrim.classList.add('open'); slPanel.classList.add('open'); document.body.style.overflow='hidden'; }
   function closeList(){ slScrim.classList.remove('open'); slPanel.classList.remove('open'); document.body.style.overflow=''; }
-  document.querySelector('.fs-more').addEventListener('click',openList);
+  var fsMoreEl = document.querySelector('.fs-more');
+  if (fsMoreEl) fsMoreEl.addEventListener('click',openList);
   slClose.addEventListener('click',closeList);
   slScrim.addEventListener('click',closeList);
   slSearch.addEventListener('input',renderList);
