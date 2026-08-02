@@ -25,6 +25,10 @@ import { randomUUID } from 'crypto';
 
 const clean = (v, max = 500) => (typeof v === 'string' ? v.trim().slice(0, max) : '');
 
+// Everything an enquirer types lands in the notification email. Escape it —
+// the email is untrusted input arriving in Jasper's inbox.
+const esc = v => String(v).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
 // ── Abuse guards ──────────────────────────────────────────────────────────
 // Deliberately tuned to never block a real couple. A genuine enquirer sends
 // one form, once. Everything here only trips on volume or obvious bot markers.
@@ -92,15 +96,19 @@ function nzToday() {
 // Supabase before this runs, so any failure here is logged and swallowed —
 // a wobbly third party must never cost Jasper a lead.
 
-// Don't let a slow AC hold the visitor's browser waiting.
-async function acFetch(url, opts, ms = 5000) {
+// No third party gets to hold the visitor's browser open indefinitely.
+async function withTimeout(run, ms) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), ms);
   try {
-    return await fetch(url, { ...opts, signal: ctrl.signal });
+    return await run(ctrl.signal);
   } finally {
     clearTimeout(timer);
   }
+}
+
+async function acFetch(url, opts, ms = 3000) {
+  return withTimeout(signal => fetch(url, { ...opts, signal }), ms);
 }
 
 async function addToActiveCampaign({ name, email, phone, eventType }) {
@@ -137,8 +145,10 @@ async function addToActiveCampaign({ name, email, phone, eventType }) {
   const tagRes = await acFetch(`${base}/api/3/tags?search=${encodeURIComponent(tagName)}`, { headers });
   if (!tagRes.ok) throw new Error(`tags lookup ${tagRes.status}`);
   const tags = (await tagRes.json())?.tags ?? [];
-  const tag = tags.find(t => t.tag?.toLowerCase() === tagName.toLowerCase()) ?? tags[0];
-  if (!tag?.id) throw new Error(`no tag matching "${tagName}"`);
+  // Exact match only. Falling back to the first search hit would silently fire
+  // the wrong automation at a real couple if the tag were ever renamed.
+  const tag = tags.find(t => t.tag?.toLowerCase() === tagName.toLowerCase());
+  if (!tag?.id) throw new Error(`no tag exactly matching "${tagName}"`);
 
   // 3) Apply it — this is what trips the automation.
   const applyRes = await acFetch(`${base}/api/3/contactTags`, {
@@ -156,16 +166,32 @@ export default async function handler(req, res) {
     return res.status(405).json({ ok: false, error: 'Method not allowed' });
   }
 
-  const body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body || {});
+  let body;
+  try {
+    body = typeof req.body === 'string' ? JSON.parse(req.body || '{}') : (req.body ?? {});
+  } catch {
+    return res.status(400).json({ ok: false, error: 'Invalid request.' });
+  }
+  // JSON.parse('[]') and 'null' would otherwise sail through every body.x read.
+  if (typeof body !== 'object' || body === null || Array.isArray(body)) body = {};
 
-  // Honeypot: real people never fill "company" (it's off-screen). Bots do.
-  // Pretend success so the bot moves on, but save nothing.
-  if (clean(body.company)) return res.status(200).json({ ok: true });
-
-  const name  = clean(body.firstName, 120);
+  const name  = clean(body.firstName, 120).replace(/\s+/g, ' ');
   const email = clean(body.email, 200);
   if (!name || !email) {
     return res.status(400).json({ ok: false, error: 'Name and email are required.' });
+  }
+  // Checked here rather than scored as spam: a couple who typos their own
+  // address would otherwise get a cheerful "sent" and never hear back.
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) {
+    return res.status(400).json({ ok: false, error: 'That email address looks incomplete — please check it.' });
+  }
+
+  // Honeypot: off-screen, so a person never types in it. Password managers and
+  // browser autofill DO sometimes fill a field called "company", which would
+  // silently bin a real enquiry — so log it rather than vanishing.
+  if (clean(body.company)) {
+    console.warn('Honeypot tripped:', { name, email });
+    return res.status(200).json({ ok: true });
   }
 
   // Too many submissions from one address in a short window — almost certainly
@@ -179,13 +205,17 @@ export default async function handler(req, res) {
     });
   }
 
-  // Two or more bot signals: drop it silently (a 200 keeps bots from probing
-  // for what tripped the filter). Logged so genuine misses can be reviewed.
-  const score = spamScore(body, name, clean(body.email, 200), clean(body.message, 4000));
-  if (score >= 2) {
-    console.warn('Spam filtered:', { score, ip, name, email });
-    return res.status(200).json({ ok: true });
+  // Suspected spam is FLAGGED, never discarded. A corporate enquirer pasting a
+  // few links, or a couple whose name is in Chinese characters, can both trip
+  // two signals — and losing one of those costs far more than the nuisance of
+  // an obvious spam row. Only a pile-up of signals is dropped outright.
+  const score = spamScore(body, name, email, clean(body.message, 4000));
+  const suspect = score >= 2;
+  if (score >= 4) {
+    console.warn('Spam rejected:', { score, ip });
+    return res.status(200).json({ ok: true });   // tell bots nothing
   }
+  if (suspect) console.warn('Enquiry flagged as possible spam:', { score, ip });
 
   const SB = process.env.SUPABASE_URL;
   const KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -198,51 +228,70 @@ export default async function handler(req, res) {
   const location = clean(body.eventLocation, 200);
   // Derive the dashboard gig type from the event type submitted by the page the
   // enquiry came from (weddings/parties/corporate preset it; home lets them choose).
-  const eventType = clean(body.eventType, 40) || 'wedding';
   const GIG_MAP = { wedding: 'wedding', corporate: 'corporate', party: 'party', birthday: 'party', function: 'party', other: 'party' };
-  const gigType  = GIG_MAP[eventType] || 'wedding';
-  // Friendly label for the notification email only (not stored).
+  // Friendly label for the notification email only.
   const LABELS = { wedding: 'wedding', corporate: 'corporate', party: 'party', birthday: 'birthday', function: 'private function', other: 'event' };
-  const evLabel = LABELS[eventType] || 'event';
+  // Allowlist the key: a raw lookup would return Object for "constructor" and
+  // functions for "toString", which then leak into the email subject.
+  const rawType = clean(body.eventType, 40).toLowerCase();
+  const eventType = Object.hasOwn(GIG_MAP, rawType) ? rawType : 'wedding';
+  const gigType = GIG_MAP[eventType];
+  const evLabel = LABELS[eventType];
+
+  // The public availability calendar casts this column to `date`. One junk
+  // value makes that cast throw for EVERY request, and the website then treats
+  // every date as free — including dates already booked. So it is validated
+  // hard, and written as '' (the column is NOT NULL) rather than null.
+  const rawDate = clean(body.eventDate, 10);
+  const eventDate = /^\d{4}-\d{2}-\d{2}$/.test(rawDate) && !Number.isNaN(Date.parse(rawDate + 'T00:00:00Z'))
+    ? rawDate : '';
+
+  const message = clean(body.message, 4000);
   const record = {
     id: randomUUID(),                                // clients.id is NOT NULL with no default
     user_id: OWNER,
     stage: 'enquiry',
     gig_type: gigType,
+    event_type: eventType,                           // keeps birthday/function/other, which gig_type flattens
     name,
     email,
     phone: clean(body.phone, 60),
     source: clean(body.source, 60),
-    event_date: clean(body.eventDate, 10) || null,   // YYYY-MM-DD from the date picker
+    event_date: eventDate,
     venue: location,
     event_location: location,
-    enquiry_message: clean(body.message, 4000),
+    enquiry_message: suspect ? `[possible spam — score ${score}]\n${message}` : message,
     enquiry_date: nzToday(),
   };
 
-  // 1) Save the enquiry (source of truth).
+  // 1) Save the enquiry (source of truth). If this fails we do NOT bail out —
+  // the email below becomes the only copy of the lead, so it's worth far more
+  // than a tidy early return. The visitor still gets an honest error at the end.
+  let saved = true;
   try {
-    const r = await fetch(`${SB}/rest/v1/clients`, {
-      method: 'POST',
-      headers: {
-        apikey: KEY,
-        Authorization: `Bearer ${KEY}`,
-        'Content-Type': 'application/json',
-        Prefer: 'return=minimal',
-      },
-      body: JSON.stringify(record),
-    });
+    const r = await withTimeout(
+      signal => fetch(`${SB}/rest/v1/clients`, {
+        method: 'POST',
+        headers: {
+          apikey: KEY,
+          Authorization: `Bearer ${KEY}`,
+          'Content-Type': 'application/json',
+          Prefer: 'return=minimal',
+        },
+        body: JSON.stringify(record),
+        signal,
+      }), 8000);
     if (!r.ok) {
-      const detail = await r.text();
-      console.error('Supabase insert failed:', r.status, detail);
-      return res.status(502).json({ ok: false, error: 'Could not save enquiry.' });
+      console.error('Supabase insert failed:', r.status, (await r.text()).slice(0, 300));
+      saved = false;
     }
   } catch (err) {
-    console.error('Supabase insert threw:', err);
-    return res.status(502).json({ ok: false, error: 'Could not save enquiry.' });
+    console.error('Supabase insert threw:', String(err).slice(0, 300));
+    saved = false;
   }
 
-  // 2) Notify Jasper by email (best-effort — enquiry is already saved).
+  // 2) Notify Jasper by email. If the save failed this email IS the lead, so
+  // it says so loudly in the subject.
   const haveEnv = {
     RESEND_API_KEY: !!process.env.RESEND_API_KEY,
     NOTIFY_EMAIL:   !!process.env.NOTIFY_EMAIL,
@@ -254,34 +303,48 @@ export default async function handler(req, res) {
         ['Name', name], ['Email', email], ['Phone', record.phone],
         ['Event type', evLabel], ['Event date', record.event_date || '—'], ['Location', location || '—'],
         ['Heard via', record.source || '—'], ['Message', record.enquiry_message || '—'],
-      ].map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#888;vertical-align:top">${k}</td><td style="padding:4px 0">${String(v).replace(/</g, '&lt;')}</td></tr>`).join('');
-      const r = await fetch('https://api.resend.com/emails', {
+      ].map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#888;vertical-align:top">${esc(k)}</td><td style="padding:4px 0">${esc(v)}</td></tr>`).join('');
+      const flag = !saved ? '⚠ NOT SAVED — ' : suspect ? '[possible spam] ' : '';
+      const note = !saved
+        ? 'This enquiry could NOT be saved to your dashboard — this email is the only copy. Add it manually.'
+        : "It's already in your dashboard Enquiry tab.";
+      const r = await withTimeout(signal => fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           from: process.env.FROM_EMAIL,
           to: process.env.NOTIFY_EMAIL,
           reply_to: email,
-          subject: `New ${evLabel} enquiry — ${name}${record.event_date ? ' · ' + record.event_date : ''}`,
-          html: `<h2 style="font-family:sans-serif">New ${evLabel} enquiry</h2><p style="font-family:sans-serif;color:#555">It's already in your dashboard Enquiry tab.</p><table style="font-family:sans-serif;font-size:14px">${rows}</table>`,
+          subject: `${flag}New ${evLabel} enquiry — ${name}${record.event_date ? ' · ' + record.event_date : ''}`,
+          html: `<h2 style="font-family:sans-serif">New ${esc(evLabel)} enquiry</h2><p style="font-family:sans-serif;color:${saved ? '#555' : '#b00'}">${note}</p><table style="font-family:sans-serif;font-size:14px">${rows}</table>`,
         }),
-      });
+        signal,
+      }), 8000);
       if (!r.ok) {
-        const detail = await r.text();
-        console.error('Resend send failed:', r.status, detail);
+        console.error('Resend send failed:', r.status, (await r.text()).slice(0, 300));
       }
     } else {
       console.error('Email skipped — missing env vars:', haveEnv);
     }
   } catch (err) {
-    console.error('Resend email threw (enquiry still saved):', err);
+    console.error('Resend email threw:', String(err).slice(0, 300));
   }
 
-  // 3) Start the ActiveCampaign follow-up sequence (best-effort).
-  try {
-    const acResult = await addToActiveCampaign({
-      name, email, phone: record.phone, eventType,
+  // The visitor needs to know it didn't land, so they can try again or ring.
+  if (!saved) {
+    return res.status(502).json({
+      ok: false,
+      error: "Something went wrong saving your enquiry — please try again, or email hello@jasperhawkinsmusic.co.nz directly.",
     });
+  }
+
+  // 3) Start the ActiveCampaign follow-up sequence (best-effort). Capped
+  // overall so three slow calls can't stack up behind the visitor.
+  try {
+    const acResult = await Promise.race([
+      addToActiveCampaign({ name, email, phone: record.phone, eventType }),
+      new Promise((_, rj) => setTimeout(() => rj(new Error('AC budget exceeded')), 6000)),
+    ]);
     if (acResult.skipped) console.log('ActiveCampaign skipped:', acResult.skipped);
     else console.log('ActiveCampaign tagged:', acResult.tag);
   } catch (err) {

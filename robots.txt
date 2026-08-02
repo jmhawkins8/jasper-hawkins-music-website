@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://www.jasperhawkinsmusic.co.nz/sitemap.xml

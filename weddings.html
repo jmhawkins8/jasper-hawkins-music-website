@@ -4,6 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Weddings · Jasper Hawkins Music</title>
+  <meta name="description" content="Acoustic ceremony music and DJ sets for weddings across Auckland and New Zealand. One musician for the whole day — ceremony, canapés, dinner and dancing.">
+  <link rel="canonical" href="https://www.jasperhawkinsmusic.co.nz/weddings">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Jasper Hawkins Music">
+  <meta property="og:title" content="Weddings · Jasper Hawkins Music">
+  <meta property="og:description" content="Acoustic ceremony music and DJ sets for weddings across Auckland and New Zealand. One musician for the whole day — ceremony, canapés, dinner and dancing.">
+  <meta property="og:url" content="https://www.jasperhawkinsmusic.co.nz/weddings">
+  <meta property="og:image" content="https://www.jasperhawkinsmusic.co.nz/assets/photos/jas-acoustic-mudbrick.webp">
+  <meta property="og:locale" content="en_NZ">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Weddings · Jasper Hawkins Music">
+  <meta name="twitter:description" content="Acoustic ceremony music and DJ sets for weddings across Auckland and New Zealand. One musician for the whole day — ceremony, canapés, dinner and dancing.">
+  <meta name="twitter:image" content="https://www.jasperhawkinsmusic.co.nz/assets/photos/jas-acoustic-mudbrick.webp">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <!-- Warm up the Bunny CDN connection early — first video tap skips DNS/TLS setup -->
   <link rel="preconnect" href="https://vz-0620fbe9-cee.b-cdn.net" crossorigin>
   <link rel="dns-prefetch" href="https://vz-0620fbe9-cee.b-cdn.net">
@@ -122,11 +136,12 @@
       flex-direction: column;
       padding: 108px 32px 56px;
       pointer-events: none;
+      visibility: hidden;
       opacity: 0;
       transform: translateX(6%);
       transition: opacity 300ms var(--ease), transform 300ms var(--ease);
     }
-    .nav-menu.is-open { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .nav-menu.is-open { visibility: visible; opacity: 1; transform: translateX(0); pointer-events: auto; }
     .nav-menu-links { display: flex; flex-direction: column; flex: 1; }
     .nav-menu-links a {
       font-family: var(--font-serif);
@@ -1101,6 +1116,8 @@
 .fp-catch{position:absolute;inset:0;z-index:2;cursor:pointer}
 .fp-loading{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:1;transition:opacity .35s}
 .fan-phone.vid-ready .fp-loading{opacity:0}
+/* Clip couldn't load — say so rather than spinning forever. */
+.fan-phone.vid-error .fp-media::after{content:"Video unavailable right now — sing out and I'll send you a link";position:absolute;inset:0;z-index:6;display:flex;align-items:center;justify-content:center;text-align:center;padding:0 18px;font-family:var(--font-sans);font-size:12px;line-height:1.5;color:var(--bone-mute);background:rgba(0,0,0,0.72)}
 .fp-spin{width:32px;height:32px;border-radius:50%;border:3px solid rgba(242,234,216,.22);border-top-color:var(--ember);animation:fpspin .8s linear infinite}
 @keyframes fpspin{to{transform:rotate(360deg)}}
 .fp-vgrad{position:absolute;inset:0;z-index:3;pointer-events:none;background:linear-gradient(to top,rgba(0,0,0,.85),rgba(0,0,0,.2) 34%,transparent 58%),linear-gradient(to bottom,rgba(0,0,0,.35),transparent 18%)}
@@ -1807,9 +1824,10 @@
       z-index: 401;
       display: flex; flex-direction: column;
       transform: translateX(100%);
-      transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1);
+      visibility: hidden;
+      transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 420ms;
     }
-    .eq-panel.is-open { transform: translateX(0); }
+    .eq-panel.is-open { transform: translateX(0); visibility: visible; transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s; }
     .eq-panel-head {
       display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
       padding: 28px 28px 22px;
@@ -2968,16 +2986,19 @@
 
     <!-- Full-bleed photo behind everything -->
     <div class="hero-photo">
-      <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="assets/photos/jas-acoustic-markovina.webp">
-        <source src="assets/video/hero-promo.mp4?v=2" type="video/mp4">
-      </video>
+      <video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="assets/photos/jas-acoustic-markovina.webp"></video>
       <script>
-        /* Phones get the portrait cut — every shot re-cropped so Jasper stays in frame */
+        /* Phones get the portrait cut — every shot re-cropped so Jasper stays
+           in frame. The src is set here rather than in a <source> child so the
+           preload scanner can't start fetching the desktop file first and then
+           abandon it — that was costing phones a wasted partial download. */
         (function(){
-          if (window.matchMedia && matchMedia('(max-width: 767px)').matches) {
-            var v = document.querySelector('.hero-video');
-            if (v) { v.src = 'assets/video/hero-promo-mobile-hd.mp4?v=4'; v.load(); if (v.play) v.play().catch(function(){}); }
-          }
+          var v = document.querySelector('.hero-video');
+          if (!v) return;
+          var mobile = window.matchMedia && matchMedia('(max-width: 767px)').matches;
+          v.src = mobile ? 'assets/video/hero-promo-mobile-hd.mp4?v=5'
+                         : 'assets/video/hero-promo.mp4?v=5';
+          if (v.play) v.play().catch(function(){});
         })();
       </script>
       <img
@@ -3038,7 +3059,7 @@
   <section class="section-testi">
     <div class="testi-photo" data-reveal>
       <img
-        src="assets/photos/jas-dj-wedding-party.png"
+        src="assets/photos/jas-dj-wedding-party.webp"
         alt="Jasper DJing at a wedding reception"
       >
     </div>
@@ -3448,9 +3469,26 @@
 
   <!-- ── Final CTA — simple centered card ───────────────────── -->
   <section class="section-cta" id="contact">
-    <video class="cta-video" autoplay muted loop playsinline preload="auto" poster="assets/photos/dj-roller-poster.jpg?v=3">
-      <source src="assets/video/dj-roller.mp4?v=3" type="video/mp4">
-    </video>
+    <!-- Sits ~4000 lines down the page. Nothing is fetched until it's nearly
+         on screen; until then the poster stands in. -->
+    <video class="cta-video" autoplay muted loop playsinline preload="none"
+           data-src="assets/video/dj-roller.mp4?v=4" poster="assets/photos/dj-roller-poster.jpg?v=4"></video>
+    <script>
+      (function(){
+        var v = document.querySelector('.cta-video');
+        if (!v || !v.dataset.src) return;
+        var load = function(){
+          if (v.src) return;
+          v.src = v.dataset.src;
+          if (v.play) v.play().catch(function(){});
+        };
+        if (!('IntersectionObserver' in window)) { load(); return; }
+        var io = new IntersectionObserver(function(entries){
+          if (entries.some(function(e){ return e.isIntersecting; })) { load(); io.disconnect(); }
+        }, { rootMargin: '400px' });
+        io.observe(v);
+      })();
+    </script>
     <div class="cta-inner">
       <span class="cta-eyebrow" data-reveal>Get in touch</span>
       <h2 class="cta-heading" data-reveal data-delay="1">Let's make your day<br>unforgettable</h2>
@@ -3802,7 +3840,7 @@
       const btn = form.querySelector('.eq-submit');
       const errEl = document.getElementById('eqError');
       const okEl = document.getElementById('eqSuccess');
-      if (errEl) errEl.hidden = true;
+      if (errEl) { errEl.hidden = true; if (errEl.dataset.def === undefined) errEl.dataset.def = errEl.textContent; errEl.textContent = errEl.dataset.def; }
       if (!form.reportValidity()) return;
 
       const payload = {
@@ -3822,11 +3860,17 @@
       btn.disabled = true;
       btn.textContent = 'Sending…';
       try {
-        const res = await fetch('/api/enquiry', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
+        const ctrl = new AbortController();
+        const to = setTimeout(() => ctrl.abort(), 20000);
+        let res;
+        try {
+          res = await fetch('/api/enquiry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+            signal: ctrl.signal,
+          });
+        } finally { clearTimeout(to); }
         if (!res.ok) {
           // Show the server's own wording when it has some (e.g. rate limit).
           const info = await res.json().catch(() => null);
@@ -3838,7 +3882,7 @@
       } catch (err) {
         btn.disabled = false;
         btn.textContent = orig;
-        if (errEl) errEl.hidden = false;
+        if (errEl) { if (err && err.name === 'AbortError') errEl.textContent = 'That took too long — please try again, or email hello@jasperhawkinsmusic.co.nz directly.'; errEl.hidden = false; }
       }
     });
   }());
@@ -3895,8 +3939,15 @@
       for (let d = 1; d <= daysInMonth; d++) {
         const date = new Date(y, m, d);
         const key = iso(date);
+        const status = STATUS[key];
         if (date < today) {
           html += `<div class="cal-cell is-past">${d}</div>`;
+        } else if (status === 'booked') {
+          // Already taken — not a button, so nobody can enquire for it.
+          html += `<div class="cal-cell is-booked" aria-label="${key} — already booked">${d}</div>`;
+        } else if (status === 'enquiry') {
+          // Someone's asked about this date but hasn't confirmed — still winnable.
+          html += `<button type="button" class="cal-cell is-open is-enquiry" data-iso="${key}" aria-label="${key} — in demand, still available, enquire">${d}</button>`;
         } else {
           html += `<button type="button" class="cal-cell is-open" data-iso="${key}" aria-label="${key} — available, enquire">${d}</button>`;
         }
@@ -4049,7 +4100,7 @@
 
     const slides = [
       {
-        photo: 'assets/photos/annette-kumeu-valley.png?v=2',
+        photo: 'assets/photos/annette-kumeu-valley.webp?v=2',
         pos:   'center 28%',
         posM:  'center top',
         alt:   'Annette, Kumeu Valley Estate',
@@ -4059,7 +4110,7 @@
         quote: 'He is a truly gifted artist who brings romantic tones to the wedding ceremonies with his guitar and vocals. He works tirelessly throughout the entire event, then completely smashes it on the dance floor with a flawless mix of modern hits and timeless classics. If you want an incredible daytime atmosphere and a guaranteed packed dance floor at night, booking Jasper is a must!',
       },
       {
-        photo: 'assets/photos/mark-markovina.png',
+        photo: 'assets/photos/mark-markovina.webp',
         pos:   'center top',
         alt:   'Mark, Markovina Estate',
         name:  'Mark',
@@ -4068,7 +4119,7 @@
         quote: 'Since he knows the venue inside and out, the entire process is stress-free for us as the hosts. Jasper is incredibly talented, with seamless transitions from live singing to DJing, and his peaceful presence makes the day so much easier. He\'s a wonderful performer and we love having him here at our Estate.',
       },
       {
-        photo: 'assets/photos/tracey-bridgewater.png?v=2',
+        photo: 'assets/photos/tracey-bridgewater.webp?v=2',
         pos:   'center 22%',
         posM:  'center 20%',
         alt:   'Tracey, Bridgewater Estate',
@@ -4201,7 +4252,13 @@
   function loadSource(video, guid){
     const u = HLS(guid);
     if(video.canPlayType('application/vnd.apple.mpegurl')){ video.src = u; }
-    else if(window.Hls && window.Hls.isSupported()){ const h = new Hls({capLevelToPlayerSize:true, abrEwmaDefaultEstimate:5000000, startLevel:-1, maxStarvationDelay:6, testBandwidth:false, startFragPrefetch:true}); h.loadSource(u); h.attachMedia(video); video._hls = h; }
+    else if(window.Hls && window.Hls.isSupported()){ const h = new Hls({capLevelToPlayerSize:true, abrEwmaDefaultEstimate:5000000, startLevel:-1, maxStarvationDelay:6, testBandwidth:false, startFragPrefetch:true}); h.loadSource(u); h.attachMedia(video); video._hls = h;
+      // Streaming died — try the plain MP4 before giving up on this clip.
+      h.on(Hls.Events.ERROR,(_,d)=>{ if(!d || !d.fatal) return;
+        try{ h.destroy(); }catch(_){ } video._hls=null;
+        video.src = MP4(guid); video.play().catch(()=>{});
+      });
+    }
     else { video.src = MP4(guid); }
   }
   /* Pre-warm the centre phone's stream: quietly fetch its playlists + first chunk
@@ -4293,6 +4350,18 @@
     video.addEventListener('loadedmetadata',()=>{ curDur=video.duration||0; });
     video.addEventListener('timeupdate',()=>{ if(video.duration){ curDur=video.duration; if(!seeking&&!paused) setScrub(video.currentTime/video.duration); } });
     video.addEventListener('ended',stop);
+    // If the CDN is unreachable (a lapsed Bunny balance 403s every clip), the
+    // spinner would otherwise turn forever on the page's headline feature.
+    // Fail visibly instead, and give the visitor somewhere to go.
+    let failed=false;
+    const fail=()=>{ if(failed) return; failed=true; clearTimeout(watchdog);
+      try{ stop(); }catch(_){ }
+      el.classList.add('vid-error');
+    };
+    const watchdog=setTimeout(()=>{ if(!el.classList.contains('vid-ready')) fail(); },12000);
+    video.addEventListener('playing',()=>clearTimeout(watchdog),{once:true});
+    video.addEventListener('error',fail);
+    el._fanFail=fail;
     loadSource(video, s.guid);
     video.play().catch(()=>{});
   }
@@ -4593,12 +4662,21 @@
       btn.setAttribute('aria-haspopup', 'listbox');
       var list = document.createElement('ul'); list.className = 'eqdd-list'; list.setAttribute('role', 'listbox');
 
+      var listId = 'eqdd-list-' + Math.random().toString(36).slice(2, 8);
+      list.id = listId;
+      btn.setAttribute('aria-controls', listId);
+      btn.setAttribute('aria-expanded', 'false');
+      function open(){ wrap.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+      function close(){ wrap.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+
       function sync(){
         var o = sel.options[sel.selectedIndex];
         btn.textContent = o ? o.textContent : '';
         btn.classList.toggle('placeholder', !sel.value);
         list.querySelectorAll('.eqdd-opt').forEach(function(li){
-          li.classList.toggle('selected', li.dataset.value === sel.value && sel.value !== '');
+          var on = li.dataset.value === sel.value && sel.value !== '';
+          li.classList.toggle('selected', on);
+          li.setAttribute('aria-selected', on ? 'true' : 'false');
         });
       }
       Array.prototype.forEach.call(sel.options, function(o){
@@ -4606,21 +4684,54 @@
         var li = document.createElement('li');
         li.className = 'eqdd-opt'; li.textContent = o.textContent;
         li.dataset.value = o.value; li.setAttribute('role', 'option');
-        li.addEventListener('click', function(){
+        li.tabIndex = -1;
+        function choose(){
           sel.value = o.value;
           sel.dispatchEvent(new Event('change', { bubbles: true }));
-          wrap.classList.remove('open');
+          close();
+          btn.focus();
           sync();
+        }
+        li.addEventListener('click', choose);
+        li.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); }
+          else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            var opts = Array.prototype.slice.call(list.querySelectorAll('.eqdd-opt'));
+            var i = opts.indexOf(li) + (e.key === 'ArrowDown' ? 1 : -1);
+            if (opts[i]) opts[i].focus();
+          } else if (e.key === 'Home' || e.key === 'End') {
+            e.preventDefault();
+            var all = list.querySelectorAll('.eqdd-opt');
+            (e.key === 'Home' ? all[0] : all[all.length - 1]).focus();
+          }
         });
         list.appendChild(li);
       });
-      btn.addEventListener('click', function(e){ e.stopPropagation(); wrap.classList.toggle('open'); });
-      document.addEventListener('click', function(){ wrap.classList.remove('open'); });
-      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') wrap.classList.remove('open'); });
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (wrap.classList.contains('open')) close(); else open();
+      });
+      // Open on Down/Enter and land on the first option, as a native select does.
+      btn.addEventListener('keydown', function(e){
+        if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault(); open();
+          var first = list.querySelector('.eqdd-opt.selected') || list.querySelector('.eqdd-opt');
+          if (first) first.focus();
+        }
+      });
+      document.addEventListener('click', close);
+      document.addEventListener('keydown', function(e){
+        if (e.key !== 'Escape' || !wrap.classList.contains('open')) return;
+        close(); btn.focus();
+      });
 
       sel.parentNode.insertBefore(wrap, sel);
       wrap.appendChild(btn); wrap.appendChild(list); wrap.appendChild(sel);
       sel.tabIndex = -1;
+      // Browser validation on a required, visually-hidden select would try to
+      // focus something nobody can see; point the message at the button instead.
+      sel.addEventListener('invalid', function(){ btn.focus(); });
       sync();
     });
   })();

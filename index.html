@@ -4,6 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Jasper Hawkins Music · Musician | Songwriter | DJ</title>
+  <meta name="description" content="Live wedding and event music across Auckland and New Zealand — solo acoustic, guitar and vocals, plus DJ sets to keep the dance floor full. Check your date.">
+  <link rel="canonical" href="https://www.jasperhawkinsmusic.co.nz/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Jasper Hawkins Music">
+  <meta property="og:title" content="Jasper Hawkins Music · Musician | Songwriter | DJ">
+  <meta property="og:description" content="Live wedding and event music across Auckland and New Zealand — solo acoustic, guitar and vocals, plus DJ sets to keep the dance floor full. Check your date.">
+  <meta property="og:url" content="https://www.jasperhawkinsmusic.co.nz/">
+  <meta property="og:image" content="https://www.jasperhawkinsmusic.co.nz/assets/photos/jas-acoustic-mudbrick.webp">
+  <meta property="og:locale" content="en_NZ">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Jasper Hawkins Music · Musician | Songwriter | DJ">
+  <meta name="twitter:description" content="Live wedding and event music across Auckland and New Zealand — solo acoustic, guitar and vocals, plus DJ sets to keep the dance floor full. Check your date.">
+  <meta name="twitter:image" content="https://www.jasperhawkinsmusic.co.nz/assets/photos/jas-acoustic-mudbrick.webp">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/colors_and_type.css">
   <link rel="stylesheet" href="assets/design-system.css">
   <style>
@@ -117,11 +131,12 @@
       flex-direction: column;
       padding: 108px 32px 56px;
       pointer-events: none;
+      visibility: hidden;
       opacity: 0;
       transform: translateX(6%);
       transition: opacity 300ms var(--ease), transform 300ms var(--ease);
     }
-    .nav-menu.is-open { opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .nav-menu.is-open { visibility: visible; opacity: 1; transform: translateX(0); pointer-events: auto; }
     .nav-menu-links { display: flex; flex-direction: column; flex: 1; }
     .nav-menu-links a {
       font-family: var(--font-serif);
@@ -887,9 +902,10 @@
       z-index: 401;
       display: flex; flex-direction: column;
       transform: translateX(100%);
-      transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1);
+      visibility: hidden;
+      transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 420ms;
     }
-    .eq-panel.is-open { transform: translateX(0); }
+    .eq-panel.is-open { transform: translateX(0); visibility: visible; transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s; }
     .eq-panel-head {
       display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
       padding: 28px 28px 22px;
@@ -1149,7 +1165,7 @@
   <section class="section-about" id="about">
     <div class="about-inner">
       <div class="about-photo" data-reveal>
-        <img src="assets/photos/oldsite/home-about.png" alt="Jasper Hawkins performing acoustic guitar and vocals">
+        <img src="assets/photos/oldsite/home-about.webp" alt="Jasper Hawkins performing acoustic guitar and vocals">
       </div>
       <div>
         <div class="s-eyebrow" data-reveal>About</div>
@@ -1177,7 +1193,7 @@
       <div class="services-grid">
         <div class="svc-card" data-reveal>
           <div class="svc-photo">
-            <img src="assets/photos/oldsite/home-card-weddings.png" alt="Wedding reception dance floor with live music">
+            <img src="assets/photos/oldsite/home-card-weddings.webp" alt="Wedding reception dance floor with live music">
           </div>
           <div class="svc-body">
             <div class="svc-num">01</div>
@@ -1189,7 +1205,7 @@
 
         <div class="svc-card" data-reveal data-delay="1">
           <div class="svc-photo">
-            <img src="assets/photos/oldsite/home-card-corporate.png" alt="Jasper Hawkins performing at a corporate marquee event">
+            <img src="assets/photos/oldsite/home-card-corporate.webp" alt="Jasper Hawkins performing at a corporate marquee event">
           </div>
           <div class="svc-body">
             <div class="svc-num">02</div>
@@ -1201,7 +1217,7 @@
 
         <div class="svc-card" data-reveal data-delay="2">
           <div class="svc-photo">
-            <img src="assets/photos/oldsite/band-corporate.png" alt="Jasper Hawkins DJing a party">
+            <img src="assets/photos/oldsite/band-corporate.webp" alt="Jasper Hawkins DJing a party">
           </div>
           <div class="svc-body">
             <div class="svc-num">03</div>
@@ -1524,7 +1540,7 @@
         const btn = form.querySelector('.eq-submit');
         const errEl = document.getElementById('eqError');
         const okEl = document.getElementById('eqSuccess');
-        if (errEl) errEl.hidden = true;
+        if (errEl) { errEl.hidden = true; if (errEl.dataset.def === undefined) errEl.dataset.def = errEl.textContent; errEl.textContent = errEl.dataset.def; }
         if (!form.reportValidity()) return;
 
         const payload = {
@@ -1544,11 +1560,17 @@
         btn.disabled = true;
         btn.textContent = 'Sending…';
         try {
-          const res = await fetch('/api/enquiry', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
-          });
+          const ctrl = new AbortController();
+          const to = setTimeout(() => ctrl.abort(), 20000);
+          let res;
+          try {
+            res = await fetch('/api/enquiry', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload),
+              signal: ctrl.signal,
+            });
+          } finally { clearTimeout(to); }
           if (!res.ok) {
             // Show the server's own wording when it has some (e.g. rate limit).
             const info = await res.json().catch(() => null);
@@ -1560,7 +1582,7 @@
         } catch (err) {
           btn.disabled = false;
           btn.textContent = orig;
-          if (errEl) errEl.hidden = false;
+          if (errEl) { if (err && err.name === 'AbortError') errEl.textContent = 'That took too long — please try again, or email hello@jasperhawkinsmusic.co.nz directly.'; errEl.hidden = false; }
         }
       });
     }());
@@ -1591,12 +1613,21 @@
       btn.setAttribute('aria-haspopup', 'listbox');
       var list = document.createElement('ul'); list.className = 'eqdd-list'; list.setAttribute('role', 'listbox');
 
+      var listId = 'eqdd-list-' + Math.random().toString(36).slice(2, 8);
+      list.id = listId;
+      btn.setAttribute('aria-controls', listId);
+      btn.setAttribute('aria-expanded', 'false');
+      function open(){ wrap.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+      function close(){ wrap.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+
       function sync(){
         var o = sel.options[sel.selectedIndex];
         btn.textContent = o ? o.textContent : '';
         btn.classList.toggle('placeholder', !sel.value);
         list.querySelectorAll('.eqdd-opt').forEach(function(li){
-          li.classList.toggle('selected', li.dataset.value === sel.value && sel.value !== '');
+          var on = li.dataset.value === sel.value && sel.value !== '';
+          li.classList.toggle('selected', on);
+          li.setAttribute('aria-selected', on ? 'true' : 'false');
         });
       }
       Array.prototype.forEach.call(sel.options, function(o){
@@ -1604,21 +1635,54 @@
         var li = document.createElement('li');
         li.className = 'eqdd-opt'; li.textContent = o.textContent;
         li.dataset.value = o.value; li.setAttribute('role', 'option');
-        li.addEventListener('click', function(){
+        li.tabIndex = -1;
+        function choose(){
           sel.value = o.value;
           sel.dispatchEvent(new Event('change', { bubbles: true }));
-          wrap.classList.remove('open');
+          close();
+          btn.focus();
           sync();
+        }
+        li.addEventListener('click', choose);
+        li.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); }
+          else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            var opts = Array.prototype.slice.call(list.querySelectorAll('.eqdd-opt'));
+            var i = opts.indexOf(li) + (e.key === 'ArrowDown' ? 1 : -1);
+            if (opts[i]) opts[i].focus();
+          } else if (e.key === 'Home' || e.key === 'End') {
+            e.preventDefault();
+            var all = list.querySelectorAll('.eqdd-opt');
+            (e.key === 'Home' ? all[0] : all[all.length - 1]).focus();
+          }
         });
         list.appendChild(li);
       });
-      btn.addEventListener('click', function(e){ e.stopPropagation(); wrap.classList.toggle('open'); });
-      document.addEventListener('click', function(){ wrap.classList.remove('open'); });
-      document.addEventListener('keydown', function(e){ if (e.key === 'Escape') wrap.classList.remove('open'); });
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (wrap.classList.contains('open')) close(); else open();
+      });
+      // Open on Down/Enter and land on the first option, as a native select does.
+      btn.addEventListener('keydown', function(e){
+        if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault(); open();
+          var first = list.querySelector('.eqdd-opt.selected') || list.querySelector('.eqdd-opt');
+          if (first) first.focus();
+        }
+      });
+      document.addEventListener('click', close);
+      document.addEventListener('keydown', function(e){
+        if (e.key !== 'Escape' || !wrap.classList.contains('open')) return;
+        close(); btn.focus();
+      });
 
       sel.parentNode.insertBefore(wrap, sel);
       wrap.appendChild(btn); wrap.appendChild(list); wrap.appendChild(sel);
       sel.tabIndex = -1;
+      // Browser validation on a required, visually-hidden select would try to
+      // focus something nobody can see; point the message at the button instead.
+      sel.addEventListener('invalid', function(){ btn.focus(); });
       sync();
     });
   })();
