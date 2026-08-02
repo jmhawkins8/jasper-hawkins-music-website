@@ -1033,6 +1033,23 @@
       .eq-input[type="date"] { cursor: pointer; }
     }
   </style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Party & Function Music",
+  "description": "Live acoustic and DJ music for private parties, birthdays and celebrations.",
+  "serviceType": "Party & Function Music",
+  "provider": {
+    "@id": "https://www.jasperhawkinsmusic.co.nz/#business"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "New Zealand"
+  },
+  "url": "https://www.jasperhawkinsmusic.co.nz/parties"
+}
+  </script>
 </head>
 <body>
 
@@ -1101,7 +1118,7 @@
   <!-- ── Hero ─────────────────────────────────────────────── -->
   <section class="p-hero">
     <div class="p-hero-photo">
-      <img src="assets/photos/oldsite/parties-hero.webp" alt="Jasper Hawkins performing live acoustic music with vocalist at an outdoor celebration">
+      <img src="assets/photos/oldsite/parties-hero.webp" alt="Jasper Hawkins performing live acoustic music with vocalist at an outdoor celebration" fetchpriority="high" width="1280" height="720">
     </div>
     <div class="p-hero-overlay"></div>
     <div class="p-hero-content">
@@ -1126,7 +1143,7 @@
       <div class="offer-grid">
         <div class="offer-card" data-reveal>
           <div class="offer-photo">
-            <img src="assets/photos/oldsite/acoustic-corporate.png" alt="Jasper Hawkins performing a solo acoustic set">
+            <img src="assets/photos/oldsite/acoustic-corporate.png" alt="Jasper Hawkins performing a solo acoustic set" loading="lazy" decoding="async">
           </div>
           <div class="offer-body">
             <h3 class="offer-title">Solo Acoustic Performances</h3>
@@ -1135,7 +1152,7 @@
         </div>
         <div class="offer-card" data-reveal data-delay="1">
           <div class="offer-photo">
-            <img src="assets/photos/oldsite/band-corporate.webp" alt="Full band performing live at a celebration">
+            <img src="assets/photos/oldsite/band-corporate.webp" alt="Full band performing live at a celebration" loading="lazy" decoding="async" width="800" height="572">
           </div>
           <div class="offer-body">
             <h3 class="offer-title">Full Band Experience</h3>

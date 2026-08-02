@@ -3321,7 +3321,7 @@
   const poster=s => {
     const pimg = s.poster ? s.poster : (CDN ? 'https://'+CDN+'/'+s.guid+'/thumbnail.jpg' : '');
     return '<div class="fp-poster-grad" style="position:absolute;inset:0;background:linear-gradient(150deg,hsl('+s.hue+' 70% 30%),hsl('+s.hue+' 60% 12%))"></div>'+
-      (pimg ? '<img src="'+pimg+'" alt="" onerror="this.style.display=\'none\'">' : '');
+      (pimg ? '<img src="'+pimg+'" alt="" onerror="this.style.display=\'none\'" fetchpriority="high">' : '');
   };
 
   const els=SONGS.map((s,i)=>{

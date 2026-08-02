@@ -1097,6 +1097,64 @@
       .eq-input[type="date"] { cursor: pointer; }
     }
   </style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": [
+    "LocalBusiness",
+    "MusicGroup"
+  ],
+  "@id": "https://www.jasperhawkinsmusic.co.nz/#business",
+  "name": "Jasper Hawkins Music",
+  "url": "https://www.jasperhawkinsmusic.co.nz/",
+  "email": "hello@jasperhawkinsmusic.co.nz",
+  "telephone": "+64220805085",
+  "image": "https://www.jasperhawkinsmusic.co.nz/assets/photos/jas-acoustic-mudbrick.webp",
+  "logo": "https://www.jasperhawkinsmusic.co.nz/favicon.svg",
+  "description": "Live wedding and event music across Auckland and New Zealand — acoustic guitar and vocals for ceremonies, plus DJ sets for the dance floor.",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "addressCountry": "NZ",
+    "addressRegion": "Auckland"
+  },
+  "areaServed": [
+    {
+      "@type": "Country",
+      "name": "New Zealand"
+    },
+    {
+      "@type": "AdministrativeArea",
+      "name": "Auckland"
+    }
+  ],
+  "knowsLanguage": "en-NZ",
+  "sameAs": [],
+  "makesOffer": [
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Wedding music — acoustic ceremony and DJ reception"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Corporate event music"
+      }
+    },
+    {
+      "@type": "Offer",
+      "itemOffered": {
+        "@type": "Service",
+        "name": "Private party and function music"
+      }
+    }
+  ]
+}
+  </script>
 </head>
 <body>
 
@@ -1167,8 +1225,7 @@
     <div class="hero-photo">
       <img
         src="assets/photos/oldsite/corporate-hero.webp"
-        alt="Jasper Hawkins performing live"
-      >
+        alt="Jasper Hawkins performing live" fetchpriority="high" width="1600" height="904">
     </div>
     <div class="hero-scrim"></div>
     <div class="hero-spot"></div>
@@ -1188,7 +1245,7 @@
   <section class="section-about" id="about">
     <div class="about-inner">
       <div class="about-photo" data-reveal>
-        <img src="assets/photos/oldsite/home-about.webp" alt="Jasper Hawkins performing acoustic guitar and vocals">
+        <img src="assets/photos/oldsite/home-about.webp" alt="Jasper Hawkins performing acoustic guitar and vocals" loading="lazy" decoding="async" width="1000" height="715">
       </div>
       <div>
         <div class="s-eyebrow" data-reveal>About</div>
@@ -1216,7 +1273,7 @@
       <div class="services-grid">
         <div class="svc-card" data-reveal>
           <div class="svc-photo">
-            <img src="assets/photos/oldsite/home-card-weddings.webp" alt="Wedding reception dance floor with live music">
+            <img src="assets/photos/oldsite/home-card-weddings.webp" alt="Wedding reception dance floor with live music" loading="lazy" decoding="async" width="800" height="572">
           </div>
           <div class="svc-body">
             <div class="svc-num">01</div>
@@ -1228,7 +1285,7 @@
 
         <div class="svc-card" data-reveal data-delay="1">
           <div class="svc-photo">
-            <img src="assets/photos/oldsite/home-card-corporate.webp" alt="Jasper Hawkins performing at a corporate marquee event">
+            <img src="assets/photos/oldsite/home-card-corporate.webp" alt="Jasper Hawkins performing at a corporate marquee event" loading="lazy" decoding="async" width="800" height="572">
           </div>
           <div class="svc-body">
             <div class="svc-num">02</div>
@@ -1240,7 +1297,7 @@
 
         <div class="svc-card" data-reveal data-delay="2">
           <div class="svc-photo">
-            <img src="assets/photos/oldsite/band-corporate.webp" alt="Jasper Hawkins DJing a party">
+            <img src="assets/photos/oldsite/band-corporate.webp" alt="Jasper Hawkins DJing a party" loading="lazy" decoding="async" width="800" height="572">
           </div>
           <div class="svc-body">
             <div class="svc-num">03</div>

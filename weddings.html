@@ -2888,6 +2888,23 @@
     }
 
   </style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "name": "Wedding Music",
+  "description": "Acoustic guitar and vocals for the ceremony and canapés, then DJ sets for the reception — one performer for the whole day.",
+  "serviceType": "Wedding Music",
+  "provider": {
+    "@id": "https://www.jasperhawkinsmusic.co.nz/#business"
+  },
+  "areaServed": {
+    "@type": "Country",
+    "name": "New Zealand"
+  },
+  "url": "https://www.jasperhawkinsmusic.co.nz/weddings"
+}
+  </script>
 </head>
 <body>
 
@@ -3018,8 +3035,7 @@
       </script>
       <img
         src="assets/photos/jas-acoustic-markovina.webp"
-        alt="Jasper Hawkins performing acoustic guitar at Markovina Vineyard"
-      >
+        alt="Jasper Hawkins performing acoustic guitar at Markovina Vineyard" fetchpriority="high" width="1280" height="720">
     </div>
     <!-- Full-width gradient: dark left → transparent right, no edge -->
     <div class="hero-overlay-left"></div>
@@ -3075,8 +3091,7 @@
     <div class="testi-photo" data-reveal>
       <img
         src="assets/photos/jas-dj-wedding-party.webp"
-        alt="Jasper DJing at a wedding reception"
-      >
+        alt="Jasper DJing at a wedding reception" loading="lazy" decoding="async" width="1200" height="676">
     </div>
     <div class="testi-o-flat"></div>
     <div class="testi-o-edges"></div>
@@ -3115,7 +3130,7 @@
             <p class="frame-desc">Live acoustic music for your aisle song, signing of the register and exit, performed exactly the way you've always imagined it.</p>
           </div>
           <div class="frame-photo">
-            <img src="assets/photos/jas-acoustic-mudbrick.webp" alt="Jasper Hawkins performing live acoustic at wedding ceremony">
+            <img src="assets/photos/jas-acoustic-mudbrick.webp" alt="Jasper Hawkins performing live acoustic at wedding ceremony" loading="lazy" decoding="async" width="1500" height="1000">
           </div>
         </div>
       </div>
@@ -3127,7 +3142,7 @@
         <div class="canapes-grain"></div>
         <div class="frame-grid">
           <div class="frame-photo frame-photo-warm">
-            <img src="assets/photos/jas-acoustic-markovina.webp" alt="Jasper Hawkins performing live acoustic during wedding canapés">
+            <img src="assets/photos/jas-acoustic-markovina.webp" alt="Jasper Hawkins performing live acoustic during wedding canapés" loading="lazy" decoding="async" width="1280" height="720">
           </div>
           <div class="frame-text">
             <div class="frame-num">02 / Canapés</div>
@@ -3148,7 +3163,7 @@
             <p class="frame-desc">A packed dance floor, the songs everyone knows, and a DJ set that builds naturally from the first dance through to the final song.</p>
           </div>
           <div class="frame-photo">
-            <img src="assets/photos/wedding-reception.webp" alt="Wedding reception DJ set">
+            <img src="assets/photos/wedding-reception.webp" alt="Wedding reception DJ set" loading="lazy" decoding="async" width="1500" height="999">
           </div>
         </div>
       </div>
@@ -3365,7 +3380,7 @@
           <p class="why-card-body">Couples, celebrants and venues consistently rate the experience five stars. Read them for yourself on Google.</p>
         </div>
         <div class="why-tall why-e" data-reveal data-delay="2">
-          <img class="why-tall-photo" src="assets/photos/ceremony-markovina.webp" alt="" aria-hidden="true">
+          <img class="why-tall-photo" src="assets/photos/ceremony-markovina.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="680" height="1020">
           <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-4.35-9.5-8.5C.8 9.6 2.3 6 5.5 6 7.6 6 9 7.3 12 10c3-2.7 4.4-4 6.5-4 3.2 0 4.7 3.6 3 6.5C19 16.65 12 21 12 21z"/></svg></div>
           <h3 class="why-tall-title">Fully Personalised</h3>
           <p class="why-tall-body">Every detail is tailored to you, right down to your custom aisle song and first dance track. Nothing generic, nothing left to chance.</p>
@@ -4331,7 +4346,7 @@
   const poster=s => {
     const pimg = s.poster ? s.poster : (CDN ? 'https://'+CDN+'/'+s.guid+'/thumbnail.jpg' : '');
     return '<div class="fp-poster-grad" style="position:absolute;inset:0;background:linear-gradient(150deg,hsl('+s.hue+' 70% 30%),hsl('+s.hue+' 60% 12%))"></div>'+
-      (pimg ? '<img src="'+pimg+'" alt="" onerror="this.style.display=\'none\'">' : '');
+      (pimg ? '<img src="'+pimg+'" alt="" onerror="this.style.display=\'none\'" loading="lazy" decoding="async">' : '');
   };
 
   const els=SONGS.map((s,i)=>{
