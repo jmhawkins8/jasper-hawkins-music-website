@@ -1754,7 +1754,11 @@
           // Conversion — mirrors the Lead event the old site fired, so Meta's
           // history and ad optimisation carry across the switch unbroken.
           try {
-          if (window.fbq) fbq('track', 'Lead');
+          // Both events, deliberately. The GTM container fires Lead, but
+          // Events Manager also shows SubmitApplication (most likely from the
+          // Elementor form). Firing both means whichever one the ad campaigns
+          // actually optimise for keeps its history unbroken.
+          if (window.fbq) { fbq('track', 'Lead'); fbq('track', 'SubmitApplication'); }
           if (window.gtag) gtag('event', 'generate_lead', {
           event_category: 'enquiry',
           event_label: payload.eventType || 'unknown',
