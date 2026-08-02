@@ -2885,12 +2885,12 @@
           <svg class="nav-dd-caret" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
         <div class="nav-dd-menu">
-          <a href="/weddings.html">Weddings</a>
-          <a href="/parties.html">Parties</a>
-          <a href="/corporate.html">Corporate</a>
+          <a href="/weddings">Weddings</a>
+          <a href="/parties">Parties</a>
+          <a href="/corporate">Corporate</a>
         </div>
       </div>
-      <a href="/songlist.html" aria-current="page">Song List</a>
+      <a href="/songlist" aria-current="page">Song List</a>
       <a href="#" data-enquire>Contact</a>
       <a class="nav-cta" href="#" data-enquire>Check availability</a>
     </div>
@@ -2903,17 +2903,23 @@
       <div class="nav-menu-group">
         <button type="button" class="nav-menu-group-trigger" aria-expanded="false">Services <span class="nmg-caret">&#9662;</span></button>
         <div class="nav-menu-sub">
-          <a href="/weddings.html">Weddings</a>
-          <a href="/parties.html">Parties</a>
-          <a href="/corporate.html">Corporate</a>
+          <a href="/weddings">Weddings</a>
+          <a href="/parties">Parties</a>
+          <a href="/corporate">Corporate</a>
         </div>
       </div>
-      <a href="/songlist.html" aria-current="page">Song List</a>
+      <a href="/songlist" aria-current="page">Song List</a>
       <a href="#" data-enquire>Contact</a>
     </nav>
     <a class="nav-menu-cta" href="#" data-enquire>Check availability</a>
     <div class="nav-menu-note">Booking subject to availability</div>
   </div>
+
+  <!-- The page opened on an h2, leaving it with no primary heading for search
+       engines or screen readers. Visually hidden so the design is untouched. -->
+  <h1 style="position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0">
+    Wedding &amp; Event Song List — Jasper Hawkins Music
+  </h1>
 
   <!-- ── Hear me play — phone fan (Bunny video) ── -->
   <section class="fansec" style="padding-top: clamp(96px, 12vh, 150px);">
@@ -2963,7 +2969,7 @@
     <p class="sl-sub">190+ songs, all hand-learned. Can't spot one? Just ask — I'm always adding.</p>
     <button class="sl-close" id="slClose" aria-label="Close">&times;</button>
     <div class="sl-controls">
-      <input class="sl-search" id="slSearch" type="search" placeholder="Search song or artist…">
+      <input class="sl-search" aria-label="Search songs or artists" id="slSearch" type="search" placeholder="Search song or artist…">
       <button class="sl-filter" id="slFilter" type="button">&#9829; Ceremony favourites</button>
     </div>
   </div>
