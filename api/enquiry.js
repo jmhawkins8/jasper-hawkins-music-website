@@ -250,7 +250,8 @@ export default async function handler(req, res) {
   // would rather have the conversation, since couples often move their date.
   // But he wants to know at a glance, so look up what's already on that day.
   // Best-effort: a failure here must never stop the enquiry being saved.
-  let clash = '';
+  let clash = '';        // written into the dashboard record
+  let clashTag = '';      // prefixes the email subject
   if (eventDate) {
     try {
       const r = await withTimeout(signal => fetch(
@@ -258,13 +259,24 @@ export default async function handler(req, res) {
         { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }, signal },
       ), 5000);
       if (r.ok) {
+        // Runs before the insert, so this counts who was already there.
         const rows = await r.json();
         const booked = rows.filter(c => c.stage !== 'enquiry' && c.stage !== 'cancelled');
         const others = rows.filter(c => c.stage === 'enquiry');
         const parts = [];
-        if (booked.length) parts.push(`ALREADY BOOKED this date: ${booked.map(c => c.name).join(', ')}`);
-        if (others.length) parts.push(`${others.length} other open ${others.length === 1 ? 'enquiry' : 'enquiries'} for this date`);
-        if (parts.length) clash = `⚠ ${parts.join(' · ')}`;
+        if (booked.length) {
+          parts.push(`DATE ALREADY BOOKED — ${booked.map(c => c.name).join(', ')}`);
+        }
+        if (others.length) {
+          // Phrased so it can be repeated to the couple more or less verbatim:
+          // "the date's still free, but someone else is looking at it too."
+          const who = others.map(c => c.name).join(', ');
+          parts.push(others.length === 1
+            ? `1 other person is enquiring about this date (${who}) — still unbooked`
+            : `${others.length} other people are enquiring about this date (${who}) — still unbooked`);
+        }
+        if (parts.length) clash = `⚠ ${parts.join('\n⚠ ')}`;
+        clashTag = booked.length ? '[DATE TAKEN] ' : others.length ? '[DATE IN DEMAND] ' : '';
       }
     } catch (err) {
       console.error('Date clash lookup failed (enquiry unaffected):', String(err).slice(0, 200));
@@ -333,13 +345,15 @@ export default async function handler(req, res) {
         ['Event type', evLabel], ['Event date', record.event_date || '—'], ['Location', location || '—'],
         ['Heard via', record.source || '—'], ['Message', record.enquiry_message || '—'],
       ].map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#888;vertical-align:top">${esc(k)}</td><td style="padding:4px 0">${esc(v)}</td></tr>`).join('');
-      const flag = !saved ? '⚠ NOT SAVED — ' : clash.includes('ALREADY BOOKED') ? '[DATE TAKEN] ' : suspect ? '[possible spam] ' : '';
+      const flag = !saved ? '⚠ NOT SAVED — ' : (clashTag || (suspect ? '[possible spam] ' : ''));
       const note = !saved
         ? 'This enquiry could NOT be saved to your dashboard — this email is the only copy. Add it manually.'
         : "It's already in your dashboard Enquiry tab.";
       // Front and centre, so the date situation is obvious before replying.
+      // Red when the date is gone, amber when it's merely contested.
+      const hard = clash.includes('ALREADY BOOKED');
       const clashBlock = clash
-        ? `<p style="font-family:sans-serif;font-size:14px;padding:10px 14px;border-radius:8px;background:#fff4e5;border:1px solid #f0c48a;color:#8a4b00">${esc(clash)}</p>`
+        ? `<p style="font-family:sans-serif;font-size:14px;line-height:1.6;padding:10px 14px;border-radius:8px;white-space:pre-line;background:${hard ? '#fdecea' : '#fff4e5'};border:1px solid ${hard ? '#e0a8a2' : '#f0c48a'};color:${hard ? '#8a1f14' : '#8a4b00'}">${esc(clash)}</p>`
         : '';
       const r = await withTimeout(signal => fetch('https://api.resend.com/emails', {
         method: 'POST',
