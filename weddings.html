@@ -1888,7 +1888,7 @@
       padding: 12px 14px;
       font-family: var(--font-sans); font-size: 14px; color: var(--bone);
       outline: none; -webkit-appearance: none; appearance: none;
-      transition: border-color 200ms, box-shadow 200ms;
+      transition: border-color 200ms, box-shadow 200ms; box-shadow: 0 0 0 1000px #202020 inset; -webkit-text-fill-color: var(--bone);
     }
     .eq-input::placeholder, .eq-textarea::placeholder { color: var(--bone-faint); opacity: 1; }
 
@@ -1902,60 +1902,10 @@
     .eq-input[type="date"]::-webkit-date-and-time-value { text-align: left; }
     .eq-input:focus, .eq-select:focus, .eq-textarea:focus {
       border-color: var(--ember);
-      box-shadow: 0 0 0 3px rgba(255,113,61,0.12);
+      /* Ring plus the permanent inset fill — dropping the inset here would
+         let the autofill background back in the moment a field is focused. */
+      box-shadow: 0 0 0 3px rgba(255,113,61,0.12), 0 0 0 1000px #202020 inset;
     }
-    /* Autofill: browsers paint their own background over a filled field, and
-       it cannot be overridden with background-color — an inset shadow the full
-       height of the field is the only thing that covers it. #202020 is exactly
-       rgba(255,255,255,0.05) over the panel, so an autofilled field is
-       indistinguishable from a typed one.
-
-       Do NOT add `background-color` here: it is paired with a very long
-       transition (which is what stops the browser's colour animating in), so
-       an explicit colour would take ~7 days to arrive and the white would sit
-       there in the meantime. The shadow does the work; the transition just
-       holds the browser off.
-
-       Three SEPARATE blocks on purpose — browsers use different pseudo-classes
-       for this, and a CSS parser discards an ENTIRE selector list if it does
-       not recognise one selector in it, so comma-joining would silently
-       disable all of them in browsers that know only some. */
-    .eq-input:-webkit-autofill,
-    .eq-input:-webkit-autofill:hover,
-    .eq-input:-webkit-autofill:focus,
-    .eq-input:-webkit-autofill:active,
-    .eq-textarea:-webkit-autofill,
-    .eq-select:-webkit-autofill {
-      -webkit-box-shadow: 0 0 0 1000px #202020 inset !important;
-      box-shadow: 0 0 0 1000px #202020 inset !important;
-      -webkit-text-fill-color: var(--bone) !important;
-      caret-color: var(--bone);
-      transition: background-color 600000s 0s, color 600000s 0s !important;
-    }
-    /* Standard pseudo-class — modern Safari, Chrome and Firefox. */
-    .eq-input:autofill,
-    .eq-input:autofill:hover,
-    .eq-input:autofill:focus,
-    .eq-textarea:autofill,
-    .eq-select:autofill {
-      -webkit-box-shadow: 0 0 0 1000px #202020 inset !important;
-      box-shadow: 0 0 0 1000px #202020 inset !important;
-      -webkit-text-fill-color: var(--bone) !important;
-      caret-color: var(--bone);
-      transition: background-color 600000s 0s, color 600000s 0s !important;
-    }
-    /* Chrome's internal states, including the highlight shown while a
-       suggestion is still being hovered. */
-    .eq-input:-internal-autofill-selected,
-    .eq-input:-internal-autofill-previewed,
-    .eq-textarea:-internal-autofill-selected,
-    .eq-select:-internal-autofill-selected {
-      -webkit-box-shadow: 0 0 0 1000px #202020 inset !important;
-      box-shadow: 0 0 0 1000px #202020 inset !important;
-      -webkit-text-fill-color: var(--bone) !important;
-      transition: background-color 600000s 0s, color 600000s 0s !important;
-    }
-    .eq-input:-webkit-autofill::first-line { font-family: var(--font-sans); font-size: 14px; color: var(--bone); }
 
     .eq-select {
       cursor: pointer;
