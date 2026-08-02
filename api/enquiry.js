@@ -246,6 +246,31 @@ export default async function handler(req, res) {
   const eventDate = /^\d{4}-\d{2}-\d{2}$/.test(rawDate) && !Number.isNaN(Date.parse(rawDate + 'T00:00:00Z'))
     ? rawDate : '';
 
+  // Anyone can enquire about any date, including one already taken — Jasper
+  // would rather have the conversation, since couples often move their date.
+  // But he wants to know at a glance, so look up what's already on that day.
+  // Best-effort: a failure here must never stop the enquiry being saved.
+  let clash = '';
+  if (eventDate) {
+    try {
+      const r = await withTimeout(signal => fetch(
+        `${SB}/rest/v1/clients?event_date=eq.${encodeURIComponent(eventDate)}&select=name,stage`,
+        { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }, signal },
+      ), 5000);
+      if (r.ok) {
+        const rows = await r.json();
+        const booked = rows.filter(c => c.stage !== 'enquiry' && c.stage !== 'cancelled');
+        const others = rows.filter(c => c.stage === 'enquiry');
+        const parts = [];
+        if (booked.length) parts.push(`ALREADY BOOKED this date: ${booked.map(c => c.name).join(', ')}`);
+        if (others.length) parts.push(`${others.length} other open ${others.length === 1 ? 'enquiry' : 'enquiries'} for this date`);
+        if (parts.length) clash = `⚠ ${parts.join(' · ')}`;
+      }
+    } catch (err) {
+      console.error('Date clash lookup failed (enquiry unaffected):', String(err).slice(0, 200));
+    }
+  }
+
   const message = clean(body.message, 4000);
   const record = {
     id: randomUUID(),                                // clients.id is NOT NULL with no default
@@ -260,7 +285,11 @@ export default async function handler(req, res) {
     event_date: eventDate,
     venue: location,
     event_location: location,
-    enquiry_message: suspect ? `[possible spam — score ${score}]\n${message}` : message,
+    enquiry_message: [
+      clash,
+      suspect ? `[possible spam — score ${score}]` : '',
+      message,
+    ].filter(Boolean).join('\n'),
     enquiry_date: nzToday(),
   };
 
@@ -304,10 +333,14 @@ export default async function handler(req, res) {
         ['Event type', evLabel], ['Event date', record.event_date || '—'], ['Location', location || '—'],
         ['Heard via', record.source || '—'], ['Message', record.enquiry_message || '—'],
       ].map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#888;vertical-align:top">${esc(k)}</td><td style="padding:4px 0">${esc(v)}</td></tr>`).join('');
-      const flag = !saved ? '⚠ NOT SAVED — ' : suspect ? '[possible spam] ' : '';
+      const flag = !saved ? '⚠ NOT SAVED — ' : clash.includes('ALREADY BOOKED') ? '[DATE TAKEN] ' : suspect ? '[possible spam] ' : '';
       const note = !saved
         ? 'This enquiry could NOT be saved to your dashboard — this email is the only copy. Add it manually.'
         : "It's already in your dashboard Enquiry tab.";
+      // Front and centre, so the date situation is obvious before replying.
+      const clashBlock = clash
+        ? `<p style="font-family:sans-serif;font-size:14px;padding:10px 14px;border-radius:8px;background:#fff4e5;border:1px solid #f0c48a;color:#8a4b00">${esc(clash)}</p>`
+        : '';
       const r = await withTimeout(signal => fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: { Authorization: `Bearer ${process.env.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
@@ -316,7 +349,7 @@ export default async function handler(req, res) {
           to: process.env.NOTIFY_EMAIL,
           reply_to: email,
           subject: `${flag}New ${evLabel} enquiry — ${name}${record.event_date ? ' · ' + record.event_date : ''}`,
-          html: `<h2 style="font-family:sans-serif">New ${esc(evLabel)} enquiry</h2><p style="font-family:sans-serif;color:${saved ? '#555' : '#b00'}">${note}</p><table style="font-family:sans-serif;font-size:14px">${rows}</table>`,
+          html: `<h2 style="font-family:sans-serif">New ${esc(evLabel)} enquiry</h2>${clashBlock}<p style="font-family:sans-serif;color:${saved ? '#555' : '#b00'}">${note}</p><table style="font-family:sans-serif;font-size:14px">${rows}</table>`,
         }),
         signal,
       }), 8000);
