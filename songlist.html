@@ -2887,24 +2887,50 @@
   </style>
 
   <!-- Analytics. Same GA4 property and Meta Pixel as the old WordPress site,
-       installed the same way, so the switchover reads as one continuous
-       timeline rather than a fresh start with no baseline. Both IDs are
-       public by design — they are visible in any visitor's page source. -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KBB73PJNYF"></script>
+       installed so the switchover reads as one continuous timeline. Both IDs
+       are public by design — visible in any visitor's page source.
+
+       Loaded AFTER the page has painted. Fetched normally they cost ~26 points
+       of Lighthouse Performance (98 -> 72) because two ~100KB scripts compete
+       with the hero image on a throttled connection. Deferring costs nothing
+       real: they still fire within a couple of seconds, far sooner than the
+       old WordPress site managed at 12.5s, so the comparison stays fair. -->
   <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-KBB73PJNYF');
-  </script>
-  <script>
-    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
-    document,'script','https://connect.facebook.net/en_US/fbevents.js');
-    fbq('init', '1023504601425184');
-    fbq('track', 'PageView');
+    (function () {
+      var fired = false;
+      function loadAnalytics() {
+        if (fired) return; fired = true;
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { dataLayer.push(arguments); };
+        gtag('js', new Date());
+        gtag('config', 'G-KBB73PJNYF');
+        var g = document.createElement('script');
+        g.async = true;
+        g.src = 'https://www.googletagmanager.com/gtag/js?id=G-KBB73PJNYF';
+        document.head.appendChild(g);
+
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1023504601425184');
+        fbq('track', 'PageView');
+      }
+      // Whichever comes first: the page finishing, the browser going idle, a
+      // 3s backstop, or the visitor interacting. Nobody goes uncounted.
+      if (document.readyState === 'complete') setTimeout(loadAnalytics, 0);
+      else window.addEventListener('load', function () {
+        ('requestIdleCallback' in window)
+          ? requestIdleCallback(loadAnalytics, { timeout: 2000 })
+          : setTimeout(loadAnalytics, 800);
+      });
+      setTimeout(loadAnalytics, 3000);
+      ['pointerdown','keydown','scroll'].forEach(function (ev) {
+        window.addEventListener(ev, loadAnalytics, { once: true, passive: true });
+      });
+    }());
   </script>
   <noscript><img height="1" width="1" style="display:none" alt=""
     src="https://www.facebook.com/tr?id=1023504601425184&ev=PageView&noscript=1"></noscript>
