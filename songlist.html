@@ -1743,12 +1743,14 @@
        ANIMATION SYSTEM
     ════════════════════════════════════════════════════════════ */
 
-    /* — Hero photo load ——————————————————————————————————————— */
+    /* — Hero photo ————————————————————————————————————————————
+       Visible from the first paint. It used to start at opacity:0 and wait
+       for JS to add .loaded, which left the largest element on the page
+       unpainted — Google then reported NO_LCP and would not score
+       Performance at all. */
     .hero-photo img {
-      opacity: 0;
-      transition: opacity 900ms var(--ease);
+      opacity: 1;
     }
-    .hero-photo img.loaded { opacity: 1; }
 
     /* — Page-load sequence (hero text + nav) ————————————————— */
     [data-load] {
