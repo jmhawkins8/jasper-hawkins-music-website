@@ -29,7 +29,7 @@
 
   --bone:         #F2EAD8;   /* primary text on dark */
   --bone-mute:    #B8AC97;   /* secondary text */
-  --bone-faint:   #6E6557;   /* hint, dividers as text */
+  --bone-faint:   #8A8071;   /* hint text — 5.4:1 on ink, meets AA (was #6E6557 at 3.66:1) */
 
   /* — Light palette (printable docs only) ——————————— */
   --shell:        #F7F1E8;   /* light bg — the brand's body color */
