@@ -285,11 +285,17 @@
     .hero-photo {
       position: absolute; inset: 0; z-index: 0; overflow: hidden;
     }
+    @keyframes heroFadeIn { from { opacity: 0; } to { opacity: 1; } }
     .hero-photo img {
       width: 100%; height: 100%;
       object-fit: cover; object-position: center 30%;
       filter: var(--filter-photo);
-      opacity: 0;
+      /* Was opacity:0 until JS added .loaded. That made the largest element on
+         the page invisible at first paint, so Google could not identify a
+         Largest Contentful Paint at all and refused to score Performance.
+         It now paints immediately and fades via CSS, needing no JS. */
+      opacity: 1;
+      animation: heroFadeIn 700ms var(--ease) both;
       transition: opacity 900ms var(--ease);
     }
     .hero-photo img.loaded { opacity: 1; }
