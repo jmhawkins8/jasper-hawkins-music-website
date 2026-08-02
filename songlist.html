@@ -1869,11 +1869,17 @@
       transition: border-color 200ms, box-shadow 200ms;
     }
     .eq-input::placeholder, .eq-textarea::placeholder { color: var(--bone-faint); opacity: 1; }
-    /* Autofill: Safari/Chrome paint their own white background over the field,
-       which broke the dark panel the moment a saved name or email was filled.
-       Background colour can't be overridden directly — an inset shadow the
-       full height of the field is the only way — and the near-infinite
-       transition stops the white flashing in before the shadow lands. */
+    /* Autofill: browsers paint their own white/blue background over a filled
+       field, which broke the dark panel. Background can't be overridden
+       directly — an inset shadow the full height of the field is the only way.
+       #202020 is exactly rgba(255,255,255,0.05) over the panel, so an
+       autofilled field is indistinguishable from a typed one.
+
+       Three SEPARATE blocks on purpose. Browsers use different pseudo-classes
+       for this (and Chrome uses a different one again for email/address groups
+       than for a plain name), and a CSS parser throws away an ENTIRE selector
+       list if it doesn't recognise one selector in it — so comma-joining these
+       would silently disable the lot in some browsers. */
     .eq-input:-webkit-autofill,
     .eq-input:-webkit-autofill:hover,
     .eq-input:-webkit-autofill:focus,
@@ -1884,8 +1890,35 @@
       box-shadow: 0 0 0 1000px #202020 inset !important;
       -webkit-text-fill-color: var(--bone) !important;
       caret-color: var(--bone);
-      border: 1px solid var(--hairline);
+      border: 1px solid var(--hairline) !important;
+      background-color: #202020 !important;
+      background-image: none !important;
       transition: background-color 600000s 0s, color 600000s 0s;
+    }
+    /* Standard pseudo-class — modern Safari and Firefox. */
+    .eq-input:autofill,
+    .eq-textarea:autofill,
+    .eq-select:autofill {
+      -webkit-box-shadow: 0 0 0 1000px #202020 inset !important;
+      box-shadow: 0 0 0 1000px #202020 inset !important;
+      -webkit-text-fill-color: var(--bone) !important;
+      caret-color: var(--bone);
+      border: 1px solid var(--hairline) !important;
+      background-color: #202020 !important;
+      background-image: none !important;
+    }
+    /* Chrome's internal states — 'previewed' is the highlight shown while the
+       suggestion is still being hovered, which is the one that was slipping
+       through on the email field. */
+    .eq-input:-internal-autofill-selected,
+    .eq-input:-internal-autofill-previewed,
+    .eq-textarea:-internal-autofill-selected,
+    .eq-select:-internal-autofill-selected {
+      -webkit-box-shadow: 0 0 0 1000px #202020 inset !important;
+      box-shadow: 0 0 0 1000px #202020 inset !important;
+      -webkit-text-fill-color: var(--bone) !important;
+      background-color: #202020 !important;
+      background-image: none !important;
     }
     .eq-input:-webkit-autofill::first-line { font-family: var(--font-sans); font-size: 14px; color: var(--bone); }
 
