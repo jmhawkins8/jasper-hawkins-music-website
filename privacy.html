@@ -69,6 +69,29 @@
     }
     .pp-foot a { color: inherit; }
   </style>
+
+  <!-- Analytics. Same GA4 property and Meta Pixel as the old WordPress site,
+       installed the same way, so the switchover reads as one continuous
+       timeline rather than a fresh start with no baseline. Both IDs are
+       public by design — they are visible in any visitor's page source. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KBB73PJNYF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KBB73PJNYF');
+  </script>
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1023504601425184');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" alt=""
+    src="https://www.facebook.com/tr?id=1023504601425184&ev=PageView&noscript=1"></noscript>
 </head>
 <body>
 
@@ -117,6 +140,7 @@
       <li><strong>Xero</strong> — for quotes, invoices and accounting.</li>
       <li><strong>ActiveCampaign</strong> — for enquiry follow-ups and email updates.</li>
       <li><strong>My email and calendar (Google)</strong> — for corresponding with you and scheduling your event.</li>
+      <li><strong>Google Analytics and Meta (Facebook)</strong> — anonymous website statistics, and to measure whether my advertising is working. These tell me how many people visited and which pages they looked at; they don't tell me who you are.</li>
       <li><strong>My accountant</strong> — who sees invoice records, as any accountant would.</li>
     </ul>
     <p>The only other time I'd share anything is if the law required it.</p>
@@ -142,7 +166,7 @@
     <p>You can also ask me to delete your information, and I will, unless I'm legally required to keep it (invoices, mainly).</p>
 
     <h2>Cookies</h2>
-    <p>This site uses only what's needed to make it work properly and to count visitors anonymously. No advertising trackers, and nothing that follows you around the internet.</p>
+    <p>This site uses cookies needed to make it work, plus Google Analytics and the Meta (Facebook) pixel, which count visitors and measure whether my advertising is working. If you'd rather not be counted, most browsers let you block these, and it won't affect anything else on the site.</p>
 
     <h2>If something goes wrong</h2>
     <p>If there's ever a privacy breach that could cause you serious harm, I'll tell you and notify the Office of the Privacy Commissioner, as the Act requires.</p>

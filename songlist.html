@@ -2885,6 +2885,29 @@
     }
 
   </style>
+
+  <!-- Analytics. Same GA4 property and Meta Pixel as the old WordPress site,
+       installed the same way, so the switchover reads as one continuous
+       timeline rather than a fresh start with no baseline. Both IDs are
+       public by design — they are visible in any visitor's page source. -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KBB73PJNYF"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-KBB73PJNYF');
+  </script>
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1023504601425184');
+    fbq('track', 'PageView');
+  </script>
+  <noscript><img height="1" width="1" style="display:none" alt=""
+    src="https://www.facebook.com/tr?id=1023504601425184&ev=PageView&noscript=1"></noscript>
 </head>
 <body>
 
@@ -3264,6 +3287,15 @@
             if (info && info.error && errEl) errEl.textContent = info.error;
             throw new Error('Request failed');
           }
+          // Conversion — mirrors the Lead event the old site fired, so Meta's
+          // history and ad optimisation carry across the switch unbroken.
+          try {
+          if (window.fbq) fbq('track', 'Lead');
+          if (window.gtag) gtag('event', 'generate_lead', {
+          event_category: 'enquiry',
+          event_label: payload.eventType || 'unknown',
+          });
+          } catch (e) {}
           form.hidden = true;
           if (okEl) okEl.hidden = false;
         } catch (err) {
