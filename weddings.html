@@ -1891,6 +1891,12 @@
     }
     .eq-privacy a { color: var(--bone-mute); text-decoration: underline; text-underline-offset: 2px; }
     .eq-privacy a:hover { color: var(--ember); }
+    /* The post-submit confirmation. Present in the markup on every page but
+       only styled on two of them, so on the other three it rendered as
+       unstyled browser-default text — the one screen every converted lead
+       sees. */
+    .eq-success h3 { font-family: var(--font-serif); font-weight: 400; font-size: 22px; color: var(--bone); margin: 8px 0 12px; }
+    .eq-success p { font-family: var(--font-sans); font-size: 14px; line-height: 1.7; color: var(--bone-mute); }
     .eq-form { color-scheme: dark; }
     .eq-field { margin-bottom: 16px; }
     .eq-label {
@@ -3673,7 +3679,7 @@
         <a href="tel:+64220805085">+64 22 080 5085</a>
         <a href="mailto:hello@jasperhawkinsmusic.co.nz">hello@jasperhawkinsmusic.co.nz</a>
       </div>
-      <div class="footer-copy">© 2026 Jasper Hawkins Music &nbsp;·&nbsp; <a href="/privacy" style="color:inherit">Privacy Policy</a></div>
+      <div class="footer-copy">© 2026 Jasper Hawkins Music &nbsp;·&nbsp; <a href="/contact" style="color:inherit">Contact</a> &nbsp;·&nbsp; <a href="/privacy" style="color:inherit">Privacy Policy</a></div>
     </div>
   </footer>
 

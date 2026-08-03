@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact · Jasper Hawkins Music</title>
+  <link rel="canonical" href="https://jasperhawkinsmusic.co.nz/contact">
+  <meta name="description" content="Get in touch about live music for your wedding, party or corporate event. Auckland-based, available across New Zealand. Enquiries answered within 48 hours.">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Jasper Hawkins Music">
+  <meta property="og:title" content="Contact · Jasper Hawkins Music">
+  <meta property="og:description" content="Get in touch about live music for your wedding, party or corporate event. Auckland-based, available across New Zealand. Enquiries answered within 48 hours.">
+  <meta property="og:url" content="https://jasperhawkinsmusic.co.nz/contact">
+  <meta property="og:image" content="https://jasperhawkinsmusic.co.nz/assets/photos/jas-acoustic-mudbrick.webp">
+  <meta property="og:locale" content="en_NZ">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Contact · Jasper Hawkins Music">
+  <meta name="twitter:description" content="Get in touch about live music for your wedding, party or corporate event. Auckland-based, available across New Zealand. Enquiries answered within 48 hours.">
+  <meta name="twitter:image" content="https://jasperhawkinsmusic.co.nz/assets/photos/jas-acoustic-mudbrick.webp">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/colors_and_type.css?v=4">
+  <link rel="stylesheet" href="assets/design-system.css?v=4">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    .skip-link {
+      position: absolute; left: -9999px; top: 0; z-index: 999;
+      background: var(--ember); color: #fff; font-family: var(--font-sans);
+      font-size: 14px; font-weight: 600; padding: 12px 20px;
+      border-radius: 0 0 8px 0; text-decoration: none;
+    }
+    .skip-link:focus { left: 0; }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { background: var(--ink); }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    .site-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      will-change: transform;
+      transition: transform 260ms cubic-bezier(.4,0,.2,1),
+                  opacity 260ms cubic-bezier(.4,0,.2,1),
+                  background var(--dur) var(--ease),
+                  backdrop-filter var(--dur) var(--ease);
+    }
+    .site-nav.scrolled {
+      background: rgba(12, 10, 8, 0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--hairline);
+    }
+    #site-nav.nav-hidden {
+      transform: translateY(-115%);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .float-cta {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      z-index: 95;
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 13px 22px;
+      background: var(--ember); color: var(--ink);
+      font-family: var(--font-sans); font-size: 14px; font-weight: 600;
+      border-radius: var(--r-pill);
+      box-shadow: var(--shadow-float, 0 10px 30px rgba(255,113,61,0.42));
+      text-decoration: none;
+      opacity: 0; transform: translateY(14px); pointer-events: none;
+      transition: opacity .32s ease, transform .32s cubic-bezier(.4,0,.2,1), background .18s;
+    }
+    .float-cta.show { opacity: 1; transform: none; pointer-events: auto; }
+    .float-cta:hover { background: var(--ember-glow); }
+    @media (max-width: 600px) {
+      .float-cta { bottom: 18px; right: 18px; padding: 12px 20px; font-size: 13px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .site-nav { transition: background var(--dur) var(--ease), backdrop-filter var(--dur) var(--ease); }
+    }
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--bone);
+      position: relative;
+      z-index: 101;
+    }
+    .nav-wordmark {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1;
+      color: var(--bone);
+    }
+    .nav-descriptor {
+      font-family: var(--font-sans);
+      font-size: 8px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+      font-weight: 500;
+      margin-top: 4px;
+    }
+    .nav-hamburger {
+      background: none;
+      border: none;
+      padding: 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      touch-action: manipulation;
+      position: relative;
+      z-index: 101;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 24px;
+      height: 1.5px;
+      background: var(--bone);
+      border-radius: 1px;
+      transition: transform 280ms var(--ease), opacity 200ms var(--ease);
+    }
+    .nav-hamburger.is-open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+    .nav-hamburger.is-open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .nav-hamburger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+    .nav-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 99;
+      background: var(--ink);
+      display: flex;
+      flex-direction: column;
+      padding: 108px 32px 56px;
+      pointer-events: none;
+      visibility: hidden;
+      opacity: 0;
+      transform: translateX(6%);
+      transition: opacity 300ms var(--ease), transform 300ms var(--ease);
+    }
+    .nav-menu.is-open { visibility: visible; opacity: 1; transform: translateX(0); pointer-events: auto; }
+    .nav-menu-links { display: flex; flex-direction: column; flex: 1; }
+    .nav-menu-links a {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: clamp(30px, 8vw, 44px);
+      line-height: 1;
+      color: var(--bone);
+      text-decoration: none;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--hairline);
+      display: block;
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 260ms var(--ease), transform 260ms var(--ease), color 160ms var(--ease);
+    }
+    .nav-menu-links a:first-child { border-top: 1px solid var(--hairline); }
+    .nav-menu-links a[aria-current="page"] { color: var(--ember); }
+    .nav-menu.is-open .nav-menu-links a:nth-child(1) { opacity:1; transform:translateY(0); transition-delay:60ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(2) { opacity:1; transform:translateY(0); transition-delay:110ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(3) { opacity:1; transform:translateY(0); transition-delay:160ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(4) { opacity:1; transform:translateY(0); transition-delay:210ms; }
+    .nav-menu.is-open .nav-menu-links a:nth-child(5) { opacity:1; transform:translateY(0); transition-delay:260ms; }
+    .nav-menu-cta {
+      display: block; background: var(--ember); color: var(--ink);
+      text-align: center; padding: 18px; border-radius: var(--r-input);
+      font-family: var(--font-sans); font-size: 16px; font-weight: 500;
+      text-decoration: none; margin-top: 32px; touch-action: manipulation;
+      opacity: 0; transform: translateY(10px);
+      transition: opacity 260ms var(--ease), transform 260ms var(--ease), background 180ms var(--ease);
+    }
+    .nav-menu.is-open .nav-menu-cta { opacity:1; transform:translateY(0); transition-delay:310ms; }
+    .nav-menu-cta:hover { background: var(--ember-glow); }
+    .nav-menu-note {
+      text-align: center; font-family: var(--font-sans); font-size: 12px;
+      color: var(--bone-faint); margin-top: 12px; opacity: 0;
+      transition: opacity 260ms var(--ease);
+    }
+    .nav-menu.is-open .nav-menu-note { opacity:1; transition-delay:340ms; }
+    .nav-pill { display: none; }
+    /* ── Services dropdown: mobile accordion ── */
+    .nav-menu-group { border-bottom: 1px solid var(--hairline); opacity: 0; transform: translateY(14px); transition: opacity 260ms var(--ease), transform 260ms var(--ease); }
+    .nav-menu.is-open .nav-menu-group { opacity: 1; transform: translateY(0); transition-delay: 110ms; }
+    .nav-menu-group-trigger { width: 100%; background: none; border: 0; cursor: pointer; font-family: var(--font-serif); font-weight: 400; font-size: clamp(30px, 8vw, 44px); line-height: 1; color: var(--bone); text-align: left; padding: 16px 0; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .nav-menu-group-trigger .nmg-caret { font-size: 0.42em; color: var(--ember); transition: transform 260ms var(--ease); }
+    .nav-menu-group.is-open .nav-menu-group-trigger { color: var(--ember); }
+    .nav-menu-group.is-open .nav-menu-group-trigger .nmg-caret { transform: rotate(180deg); }
+    .nav-menu-sub { overflow: hidden; max-height: 0; transition: max-height 340ms var(--ease); }
+    .nav-menu-group.is-open .nav-menu-sub { max-height: 260px; }
+    .nav-menu-sub a { opacity: 1 !important; transform: none !important; font-family: var(--font-serif); font-weight: 400; font-size: clamp(22px, 6vw, 30px); color: var(--bone-mute); padding: 13px 0 13px 22px; border-bottom: 1px solid var(--hairline); display: block; text-decoration: none; }
+    .nav-menu-sub a:last-child { border-bottom: 0; }
+    .nav-menu-sub a[aria-current="page"] { color: var(--ember); }
+
+    /* ── Services dropdown: desktop ── */
+    @media (min-width: 1024px) {
+      .nav-dd { position: relative; display: flex; align-items: center; }
+      .nav-dd-trigger { font-family: var(--font-sans); font-size: 13px; color: var(--bone); letter-spacing: 0.02em; background: none; border: 0; cursor: pointer; padding: 6px 4px; display: inline-flex; align-items: center; gap: 5px; position: relative; white-space: nowrap; }
+      .nav-dd-caret { transition: transform 240ms var(--ease); }
+      .nav-dd:hover .nav-dd-caret, .nav-dd.is-open .nav-dd-caret { transform: rotate(180deg); }
+      .nav-dd-trigger::after { content: ""; position: absolute; left: 4px; right: 20px; bottom: 0; height: 1px; background: var(--ember); transform: scaleX(0); transform-origin: left; transition: transform var(--dur) var(--ease); }
+      .nav-dd:hover .nav-dd-trigger::after, .nav-dd-trigger.is-active::after { transform: scaleX(1); }
+      .nav-dd-trigger.is-active { color: var(--ember); }
+      .nav-dd-menu { position: absolute; top: calc(100% + 14px); left: 50%; transform: translateX(-50%) translateY(-6px); min-width: 176px; background: rgba(12, 11, 10, 0.96); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border: 1px solid rgba(242, 234, 216, 0.14); border-radius: 14px; padding: 8px; display: flex; flex-direction: column; gap: 2px; opacity: 0; pointer-events: none; transition: opacity 200ms var(--ease), transform 200ms var(--ease); box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5); }
+      .nav-dd-menu::before { content: ""; position: absolute; left: 0; right: 0; top: -14px; height: 14px; }
+      .nav-dd:hover .nav-dd-menu, .nav-dd.is-open .nav-dd-menu { opacity: 1; pointer-events: auto; transform: translateX(-50%) translateY(0); }
+      .nav-dd-menu a { font-family: var(--font-sans); font-size: 13px; color: var(--bone-mute); padding: 9px 14px; border-radius: 8px; white-space: nowrap; text-decoration: none; transition: background 160ms, color 160ms; }
+      .nav-dd-menu a::after { display: none !important; }
+      .nav-dd-menu a:hover { background: rgba(255, 113, 61, 0.12); color: var(--bone); }
+      .nav-dd-menu a[aria-current="page"] { color: var(--ember); }
+    }
+
+    @media (min-width: 1024px) {
+      .site-nav       { padding: 20px 80px; }
+      .nav-hamburger  { display: none; }
+      .nav-wordmark   { font-size: 18px; }
+      .nav-descriptor { font-size: 9px; }
+      .nav-pill {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+        background: rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(242, 234, 216, 0.14);
+        border-radius: var(--r-pill);
+        padding: 10px 12px 10px 22px;
+      }
+      .nav-pill a {
+        font-family: var(--font-sans);
+        font-size: 13px;
+        color: var(--bone);
+        letter-spacing: 0.02em;
+        text-decoration: none;
+        padding: 6px 4px;
+        position: relative;
+        white-space: nowrap;
+      }
+      .nav-pill a::after {
+        content: "";
+        position: absolute;
+        left: 4px; right: 4px; bottom: 0;
+        height: 1px;
+        background: var(--ember);
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform var(--dur) var(--ease);
+      }
+      .nav-pill a:hover::after,
+      .nav-pill a[aria-current="page"]::after { transform: scaleX(1); }
+      .nav-pill .nav-cta {
+        background: var(--ember);
+        color: var(--ink);
+        border: 0;
+        padding: 8px 16px;
+        border-radius: var(--r-pill);
+        font-family: var(--font-sans);
+        font-size: 13px;
+        font-weight: 500;
+        text-decoration: none;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background var(--dur-fast) var(--ease);
+      }
+      .nav-pill .nav-cta::after { display: none; }
+      .nav-pill .nav-cta:hover { background: var(--ember-glow); }
+    }
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--ember);
+      color: var(--ink);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 14px 28px;
+      border-radius: var(--r-input);
+      border: none;
+      text-decoration: none;
+      cursor: pointer;
+      touch-action: manipulation;
+      transition: background 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
+    }
+    .btn-primary:hover { background: var(--ember-glow); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,113,61,0.28); }
+    .btn-primary:active { background: var(--ember); transform: translateY(1px); box-shadow: none; }
+    /* ── Footer ──────────────────────────────────────────────── */
+    .site-footer {
+      background: var(--ink);
+      border-top: 1px solid var(--hairline);
+      padding: var(--section-compact) var(--gutter) 40px;
+    }
+    .footer-inner {
+      max-width: var(--container-wide);
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+    .footer-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .footer-name {
+      font-family: var(--font-serif);
+      font-weight: 400;
+      font-size: 20px;
+      color: var(--bone);
+      line-height: 1;
+    }
+    .footer-descriptor {
+      font-family: var(--font-sans);
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+      margin-top: 4px;
+    }
+    .footer-contact {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .footer-contact a {
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--bone-mute);
+      text-decoration: none;
+      transition: color 180ms var(--ease);
+    }
+    .footer-contact a:hover { color: var(--ember); }
+    .footer-copy {
+      font-family: var(--font-sans);
+      font-size: 12px;
+      color: var(--bone-faint);
+      padding-top: 24px;
+      border-top: 1px solid var(--hairline);
+    }
+    @media (min-width: 1024px) {
+      .footer-inner {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+      .footer-copy { border-top: none; padding-top: 0; }
+    }
+
+    /* ── Enquiry Off-Canvas ──────────────────────────────────── */
+    .eq-scrim {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.72);
+      z-index: 400;
+      opacity: 0; pointer-events: none;
+      transition: opacity 360ms ease;
+    }
+    .eq-scrim.is-open { opacity: 1; pointer-events: auto; }
+    .eq-panel {
+      position: fixed;
+      top: 0; right: 0; bottom: 0;
+      width: min(500px, 100vw);
+      background: var(--ink-soft);
+      border-left: 1px solid var(--hairline);
+      z-index: 401;
+      display: flex; flex-direction: column;
+      transform: translateX(100%);
+      visibility: hidden;
+      transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s linear 420ms;
+    }
+    .eq-panel.is-open { transform: translateX(0); visibility: visible; transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1), visibility 0s; }
+    .eq-panel-head {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 16px;
+      padding: 28px 28px 22px;
+      border-bottom: 1px solid var(--hairline);
+      flex-shrink: 0;
+    }
+    .eq-eyebrow {
+      font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--ember);
+      margin-bottom: 8px;
+    }
+    .eq-heading {
+      font-family: var(--font-serif); font-weight: 400;
+      font-size: 24px; line-height: 1.2; letter-spacing: -0.01em; color: var(--bone);
+    }
+    .eq-close {
+      flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%;
+      background: rgba(255,255,255,0.06); border: 1px solid var(--hairline);
+      color: var(--bone-mute); font-size: 20px; line-height: 1;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; margin-top: 2px;
+      transition: background 180ms, color 180ms;
+    }
+    .eq-close:hover { background: rgba(255,255,255,0.12); color: var(--bone); }
+    .eq-body {
+      flex: 1; overflow-y: auto; padding: 24px 28px 40px;
+      scrollbar-width: thin; scrollbar-color: rgba(255,255,255,0.08) transparent;
+    }
+    .eq-intro {
+      font-family: var(--font-sans); font-size: 14px; line-height: 1.65;
+      color: var(--bone-mute); margin-bottom: 24px;
+    }
+    .eq-privacy {
+      font-family: var(--font-sans); font-size: 12px; line-height: 1.6;
+      color: var(--bone-faint); margin: 14px 0 0;
+    }
+    .eq-privacy a { color: var(--bone-mute); text-decoration: underline; text-underline-offset: 2px; }
+    .eq-privacy a:hover { color: var(--ember); }
+    .eq-form { color-scheme: dark; }
+    .eq-field { margin-bottom: 16px; }
+    .eq-label {
+      display: block; font-family: var(--font-sans);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--bone-mute); margin-bottom: 7px;
+    }
+    .eq-req { color: var(--ember); margin-left: 1px; }
+    .eq-input, .eq-select, .eq-textarea {
+      width: 100%; background: rgba(255,255,255,0.05);
+      border: 1px solid var(--hairline); border-radius: var(--r-input);
+      padding: 12px 14px;
+      font-family: var(--font-sans); font-size: 14px; color: var(--bone);
+      outline: none; -webkit-appearance: none; appearance: none;
+      transition: border-color 200ms, box-shadow 200ms;
+      /* Always-on: #202020 is exactly what rgba(255,255,255,0.05) renders as
+         over the panel, so this changes nothing visually — but because the
+         shadow is permanent, Chrome's autofill background has nothing to
+         reveal. Chasing the :autofill pseudo-classes proved unreliable
+         (Chrome fills email via a different state than a plain name), so the
+         appearance is simply fixed instead of defended. */
+      box-shadow: 0 0 0 1000px #202020 inset;
+      -webkit-text-fill-color: var(--bone);
+    }
+    .eq-input::placeholder, .eq-textarea::placeholder { color: var(--bone-faint); opacity: 1; }
+
+    /* iOS renders date inputs at its own compact size — force it to match the other fields */
+    .eq-input[type="date"] {
+      display: block;
+      width: 100%;
+      min-height: 42px;
+      -webkit-appearance: none;
+    }
+    .eq-input[type="date"]::-webkit-date-and-time-value { text-align: left; }
+    .eq-input:focus, .eq-select:focus, .eq-textarea:focus {
+      border-color: var(--ember);
+      /* Ring plus the permanent inset fill — dropping the inset here would
+         let the autofill background back in the moment a field is focused. */
+      box-shadow: 0 0 0 3px rgba(255,113,61,0.12), 0 0 0 1000px #202020 inset;
+    }
+
+    .eq-select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B8AC97' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center; padding-right: 38px;
+    }
+    .eq-select option { background: #1f1f1f; }
+    .eq-textarea { resize: vertical; min-height: 96px; line-height: 1.6; }
+    .eq-submit {
+      width: 100%; justify-content: center; display: inline-flex; align-items: center; gap: 8px;
+      background: var(--ember); color: var(--ink);
+      font-family: var(--font-sans); font-size: 14px; font-weight: 500; letter-spacing: 0.02em;
+      padding: 15px; margin-top: 4px; border: none; box-shadow: none; background-image: none; outline: none; border-radius: 8px;
+      cursor: pointer; touch-action: manipulation; text-decoration: none;
+      transition: background 180ms var(--ease), transform 180ms var(--ease), box-shadow 180ms var(--ease);
+    }
+    .eq-submit:hover { background: var(--ember-glow); transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,113,61,0.28); }
+    .eq-submit:active { background: var(--ember); transform: translateY(1px); box-shadow: none; }
+
+    /* ── Custom dropdown — on-brand replacement for the native select popup ── */
+    .eqdd { position: relative; }
+    .eqdd > select.eq-select { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+    .eqdd-btn {
+      width: 100%; text-align: left; cursor: pointer;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--hairline); border-radius: 8px;
+      padding: 12px 38px 12px 14px;
+      font-family: var(--font-sans); font-size: 14px; color: var(--bone);
+      outline: none; -webkit-appearance: none; appearance: none;
+      transition: border-color 200ms, box-shadow 200ms;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23B8AC97' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 14px center;
+    }
+    .eqdd-btn.placeholder { color: var(--bone-faint); }
+    .eqdd.open .eqdd-btn, .eqdd-btn:focus { border-color: var(--ember); box-shadow: 0 0 0 3px rgba(255,113,61,0.12); }
+    .eqdd-list {
+      position: absolute; left: 0; right: 0; top: calc(100% + 6px);
+      z-index: 30;
+      background: #1c1c1c;
+      border: 1px solid var(--hairline); border-radius: 10px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      padding: 6px; margin: 0; list-style: none;
+      max-height: 240px; overflow: auto;
+      opacity: 0; transform: translateY(-6px); pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .eqdd.open .eqdd-list { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    .eqdd-opt {
+      padding: 10px 12px; border-radius: 6px; cursor: pointer;
+      font-family: var(--font-sans); font-size: 14px; color: var(--bone-mute);
+      transition: background 140ms, color 140ms;
+    }
+    .eqdd-opt:hover { background: rgba(255,113,61,0.12); color: var(--bone); }
+    .eqdd-opt.selected { color: var(--ember); }
+    /* ── Custom date picker (desktop only — phones keep the native one) ── */
+    .eqcal { position: relative; }
+    .eqcal-panel {
+      position: absolute; left: 0; top: calc(100% + 6px);
+      z-index: 40; width: 292px;
+      background: #1c1c1c;
+      border: 1px solid var(--hairline); border-radius: 12px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      padding: 14px;
+      opacity: 0; transform: translateY(-6px); pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+    .eqcal.open .eqcal-panel { opacity: 1; transform: translateY(0); pointer-events: auto; }
+    /* flip above the field when there's no room below — panel must never hang off-screen */
+    .eqcal.up .eqcal-panel { top: auto; bottom: calc(100% + 6px); transform: translateY(6px); }
+    .eqcal.up.open .eqcal-panel { transform: translateY(0); }
+    .eqcal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .eqcal-month {
+      font-family: var(--font-serif); font-size: 16px; color: var(--bone);
+      letter-spacing: 0.01em;
+    }
+    .eqcal-nav {
+      width: 30px; height: 30px; border-radius: 50%;
+      background: rgba(255,255,255,0.05); border: 1px solid var(--hairline);
+      color: var(--bone); cursor: pointer; font-size: 14px; line-height: 1;
+      display: inline-flex; align-items: center; justify-content: center;
+      transition: border-color 150ms, background 150ms;
+    }
+    .eqcal-nav:hover:not(:disabled) { border-color: var(--ember); background: rgba(255,113,61,0.10); }
+    .eqcal-nav:disabled { opacity: 0.3; cursor: default; }
+    .eqcal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+    .eqcal-dow {
+      font-family: var(--font-sans); font-size: 9px; font-weight: 600;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--bone-faint); text-align: center; padding: 6px 0 8px;
+    }
+    .eqcal-day {
+      aspect-ratio: 1; border: none; background: none; border-radius: 8px;
+      font-family: var(--font-sans); font-size: 13px; color: var(--bone-mute);
+      cursor: pointer; transition: background 130ms, color 130ms;
+    }
+    .eqcal-day:hover:not(:disabled) { background: rgba(255,113,61,0.14); color: var(--bone); }
+    .eqcal-day.today { color: var(--ember-glow); font-weight: 700; }
+    .eqcal-day.selected { background: var(--ember); color: #000; font-weight: 700; }
+    .eqcal-day:disabled { opacity: 0.22; cursor: default; }
+    .eqcal-day.blank { visibility: hidden; }
+    @media (min-width: 768px) {
+      .eq-input[type="date"]::-webkit-calendar-picker-indicator { display: none; }
+      .eq-input[type="date"] { cursor: pointer; }
+    }
+    .eq-success h3 { font-family: var(--font-serif); font-weight: 400; font-size: 22px; color: var(--bone); margin: 8px 0 12px; }
+    .eq-success p { font-family: var(--font-sans); font-size: 14px; line-height: 1.7; color: var(--bone-mute); }
+
+    /* ── Contact page ────────────────────────────────────────── */
+    /* A real page at /contact, matching the address the old WordPress site
+       had indexed. The enquiry slide-out remains the primary path everywhere
+       else on the site; this page exists for people who arrive from search
+       or type the address, and it carries the business details that
+       otherwise only live in the footer. The form here is inline rather
+       than in a panel — there is nothing to slide out from when the whole
+       page is the contact page. */
+    .ct-wrap {
+      max-width: var(--container-wide);
+      margin: 0 auto;
+      padding: 132px var(--gutter) 96px;
+    }
+    .ct-head { max-width: 620px; margin-bottom: 52px; }
+    .ct-eyebrow {
+      font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.2em; text-transform: uppercase; color: var(--ember);
+      margin-bottom: 14px;
+    }
+    .ct-title {
+      font-family: var(--font-serif); font-weight: 400;
+      font-size: clamp(36px, 7vw, 60px); line-height: 1.06;
+      letter-spacing: -0.015em; color: var(--bone); margin-bottom: 18px;
+    }
+    .ct-lead {
+      font-family: var(--font-sans); font-size: 17px; line-height: 1.7;
+      color: var(--bone-mute);
+    }
+
+    .ct-cols { display: flex; flex-direction: column; gap: 52px; }
+
+    /* Details column */
+    .ct-detail { margin-bottom: 30px; }
+    .ct-detail:last-of-type { margin-bottom: 0; }
+    .ct-detail-label {
+      font-family: var(--font-sans); font-size: 10px; font-weight: 500;
+      letter-spacing: 0.16em; text-transform: uppercase;
+      color: var(--bone-faint); margin-bottom: 8px;
+    }
+    .ct-detail-value {
+      font-family: var(--font-sans); font-size: 17px; line-height: 1.5;
+      color: var(--bone); text-decoration: none;
+      transition: color 180ms var(--ease);
+      display: inline-block;
+    }
+    a.ct-detail-value:hover { color: var(--ember); }
+    .ct-detail-note {
+      font-family: var(--font-sans); font-size: 13px; line-height: 1.6;
+      color: var(--bone-mute); margin-top: 6px;
+    }
+    .ct-hr { border: 0; border-top: 1px solid var(--hairline); margin: 34px 0; }
+    .ct-links { display: flex; flex-wrap: wrap; gap: 10px; }
+    .ct-link {
+      font-family: var(--font-sans); font-size: 13px; color: var(--bone-mute);
+      text-decoration: none; padding: 9px 16px; border-radius: 999px;
+      border: 1px solid var(--hairline);
+      transition: border-color 180ms var(--ease), color 180ms var(--ease);
+    }
+    .ct-link:hover { border-color: var(--ember); color: var(--bone); }
+
+    /* Form column — reuses the enquiry panel's field styles verbatim so the
+       two forms can never drift apart visually. */
+    .ct-formcard {
+      background: var(--ink-soft);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 30px 26px 34px;
+    }
+    .ct-formcard-title {
+      font-family: var(--font-serif); font-weight: 400;
+      font-size: 24px; line-height: 1.2; color: var(--bone); margin-bottom: 8px;
+    }
+
+    @media (min-width: 900px) {
+      .ct-wrap { padding-top: 152px; }
+      .ct-cols {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 72px;
+      }
+      .ct-details { flex: 1 1 0; padding-top: 4px; }
+      .ct-form-col { flex: 0 0 460px; }
+    }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": "https://jasperhawkinsmusic.co.nz/contact",
+    "url": "https://jasperhawkinsmusic.co.nz/contact",
+    "name": "Contact Jasper Hawkins Music",
+    "description": "Get in touch about live music for your wedding, party or corporate event.",
+    "inLanguage": "en-NZ",
+    "isPartOf": { "@type": "WebSite", "@id": "https://jasperhawkinsmusic.co.nz/#website", "url": "https://jasperhawkinsmusic.co.nz/", "name": "Jasper Hawkins Music" },
+    "about": {
+      "@type": "LocalBusiness",
+      "@id": "https://jasperhawkinsmusic.co.nz/#business",
+      "name": "Jasper Hawkins Music",
+      "description": "Live acoustic and DJ music for weddings, parties and corporate events.",
+      "url": "https://jasperhawkinsmusic.co.nz/",
+      "email": "hello@jasperhawkinsmusic.co.nz",
+      "telephone": "+64220805085",
+      "priceRange": "$$",
+      "address": { "@type": "PostalAddress", "addressLocality": "Auckland", "addressCountry": "NZ" },
+      "areaServed": { "@type": "Country", "name": "New Zealand" },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Bookings and enquiries",
+        "email": "hello@jasperhawkinsmusic.co.nz",
+        "telephone": "+64220805085",
+        "areaServed": "NZ",
+        "availableLanguage": "English"
+      }
+    }
+  }
+  </script>
+
+  <!-- Analytics. Same GA4 property and Meta Pixel as the old WordPress site,
+       installed so the switchover reads as one continuous timeline. Both IDs
+       are public by design — visible in any visitor's page source.
+
+       Loaded AFTER the page has painted, matching every other page on the
+       site; two ~100KB scripts fetched eagerly cost roughly 26 points of
+       Lighthouse Performance. -->
+  <script>
+    (function () {
+      var fired = false;
+      function loadAnalytics() {
+        if (fired) return; fired = true;
+
+        window.dataLayer = window.dataLayer || [];
+        window.gtag = function () { dataLayer.push(arguments); };
+        gtag('js', new Date());
+        gtag('config', 'G-KBB73PJNYF');
+        var g = document.createElement('script');
+        g.async = true;
+        g.src = 'https://www.googletagmanager.com/gtag/js?id=G-KBB73PJNYF';
+        document.head.appendChild(g);
+
+        !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+        n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+        n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+        t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+        document,'script','https://connect.facebook.net/en_US/fbevents.js');
+        fbq('init', '1023504601425184');
+        fbq('track', 'PageView');
+      }
+      if (document.readyState === 'complete') setTimeout(loadAnalytics, 0);
+      else window.addEventListener('load', function () {
+        ('requestIdleCallback' in window)
+          ? requestIdleCallback(loadAnalytics, { timeout: 2000 })
+          : setTimeout(loadAnalytics, 800);
+      });
+      setTimeout(loadAnalytics, 3000);
+      ['pointerdown','keydown','scroll'].forEach(function (ev) {
+        window.addEventListener(ev, loadAnalytics, { once: true, passive: true });
+      });
+    }());
+  </script>
+  <noscript><img height="1" width="1" style="display:none" alt=""
+    src="https://www.facebook.com/tr?id=1023504601425184&ev=PageView&noscript=1"></noscript>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <nav class="site-nav scrolled" id="site-nav">
+    <a class="nav-brand" href="/">
+      <svg width="34" height="34" viewBox="0 0 80 80" role="img" aria-label="Jasper Hawkins" style="flex-shrink:0">
+        <circle cx="40" cy="40" r="38" fill="#FF713D"/>
+        <circle cx="40" cy="40" r="34" fill="none" stroke="#B3411C" stroke-width="0.8"/>
+        <circle cx="40" cy="40" r="30" fill="#000000"/>
+        <circle cx="40" cy="40" r="28" fill="none" stroke="#FF713D" stroke-width="0.6" opacity="0.5"/>
+        <text x="40" y="49" text-anchor="middle"
+          font-family="'Playfair Display', Georgia, serif"
+          font-weight="400" font-size="24"
+          fill="#F2EAD8" letter-spacing="-0.02em">JH</text>
+      </svg>
+      <div>
+        <div class="nav-wordmark">Jasper Hawkins</div>
+        <div class="nav-descriptor">Singer · Guitarist · DJ</div>
+      </div>
+    </a>
+    <button class="nav-hamburger" id="nav-hamburger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="nav-pill">
+      <a href="/">Home</a>
+      <div class="nav-dd">
+        <button type="button" class="nav-dd-trigger" aria-haspopup="true" aria-expanded="false">Services
+          <svg class="nav-dd-caret" width="11" height="11" viewBox="0 0 12 12" aria-hidden="true"><path d="M2 4.5l4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="nav-dd-menu">
+          <a href="/weddings">Weddings</a>
+          <a href="/parties">Parties</a>
+          <a href="/corporate">Corporate</a>
+        </div>
+      </div>
+      <a href="/songlist">Song List</a>
+      <!-- On this page the form is already here, so the enquiry links scroll
+           to it rather than opening the slide-out panel. -->
+      <a href="#enquire" aria-current="page" data-scroll-form>Contact</a>
+      <a class="nav-cta" href="#enquire" data-scroll-form>Enquire now</a>
+    </div>
+  </nav>
+
+  <div class="nav-menu" id="nav-menu" aria-hidden="true">
+    <nav class="nav-menu-links">
+      <a href="/">Home</a>
+      <div class="nav-menu-group">
+        <button type="button" class="nav-menu-group-trigger" aria-expanded="false">Services <span class="nmg-caret">&#9662;</span></button>
+        <div class="nav-menu-sub">
+          <a href="/weddings">Weddings</a>
+          <a href="/parties">Parties</a>
+          <a href="/corporate">Corporate</a>
+        </div>
+      </div>
+      <a href="/songlist">Song List</a>
+      <a href="#enquire" aria-current="page" data-scroll-form>Contact</a>
+    </nav>
+    <a class="nav-menu-cta" href="#enquire" data-scroll-form>Enquire now</a>
+    <div class="nav-menu-note">Booking subject to availability</div>
+  </div>
+
+  <main id="main">
+    <div class="ct-wrap">
+
+      <header class="ct-head">
+        <p class="ct-eyebrow">Get in touch</p>
+        <h1 class="ct-title">Let's talk about your event.</h1>
+        <p class="ct-lead">Send me your date and a few details, and I'll come back to you within 48 hours to let you know whether I'm free. No pressure either way — if I'm not the right fit, I'll happily point you towards someone who is.</p>
+      </header>
+
+      <div class="ct-cols">
+
+        <div class="ct-details">
+          <div class="ct-detail">
+            <div class="ct-detail-label">Email</div>
+            <a class="ct-detail-value" href="mailto:hello@jasperhawkinsmusic.co.nz">hello@jasperhawkinsmusic.co.nz</a>
+          </div>
+          <div class="ct-detail">
+            <div class="ct-detail-label">Phone</div>
+            <a class="ct-detail-value" href="tel:+64220805085">+64 22 080 5085</a>
+          </div>
+          <div class="ct-detail">
+            <div class="ct-detail-label">Based in</div>
+            <div class="ct-detail-value">Auckland, New Zealand</div>
+            <p class="ct-detail-note">Available nationwide — happy to travel for the right event.</p>
+          </div>
+          <div class="ct-detail">
+            <div class="ct-detail-label">Response time</div>
+            <div class="ct-detail-value">Within 48 hours</div>
+            <p class="ct-detail-note">Most couples book 12&ndash;18 months ahead, especially for peak summer dates. If your date is close, sing out and I'll see what I can do.</p>
+          </div>
+
+          <hr class="ct-hr">
+
+          <div class="ct-links">
+            <a class="ct-link" href="/weddings">Weddings</a>
+            <a class="ct-link" href="/parties">Parties</a>
+            <a class="ct-link" href="/corporate">Corporate</a>
+            <a class="ct-link" href="/songlist">Song List</a>
+          </div>
+        </div>
+
+        <div class="ct-form-col" id="enquire">
+          <div class="ct-formcard">
+            <h2 class="ct-formcard-title">Submit an enquiry</h2>
+            <p class="eq-intro">Fill in your details below, and I'll get back to you and confirm availability within 48 hours.</p>
+
+            <form class="eq-form" id="eqForm" novalidate>
+
+              <div class="eq-field">
+                <label class="eq-label" for="eq-name">First Name <span class="eq-req">*</span></label>
+                <input class="eq-input" type="text" id="eq-name" name="firstName" required autocomplete="given-name" placeholder="Your first name">
+              </div>
+
+              <div class="eq-field">
+                <label class="eq-label" for="eq-email">Email <span class="eq-req">*</span></label>
+                <input class="eq-input" type="email" id="eq-email" name="email" required autocomplete="email" placeholder="your@email.com">
+              </div>
+
+              <div class="eq-field">
+                <label class="eq-label" for="eq-phone">Phone <span class="eq-req">*</span></label>
+                <input class="eq-input" type="tel" id="eq-phone" name="phone" required autocomplete="tel" placeholder="+64 21 000 0000">
+              </div>
+
+              <div class="eq-field">
+                <label class="eq-label" for="eq-type">Event Type <span class="eq-req">*</span></label>
+                <select class="eq-select" id="eq-type" name="eventType" required>
+                  <option value="" disabled selected>Select event type</option>
+                  <option value="wedding">Wedding</option>
+                  <option value="party">Party</option>
+                  <option value="corporate">Corporate Event</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="eq-field">
+                <label class="eq-label" for="eq-date">Event Date <span class="eq-req">*</span></label>
+                <input class="eq-input" type="date" id="eq-date" name="eventDate" required>
+              </div>
+
+              <div class="eq-field">
+                <label class="eq-label" for="eq-location">Event Location <span class="eq-req">*</span></label>
+                <input class="eq-input" type="text" id="eq-location" name="eventLocation" required placeholder="Venue or City/Town">
+              </div>
+
+              <div class="eq-field">
+                <label class="eq-label" for="eq-source">How Did You Hear About Me? <span class="eq-req">*</span></label>
+                <select class="eq-select" id="eq-source" name="source" required>
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="google">Google Search</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="facebook">Facebook</option>
+                  <option value="referral">Referred by a Friend</option>
+                  <option value="attended">Attended an Event</option>
+                  <option value="directory">Wedding Directory</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div class="eq-field">
+                <label class="eq-label" for="eq-message">Your Message <span class="eq-req">*</span></label>
+                <textarea class="eq-textarea" id="eq-message" name="message" required placeholder="Tell me a bit about your event..."></textarea>
+              </div>
+
+              <!-- Spam honeypot: hidden off-screen. Humans never fill it; bots do. -->
+              <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">
+                <label>Company<input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+              </div>
+
+              <p class="eq-error" id="eqError" role="alert" hidden style="color:#c0392b;margin:0 0 .5rem">Something went wrong — please try again, or email me directly.</p>
+
+              <button type="submit" class="btn-primary eq-submit">Send enquiry &nbsp;&rarr;</button>
+
+              <!-- Privacy Act 2020 (IPP3) collection notice — must sit at the point of collection. -->
+              <p class="eq-privacy">
+                I'll only use your details to reply to your enquiry and look after your booking —
+                never sold, never passed on. See my <a href="/privacy">Privacy Policy</a>.
+              </p>
+
+            </form>
+
+            <div class="eq-success" id="eqSuccess" hidden>
+              <h3>Thank you — your enquiry's on its way.</h3>
+              <p>I'll be in touch within 48 hours. Keep an eye on your inbox (and your spam folder, just in case). Cheers, Jasper</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <svg width="36" height="36" viewBox="0 0 80 80" role="img" aria-label="Jasper Hawkins" style="flex-shrink:0">
+          <circle cx="40" cy="40" r="38" fill="#FF713D"/>
+          <circle cx="40" cy="40" r="34" fill="none" stroke="#B3411C" stroke-width="0.8"/>
+          <circle cx="40" cy="40" r="30" fill="#000000"/>
+          <circle cx="40" cy="40" r="28" fill="none" stroke="#FF713D" stroke-width="0.6" opacity="0.5"/>
+          <text x="40" y="49" text-anchor="middle" font-family="'Playfair Display', Georgia, serif" font-weight="400" font-size="24" fill="#F2EAD8" letter-spacing="-0.02em">JH</text>
+        </svg>
+        <div>
+          <div class="footer-name">Jasper Hawkins</div>
+          <div class="footer-descriptor">Singer · Guitarist · DJ</div>
+        </div>
+      </div>
+      <div class="footer-contact">
+        <a href="tel:+64220805085">+64 22 080 5085</a>
+        <a href="mailto:hello@jasperhawkinsmusic.co.nz">hello@jasperhawkinsmusic.co.nz</a>
+      </div>
+      <div class="footer-copy">© 2026 Jasper Hawkins Music &nbsp;·&nbsp; <a href="/contact" style="color:inherit">Contact</a> &nbsp;·&nbsp; <a href="/privacy" style="color:inherit">Privacy Policy</a></div>
+    </div>
+  </footer>
+
+  <script>
+    /* ── Nav scroll state ────────────────────────────────────── */
+    /* No hero on this page, so the nav keeps its solid background from the
+       top and never auto-hides — there is nothing to get out of the way of. */
+    (function () {
+      var nav = document.getElementById('site-nav');
+      var tick = false;
+      function onScroll() { nav.classList.toggle('scrolled', true); tick = false; }
+      window.addEventListener('scroll', function () {
+        if (!tick) { requestAnimationFrame(onScroll); tick = true; }
+      }, { passive: true });
+    }());
+
+    /* ── Mobile menu ─────────────────────────────────────────── */
+    (function () {
+      var hamburger = document.getElementById('nav-hamburger');
+      var navMenu   = document.getElementById('nav-menu');
+      function openMenu()  { hamburger.classList.add('is-open'); navMenu.classList.add('is-open'); hamburger.setAttribute('aria-expanded','true'); navMenu.setAttribute('aria-hidden','false'); document.body.style.overflow='hidden'; }
+      function closeMenu() { hamburger.classList.remove('is-open'); navMenu.classList.remove('is-open'); hamburger.setAttribute('aria-expanded','false'); navMenu.setAttribute('aria-hidden','true'); document.body.style.overflow=''; }
+      hamburger.addEventListener('click', function () { hamburger.classList.contains('is-open') ? closeMenu() : openMenu(); });
+      navMenu.querySelectorAll('a').forEach(function (l) { l.addEventListener('click', closeMenu); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+    }());
+
+    /* ── Services dropdown: desktop ── */
+    document.querySelectorAll('.nav-dd').forEach(function(dd){
+      var trig = dd.querySelector('.nav-dd-trigger');
+      if(!trig) return;
+      trig.addEventListener('click', function(e){ e.preventDefault(); e.stopPropagation(); var open = dd.classList.toggle('is-open'); trig.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+      document.addEventListener('click', function(e){ if(!dd.contains(e.target)){ dd.classList.remove('is-open'); trig.setAttribute('aria-expanded','false'); } });
+    });
+    /* ── Services accordion: mobile ── */
+    document.querySelectorAll('.nav-menu-group-trigger').forEach(function(t){
+      t.addEventListener('click', function(){ var g = t.closest('.nav-menu-group'); var open = g.classList.toggle('is-open'); t.setAttribute('aria-expanded', open ? 'true' : 'false'); });
+    });
+
+    /* ── Enquiry links scroll to the form and focus it ───────── */
+    document.querySelectorAll('[data-scroll-form]').forEach(function (el) {
+      el.addEventListener('click', function (e) {
+        e.preventDefault();
+        var target = document.getElementById('enquire');
+        if (!target) return;
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setTimeout(function () {
+          var first = document.getElementById('eq-name');
+          if (first) first.focus({ preventScroll: true });
+        }, 500);
+      });
+    });
+
+    /* ── Enquiry form submit ─────────────────────────────────── */
+    (function () {
+      // Stamped when the script loads; used only to tell a human apart from a
+      // script that fills and submits in milliseconds.
+      var EQ_FORM_OPENED = Date.now();
+
+      var eqFormEl = document.getElementById('eqForm');
+      if (!eqFormEl) return;
+
+      eqFormEl.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        const form = e.target;
+        const btn = form.querySelector('.eq-submit');
+        const errEl = document.getElementById('eqError');
+        const okEl = document.getElementById('eqSuccess');
+        if (errEl) { errEl.hidden = true; if (errEl.dataset.def === undefined) errEl.dataset.def = errEl.textContent; errEl.textContent = errEl.dataset.def; }
+        if (!form.reportValidity()) return;
+
+        const payload = {
+          formTime:      Date.now() - EQ_FORM_OPENED,  // bot signal: instant submits
+          firstName:     form.firstName.value,
+          email:         form.email.value,
+          phone:         form.phone.value,
+          eventType:     form.eventType.value,
+          eventDate:     form.eventDate.value,
+          eventLocation: form.eventLocation.value,
+          source:        form.source.value,
+          message:       form.message.value,
+          company:       form.company ? form.company.value : '',  // honeypot
+        };
+
+        const orig = btn.textContent;
+        btn.disabled = true;
+        btn.textContent = 'Sending…';
+        try {
+          const ctrl = new AbortController();
+          const to = setTimeout(function () { ctrl.abort(); }, 20000);
+          let res;
+          try {
+            res = await fetch('/api/enquiry', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload),
+              signal: ctrl.signal,
+            });
+          } finally { clearTimeout(to); }
+          if (!res.ok) {
+            // Show the server's own wording when it has some (e.g. rate limit).
+            const info = await res.json().catch(function () { return null; });
+            if (info && info.error && errEl) errEl.textContent = info.error;
+            throw new Error('Request failed');
+          }
+          // Conversion — the same pair of events every other page fires, so the
+          // ad history stays unbroken no matter which page the lead came from.
+          try {
+            if (window.fbq) { fbq('track', 'Lead'); fbq('track', 'SubmitApplication'); }
+            if (window.gtag) gtag('event', 'generate_lead', {
+              event_category: 'enquiry',
+              event_label: payload.eventType || 'unknown',
+            });
+          } catch (e) {}
+          form.hidden = true;
+          if (okEl) okEl.hidden = false;
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = orig;
+          if (errEl) { if (err && err.name === 'AbortError') errEl.textContent = 'That took too long — please try again, or email hello@jasperhawkinsmusic.co.nz directly.'; errEl.hidden = false; }
+        }
+      });
+    }());
+  </script>
+
+  <!-- Custom on-brand dropdowns for visible .eq-select fields (native select stays for form submit/validation) -->
+  <script>
+  (function(){
+    document.querySelectorAll('select.eq-select').forEach(function(sel){
+      var field = sel.closest('.eq-field');
+      if (field && field.style.display === 'none') return;   // skip hidden fields
+      var wrap = document.createElement('div'); wrap.className = 'eqdd';
+      var btn  = document.createElement('button'); btn.type = 'button'; btn.className = 'eqdd-btn';
+      btn.setAttribute('aria-haspopup', 'listbox');
+      var list = document.createElement('ul'); list.className = 'eqdd-list'; list.setAttribute('role', 'listbox');
+
+      var listId = 'eqdd-list-' + Math.random().toString(36).slice(2, 8);
+      list.id = listId;
+      btn.setAttribute('aria-controls', listId);
+      btn.setAttribute('aria-expanded', 'false');
+      function open(){ wrap.classList.add('open'); btn.setAttribute('aria-expanded', 'true'); }
+      function close(){ wrap.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); }
+
+      function sync(){
+        var o = sel.options[sel.selectedIndex];
+        btn.textContent = o ? o.textContent : '';
+        btn.classList.toggle('placeholder', !sel.value);
+        list.querySelectorAll('.eqdd-opt').forEach(function(li){
+          var on = li.dataset.value === sel.value && sel.value !== '';
+          li.classList.toggle('selected', on);
+          li.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+      }
+      Array.prototype.forEach.call(sel.options, function(o){
+        if (o.disabled) return;
+        var li = document.createElement('li');
+        li.className = 'eqdd-opt'; li.textContent = o.textContent;
+        li.dataset.value = o.value; li.setAttribute('role', 'option');
+        li.tabIndex = -1;
+        function choose(){
+          sel.value = o.value;
+          sel.dispatchEvent(new Event('change', { bubbles: true }));
+          close();
+          btn.focus();
+          sync();
+        }
+        li.addEventListener('click', choose);
+        li.addEventListener('keydown', function(e){
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); choose(); }
+          else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            var opts = Array.prototype.slice.call(list.querySelectorAll('.eqdd-opt'));
+            var i = opts.indexOf(li) + (e.key === 'ArrowDown' ? 1 : -1);
+            if (opts[i]) opts[i].focus();
+          } else if (e.key === 'Home' || e.key === 'End') {
+            e.preventDefault();
+            var all = list.querySelectorAll('.eqdd-opt');
+            (e.key === 'Home' ? all[0] : all[all.length - 1]).focus();
+          }
+        });
+        list.appendChild(li);
+      });
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        if (wrap.classList.contains('open')) close(); else open();
+      });
+      // Open on Down/Enter and land on the first option, as a native select does.
+      btn.addEventListener('keydown', function(e){
+        if (e.key === 'ArrowDown' || e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault(); open();
+          var first = list.querySelector('.eqdd-opt.selected') || list.querySelector('.eqdd-opt');
+          if (first) first.focus();
+        }
+      });
+      document.addEventListener('click', close);
+      document.addEventListener('keydown', function(e){
+        if (e.key !== 'Escape' || !wrap.classList.contains('open')) return;
+        close(); btn.focus();
+      });
+
+      sel.parentNode.insertBefore(wrap, sel);
+      wrap.appendChild(btn); wrap.appendChild(list); wrap.appendChild(sel);
+      sel.tabIndex = -1;
+      // Browser validation on a required, visually-hidden select would try to
+      // focus something nobody can see; point the message at the button instead.
+      sel.addEventListener('invalid', function(){ btn.focus(); });
+      sync();
+    });
+  })();
+  </script>
+
+  <!-- Custom desktop date picker for the enquiry form (phones keep the native picker) -->
+  <script>
+  (function(){
+    if (!window.matchMedia || !matchMedia('(min-width: 768px)').matches) return;
+    var input = document.getElementById('eq-date');
+    if (!input) return;
+
+    var wrap = document.createElement('div'); wrap.className = 'eqcal';
+    input.parentNode.insertBefore(wrap, input); wrap.appendChild(input);
+    var panel = document.createElement('div'); panel.className = 'eqcal-panel';
+    wrap.appendChild(panel);
+
+    var today = new Date(); today.setHours(0,0,0,0);
+    var view = new Date(today.getFullYear(), today.getMonth(), 1);
+    var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var DOWS = ['Mo','Tu','We','Th','Fr','Sa','Su'];
+
+    function pad(n){ return (n < 10 ? '0' : '') + n; }
+    function fmt(d){ return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
+
+    function build(){
+      panel.innerHTML = '';
+      var head = document.createElement('div'); head.className = 'eqcal-head';
+      var prev = document.createElement('button'); prev.type='button'; prev.className='eqcal-nav'; prev.innerHTML='&#8249;'; prev.setAttribute('aria-label','Previous month');
+      var next = document.createElement('button'); next.type='button'; next.className='eqcal-nav'; next.innerHTML='&#8250;'; next.setAttribute('aria-label','Next month');
+      var title = document.createElement('div'); title.className='eqcal-month';
+      title.textContent = MONTHS[view.getMonth()] + ' ' + view.getFullYear();
+      prev.disabled = view.getFullYear() === today.getFullYear() && view.getMonth() === today.getMonth();
+      prev.addEventListener('click', function(e){ e.stopPropagation(); view = new Date(view.getFullYear(), view.getMonth()-1, 1); build(); });
+      next.addEventListener('click', function(e){ e.stopPropagation(); view = new Date(view.getFullYear(), view.getMonth()+1, 1); build(); });
+      head.appendChild(prev); head.appendChild(title); head.appendChild(next);
+      panel.appendChild(head);
+
+      var grid = document.createElement('div'); grid.className = 'eqcal-grid';
+      DOWS.forEach(function(d){ var c = document.createElement('div'); c.className='eqcal-dow'; c.textContent=d; grid.appendChild(c); });
+      var first = new Date(view.getFullYear(), view.getMonth(), 1);
+      var lead = (first.getDay() + 6) % 7;   /* Monday-first */
+      for (var b = 0; b < lead; b++) { var bl = document.createElement('button'); bl.type='button'; bl.className='eqcal-day blank'; bl.disabled=true; grid.appendChild(bl); }
+      var days = new Date(view.getFullYear(), view.getMonth()+1, 0).getDate();
+      for (var d = 1; d <= days; d++) {
+        (function(d){
+          var date = new Date(view.getFullYear(), view.getMonth(), d);
+          var cell = document.createElement('button'); cell.type='button'; cell.className='eqcal-day'; cell.textContent = d;
+          if (date < today) cell.disabled = true;
+          if (fmt(date) === fmt(today)) cell.classList.add('today');
+          if (input.value && fmt(date) === input.value) cell.classList.add('selected');
+          cell.addEventListener('click', function(e){
+            e.stopPropagation();
+            input.value = fmt(date);
+            input.dispatchEvent(new Event('change', { bubbles: true }));
+            wrap.classList.remove('open');
+          });
+          grid.appendChild(cell);
+        })(d);
+      }
+      /* pad to a constant 6-week grid so every month is the same height */
+      var total = lead + days;
+      for (var tr = total; tr < 42; tr++) { var tb = document.createElement('button'); tb.type='button'; tb.className='eqcal-day blank'; tb.disabled=true; grid.appendChild(tb); }
+      panel.appendChild(grid);
+    }
+
+    input.readOnly = true;   /* stops the native popup + typing; picker owns the value */
+    input.addEventListener('click', function(e){
+      e.preventDefault(); e.stopPropagation();
+      if (!wrap.classList.contains('open')) {
+        view = input.value ? new Date(input.value + 'T00:00:00') : new Date(today.getFullYear(), today.getMonth(), 1);
+        view = new Date(view.getFullYear(), view.getMonth(), 1);
+        build();
+        /* open upward if the panel would run off the bottom of the screen */
+        var r = wrap.getBoundingClientRect();
+        var spaceBelow = window.innerHeight - r.bottom;
+        wrap.classList.toggle('up', spaceBelow < 370 && r.top > 370);
+      }
+      wrap.classList.toggle('open');
+    });
+    document.addEventListener('click', function(){ wrap.classList.remove('open'); });
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') wrap.classList.remove('open'); });
+
+    /* readOnly disables native `required` checking — enforce it ourselves */
+    if (input.form) {
+      input.form.addEventListener('submit', function(e){
+        if (!input.value) {
+          e.preventDefault(); e.stopPropagation();
+          view = new Date(today.getFullYear(), today.getMonth(), 1);
+          build();
+          wrap.classList.add('open');
+          input.focus();
+        }
+      }, true);
+    }
+  })();
+  </script>
+
+</body>
+</html>

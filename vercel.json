@@ -63,11 +63,6 @@
       "permanent": false
     },
     {
-      "source": "/contact",
-      "destination": "/",
-      "permanent": true
-    },
-    {
       "source": "/testimonials",
       "destination": "/",
       "permanent": true

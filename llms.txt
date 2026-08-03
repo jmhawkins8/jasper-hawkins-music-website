@@ -28,4 +28,5 @@ Booking one performer for both live music and DJ means a single point of contact
 - [Corporate](https://jasperhawkinsmusic.co.nz/corporate): corporate events and functions.
 - [Parties](https://jasperhawkinsmusic.co.nz/parties): private parties and celebrations.
 - [Song list](https://jasperhawkinsmusic.co.nz/songlist): the full repertoire, 200+ songs.
+- [Contact](https://jasperhawkinsmusic.co.nz/contact): phone, email, service area and the enquiry form.
 - [Privacy policy](https://jasperhawkinsmusic.co.nz/privacy): how enquiry details are handled.
