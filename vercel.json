@@ -58,7 +58,6 @@
       "permanent": true
     },
     {
-      "_comment": "TEMPORARY on purpose. Jasper intends to rebuild this page at this same URL for his own music. A 301 would tell Google the address is gone for good; a 302 keeps its identity so removing this line later restores it with its history.",
       "source": "/making-the-music",
       "destination": "/",
       "permanent": false
