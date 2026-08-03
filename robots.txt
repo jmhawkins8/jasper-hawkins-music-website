@@ -41,4 +41,4 @@ Allow: /
 User-agent: cohere-ai
 Allow: /
 
-Sitemap: https://www.jasperhawkinsmusic.co.nz/sitemap.xml
+Sitemap: https://jasperhawkinsmusic.co.nz/sitemap.xml
