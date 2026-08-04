@@ -1575,7 +1575,7 @@
 
         <!-- Spam honeypot: hidden off-screen. Humans never fill it; bots do. -->
         <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">
-          <label>Company<input type="text" name="company" tabindex="-1" autocomplete="off"></label>
+          <label>Reference<input type="text" name="enquiry_ref" tabindex="-1" autocomplete="off"></label>
         </div>
 
         <p class="eq-error" id="eqError" role="alert" hidden style="color:#c0392b;margin:0 0 .5rem">Something went wrong — please try again, or email me directly.</p>
@@ -1733,7 +1733,7 @@
           eventLocation: form.eventLocation.value,
           source:        form.source.value,
           message:       form.message.value,
-          company:       form.company ? form.company.value : '',  // honeypot
+          enquiry_ref:   form.enquiry_ref ? form.enquiry_ref.value : '',  // honeypot
         };
 
         const orig = btn.textContent;

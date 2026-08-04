@@ -186,13 +186,22 @@ export default async function handler(req, res) {
     return res.status(400).json({ ok: false, error: 'That email address looks incomplete — please check it.' });
   }
 
-  // Honeypot: off-screen, so a person never types in it. Password managers and
-  // browser autofill DO sometimes fill a field called "company", which would
-  // silently bin a real enquiry — so log it rather than vanishing.
-  if (clean(body.company)) {
-    console.warn('Honeypot tripped:', { name, email });
-    return res.status(200).json({ ok: true });
-  }
+  // Honeypot: an off-screen field a person never sees, so only a script fills it.
+  //
+  // It used to be called "company" and an unfilled one was an instant, silent
+  // discard. That cost a real enquiry on 2026-08-03: "company" is a standard
+  // browser autofill token, so Chrome/Safari/password managers fill it for you,
+  // invisibly — the sender saw a thank-you screen and the enquiry went nowhere.
+  //
+  // Two changes, because neither alone is enough. The field is now named
+  // `enquiry_ref`, which no autofill heuristic recognises. And tripping it is
+  // no longer fatal on its own: it feeds the spam score below, so a genuine
+  // person whose password manager filled it is merely flagged and still
+  // reaches Jasper, while a bot that also pastes links or submits in 200ms
+  // clears the rejection threshold and is dropped. `company` is still read so
+  // that a page cached from before this fix cannot break.
+  const honeypot = !!clean(body.enquiry_ref ?? body.company);
+  if (honeypot) console.warn('Honeypot tripped (not discarded):', { name, email });
 
   // Too many submissions from one address in a short window — almost certainly
   // a script. Say so plainly, so a real person retrying knows to wait or email.
@@ -209,10 +218,16 @@ export default async function handler(req, res) {
   // few links, or a couple whose name is in Chinese characters, can both trip
   // two signals — and losing one of those costs far more than the nuisance of
   // an obvious spam row. Only a pile-up of signals is dropped outright.
-  const score = spamScore(body, name, email, clean(body.message, 4000));
+  // The honeypot is worth 2 on its own: enough to flag, never enough to reject.
+  // A password manager filling it is the only realistic innocent explanation,
+  // and that person's enquiry still lands in Jasper's inbox marked suspect.
+  const score = spamScore(body, name, email, clean(body.message, 4000)) + (honeypot ? 2 : 0);
   const suspect = score >= 2;
   if (score >= 4) {
-    console.warn('Spam rejected:', { score, ip });
+    // Log the whole thing. This is the one path that loses a lead outright, so
+    // if it ever fires on a real couple the enquiry must be recoverable from
+    // the Vercel logs rather than gone.
+    console.warn('Spam rejected:', { score, ip, honeypot, name, email, body });
     return res.status(200).json({ ok: true });   // tell bots nothing
   }
   if (suspect) console.warn('Enquiry flagged as possible spam:', { score, ip });
