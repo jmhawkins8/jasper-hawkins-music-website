@@ -358,7 +358,12 @@ export default async function handler(req, res) {
       const rows = [
         ['Name', name], ['Email', email], ['Phone', record.phone],
         ['Event type', evLabel], ['Event date', record.event_date || '—'], ['Location', location || '—'],
-        ['Heard via', record.source || '—'], ['Message', record.enquiry_message || '—'],
+        // The couple's own words, and nothing else. `record.enquiry_message`
+        // has the date-clash warning and any spam flag glued to the front of
+        // it, which is right for the dashboard — that has nowhere else to put
+        // them — but in the email both already appear in the subject line and
+        // the banner above. Repeating them here just buried the actual message.
+        ['Heard via', record.source || '—'], ['Message', message || '—'],
       ].map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#888;vertical-align:top">${esc(k)}</td><td style="padding:4px 0">${esc(v)}</td></tr>`).join('');
       const flag = !saved ? '⚠ NOT SAVED — ' : (clashTag || (suspect ? '[possible spam] ' : ''));
       const note = !saved
