@@ -91,10 +91,11 @@ function nzToday() {
 }
 
 // ── ActiveCampaign ────────────────────────────────────────────────────────
-// Adds the enquirer as a contact and applies the tag that starts Jasper's
-// follow-up sequence. Entirely best-effort: the enquiry is already saved in
-// Supabase before this runs, so any failure here is logged and swallowed —
-// a wobbly third party must never cost Jasper a lead.
+// Adds the enquirer as a contact (with the form answers written into AC's
+// custom fields) and applies the tag that starts Jasper's follow-up sequence.
+// Entirely best-effort: the enquiry is already saved in Supabase before this
+// runs, so any failure here is logged and swallowed — a wobbly third party
+// must never cost Jasper a lead.
 
 // No third party gets to hold the visitor's browser open indefinitely.
 async function withTimeout(run, ms) {
@@ -111,34 +112,118 @@ async function acFetch(url, opts, ms = 3000) {
   return withTimeout(signal => fetch(url, { ...opts, signal }), ms);
 }
 
-async function addToActiveCampaign({ name, email, phone, eventType }) {
+// AC custom fields we populate, matched against the account by EXACT title.
+// "Event Type" matters most: the live follow-up automation's entry condition
+// is `Event Type is "Wedding"`, and it is evaluated the instant the tag lands
+// — so these fields must be on the contact BEFORE the tag is applied. That is
+// why they ride along in the contact/sync call itself.
+const AC_FIELD_TITLES = {
+  eventType:     'Event Type',
+  eventDate:     'Event Date',
+  eventLocation: 'Event Location',
+  source:        'How Did You Hear About Me?',
+  message:       'Your Message',
+};
+
+// The one field id verified by hand in this account, used only if the
+// title lookup ever fails or times out — the automation must still see
+// Event Type, or no wedding enquiry enters the follow-up sequence.
+const AC_EVENT_TYPE_FALLBACK_ID = '1';
+
+// The form posts lowercase values ("wedding"); AC's Event Type dropdown holds
+// Title Case options and the automation condition is an exact string match on
+// "Wedding". Map every value the handler's allowlist can produce.
+const AC_EVENT_TYPE_VALUES = {
+  wedding:   'Wedding',
+  party:     'Party',
+  corporate: 'Corporate Event',
+  birthday:  'Birthday',
+  function:  'Private Function',
+  other:     'Other',
+};
+
+// Same idea for "How Did You Hear About Me?" — send the human-readable label
+// the visitor actually picked, not the internal token.
+const AC_SOURCE_VALUES = {
+  google:    'Google Search',
+  instagram: 'Instagram',
+  facebook:  'Facebook',
+  referral:  'Referred by a Friend',
+  attended:  'Attended an Event',
+  directory: 'Wedding Directory',
+  other:     'Other',
+};
+
+// title (lowercased) -> field id, cached for the life of the warm instance so
+// the lookup costs one request, not one per enquiry. Never caches a failure.
+let acFieldMapCache = null;
+
+async function acFieldMap(base, headers) {
+  if (acFieldMapCache) return acFieldMapCache;
+  const res = await acFetch(`${base}/api/3/fields?limit=100`, { headers });
+  if (!res.ok) throw new Error(`fields lookup ${res.status}`);
+  const fields = (await res.json())?.fields ?? [];
+  const map = new Map(fields.map(f => [String(f.title ?? '').trim().toLowerCase(), String(f.id)]));
+  if (map.size) acFieldMapCache = map;
+  return map;
+}
+
+async function addToActiveCampaign({ name, email, phone, eventType, eventDate, location, source, message }) {
   const base = (process.env.AC_API_URL || '').replace(/\/+$/, '');
   const key = process.env.AC_API_KEY;
   const tagName = process.env.AC_TAG_NAME;
   if (!base || !key || !tagName) return { skipped: 'not configured' };
 
-  // The follow-up copy asks about wedding music, so by default only wedding
-  // enquiries get tagged. AC_TAG_EVENT_TYPES=all opts everyone in.
-  const allowed = (process.env.AC_TAG_EVENT_TYPES || 'wedding').toLowerCase();
-  if (allowed !== 'all' && !allowed.split(',').map(s => s.trim()).includes(eventType)) {
-    return { skipped: `event type ${eventType} not tagged` };
-  }
-
   const headers = { 'Api-Token': key, 'Content-Type': 'application/json' };
 
-  // 1) Create or update the contact. contact/sync is idempotent, so a repeat
+  // 0) Resolve custom field ids by exact title. Best-effort: a failed lookup
+  //    must not cost the contact or the tag, so log and carry on — Event Type
+  //    still goes through on its hand-verified fallback id.
+  let fieldMap = new Map();
+  try {
+    fieldMap = await acFieldMap(base, headers);
+  } catch (err) {
+    console.error('AC fields lookup failed (continuing without):', String(err).slice(0, 200));
+  }
+  const fieldValues = [];
+  const addField = (fieldKey, value) => {
+    const id = fieldMap.get(AC_FIELD_TITLES[fieldKey].toLowerCase())
+      ?? (fieldKey === 'eventType' ? AC_EVENT_TYPE_FALLBACK_ID : null);
+    if (id && value) fieldValues.push({ field: id, value });
+  };
+  addField('eventType', AC_EVENT_TYPE_VALUES[eventType]
+    ?? eventType.replace(/^./, c => c.toUpperCase()));       // Title Case any stranger
+  addField('eventDate', eventDate);                          // validated YYYY-MM-DD — the ISO shape AC date fields expect
+  addField('eventLocation', location);
+  addField('source', AC_SOURCE_VALUES[source] ?? source);
+  addField('message', message);
+
+  // 1) Create or update the contact, form answers included — one call, and
+  //    strictly before the tag. contact/sync is idempotent, so a repeat
   //    enquirer updates rather than duplicating.
   const [firstName, ...rest] = name.split(/\s+/);
   const syncRes = await acFetch(`${base}/api/3/contact/sync`, {
     method: 'POST',
     headers,
     body: JSON.stringify({
-      contact: { email, firstName, lastName: rest.join(' '), phone },
+      contact: {
+        email, firstName, lastName: rest.join(' '), phone,
+        ...(fieldValues.length ? { fieldValues } : {}),
+      },
     }),
   });
   if (!syncRes.ok) throw new Error(`contact/sync ${syncRes.status}: ${(await syncRes.text()).slice(0, 200)}`);
   const contactId = (await syncRes.json())?.contact?.id;
   if (!contactId) throw new Error('contact/sync returned no id');
+
+  // The follow-up copy asks about wedding music, so by default only wedding
+  // enquiries get TAGGED. AC_TAG_EVENT_TYPES=all opts everyone in. The contact
+  // itself, fields and all, is synced for every event type above — the data
+  // is useful regardless of which automation (if any) fires.
+  const allowed = (process.env.AC_TAG_EVENT_TYPES || 'wedding').toLowerCase();
+  if (allowed !== 'all' && !allowed.split(',').map(s => s.trim()).includes(eventType)) {
+    return { contactId, skipped: `event type ${eventType} not tagged (contact + fields synced)` };
+  }
 
   // 2) Resolve the tag name to its id. Jasper supplies the name he sees in
   //    AC; search is a partial match, so confirm the exact name back.
@@ -406,10 +491,13 @@ export default async function handler(req, res) {
   }
 
   // 3) Start the ActiveCampaign follow-up sequence (best-effort). Capped
-  // overall so three slow calls can't stack up behind the visitor.
+  // overall so a run of slow AC calls can't stack up behind the visitor.
   try {
     const acResult = await Promise.race([
-      addToActiveCampaign({ name, email, phone: record.phone, eventType }),
+      addToActiveCampaign({
+        name, email, phone: record.phone, eventType,
+        eventDate, location, source: record.source, message,
+      }),
       new Promise((_, rj) => setTimeout(() => rj(new Error('AC budget exceeded')), 6000)),
     ]);
     if (acResult.skipped) console.log('ActiveCampaign skipped:', acResult.skipped);
