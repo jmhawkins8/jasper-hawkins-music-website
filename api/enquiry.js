@@ -442,7 +442,12 @@ export default async function handler(req, res) {
     if (haveEnv.RESEND_API_KEY && haveEnv.NOTIFY_EMAIL && haveEnv.FROM_EMAIL) {
       const rows = [
         ['Name', name], ['Email', email], ['Phone', record.phone],
-        ['Event type', evLabel], ['Event date', record.event_date || '—'], ['Location', location || '—'],
+        // Stored as YYYY-MM-DD; shown NZ-style with the weekday, matching the contract.
+        ['Event type', evLabel],
+        ['Event date', record.event_date
+          ? new Date(record.event_date + 'T00:00:00').toLocaleDateString('en-NZ', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+          : '—'],
+        ['Location', location || '—'],
         // The couple's own words, and nothing else. `record.enquiry_message`
         // has the date-clash warning and any spam flag glued to the front of
         // it, which is right for the dashboard — that has nowhere else to put
