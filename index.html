@@ -2349,8 +2349,7 @@
   })();
   </script>
 
-  <!-- Hear me play: adaptive Bunny streaming (HLS native on Safari, hls.js elsewhere) -->
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js" defer></script>
+  <!-- Hear me play: HLS native on Safari, progressive MP4 elsewhere -->
   <script>
   (function(){
     var CDN = 'vz-0620fbe9-cee.b-cdn.net';
@@ -2372,13 +2371,16 @@
     var cards = Array.prototype.slice.call(track.querySelectorAll('.hear-card'));
 
     function load(video, guid){
-      var u = 'https://' + CDN + '/' + guid + '/playlist.m3u8';
+      // Safari streams HLS natively; everywhere else a single progressive MP4
+      // beats hls.js here — no adaptive blur-in, and warmed cards buffer
+      // through the browser instead of a streaming engine per card
       video.preload = 'auto';
-      if (video.canPlayType('application/vnd.apple.mpegurl')) { video.src = u; video.load(); }
-      else if (window.Hls && window.Hls.isSupported()) {
-        var h = new Hls({ capLevelToPlayerSize: true, startLevel: -1 });
-        h.loadSource(u); h.attachMedia(video); video._hls = h;
-      } else { video.src = 'https://' + CDN + '/' + guid + '/play_720p.mp4'; }
+      if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = 'https://' + CDN + '/' + guid + '/playlist.m3u8';
+      } else {
+        video.src = 'https://' + CDN + '/' + guid + '/play_720p.mp4';
+      }
+      video.load();
       video._loaded = true;
     }
     function stopOthers(current){
