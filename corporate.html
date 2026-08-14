@@ -478,6 +478,9 @@
       margin-top: 44px;
     }
 
+    /* Logo band hugs the hero above it — no eyebrow, minimal padding */
+    .clients-band .sec-inner { padding-top: clamp(34px, 5vw, 54px); padding-bottom: clamp(30px, 4vw, 48px); }
+    .clients-band .clients-row { margin-top: 0; }
     /* ── Corporate clients logo strip ────────────────────────── */
     .clients-row {
       display: flex;
@@ -1131,6 +1134,20 @@
     </div>
   </section>
 
+  <!-- ── Corporate clients — logo band, reads as part of the hero ── -->
+  <section class="clients-band">
+    <div class="sec-inner">
+      <div class="clients-row" data-reveal>
+        <img class="logo-airnz" src="assets/logos/corporate/air-nz.png" alt="Air New Zealand" loading="lazy" decoding="async">
+        <img class="logo-harcourts" src="assets/logos/corporate/harcourts.png" alt="Harcourts" loading="lazy" decoding="async">
+        <img class="logo-mccaw" src="assets/logos/corporate/mccaw-lewis.png" alt="McCaw Lewis" loading="lazy" decoding="async">
+        <img class="logo-sportw" src="assets/logos/corporate/sport-waikato.png" alt="Sport Waikato" loading="lazy" decoding="async">
+        <img class="logo-success" src="assets/logos/corporate/success-resources.png" alt="Success Resources" loading="lazy" decoding="async">
+        <img class="logo-walkerw" src="assets/logos/corporate/walker-wayland.png" alt="Walker Wayland" loading="lazy" decoding="async">
+      </div>
+    </div>
+  </section>
+
   <!-- ── Intro + offerings ────────────────────────────────── -->
   <section>
     <div class="sec-inner">
@@ -1164,23 +1181,6 @@
 
       <div class="offer-cta-row" data-reveal>
         <a class="btn btn-primary" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire>Enquire Now</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ── Corporate clients ────────────────────────────────── -->
-  <section>
-    <div class="sec-inner">
-      <div class="sec-head" data-reveal>
-        <div class="sec-eyebrow">Some Of My Corporate Clients</div>
-      </div>
-      <div class="clients-row" data-reveal data-delay="1">
-        <img class="logo-airnz" src="assets/logos/corporate/air-nz.png" alt="Air New Zealand" loading="lazy" decoding="async">
-        <img class="logo-harcourts" src="assets/logos/corporate/harcourts.png" alt="Harcourts" loading="lazy" decoding="async">
-        <img class="logo-mccaw" src="assets/logos/corporate/mccaw-lewis.png" alt="McCaw Lewis" loading="lazy" decoding="async">
-        <img class="logo-sportw" src="assets/logos/corporate/sport-waikato.png" alt="Sport Waikato" loading="lazy" decoding="async">
-        <img class="logo-success" src="assets/logos/corporate/success-resources.png" alt="Success Resources" loading="lazy" decoding="async">
-        <img class="logo-walkerw" src="assets/logos/corporate/walker-wayland.png" alt="Walker Wayland" loading="lazy" decoding="async">
       </div>
     </div>
   </section>

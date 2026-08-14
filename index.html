@@ -80,6 +80,8 @@
       .float-cta { bottom: 18px; right: 18px; padding: 12px 20px; font-size: 13px; }
     }
     @media (prefers-reduced-motion: reduce) {
+      .hero-photo img { animation: none; }
+      .hear-wrap[data-reveal] .hear-card { opacity: 1; transform: none; transition: none; }
       .site-nav { transition: background var(--dur) var(--ease), backdrop-filter var(--dur) var(--ease); }
     }
     .nav-brand {
@@ -297,6 +299,12 @@
          the paint (a CSS animation included) risks the same failure, and a
          700ms fade on a background photo is not worth that. */
       opacity: 1;
+    
+      animation: hero-drift 16s cubic-bezier(.2,.4,.2,1) forwards;
+    }
+    @keyframes hero-drift {
+      from { transform: scale(1.07); }
+      to   { transform: scale(1.0); }
     }
     .hero-photo img.loaded { opacity: 1; }
     .hero-scrim {
@@ -324,12 +332,45 @@
     .hero-name {
       font-family: var(--font-serif);
       font-weight: 400;
-      font-size: clamp(52px, 10vw, 112px);
+      font-size: clamp(46px, 8.5vw, 96px);
       line-height: 0.98;
       letter-spacing: -0.025em;
       color: var(--bone);
       margin-bottom: 22px;
       text-wrap: balance;
+    }
+    .section-services .s-eyebrow { justify-content: center; }
+    .section-services .services-heading { text-align: center; }
+    .reviews-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 20px;
+    }
+    .reviews-eyebrow::before,
+    .reviews-eyebrow::after {
+      content: "";
+      display: block;
+      width: 28px; height: 1px;
+      background: var(--ember);
+      flex-shrink: 0;
+    }
+    .reviews-eyebrow span {
+      font-family: var(--font-sans);
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--bone-mute);
+    }
+    .hero-sub {
+      font-family: var(--font-sans);
+      font-size: clamp(15px, 1.5vw, 17px);
+      line-height: 1.65;
+      color: var(--bone);
+      max-width: 520px;
+      margin: 0 auto 34px;
+      text-shadow: 0 1px 2px rgba(0,0,0,.55), 0 2px 24px rgba(0,0,0,.5);
     }
     .hero-role {
       font-family: var(--font-sans);
@@ -339,12 +380,54 @@
       text-transform: uppercase;
       color: var(--bone-mute);
       display: inline-flex; align-items: center; gap: 14px;
-      margin-bottom: 36px;
+      margin-bottom: 18px;
     }
     .hero-role::before, .hero-role::after {
       content: ""; width: 28px; height: 1px; background: var(--ember); flex-shrink: 0;
     }
-    .hero-ctas { display: flex; justify-content: center; }
+    .hero-ctas { display: flex; justify-content: center; gap: 12px; }
+    .btn-ghost {
+      display: inline-flex; align-items: center; gap: 8px;
+      color: var(--bone); font-family: var(--font-sans); font-size: 14px;
+      font-weight: 500; letter-spacing: 0.02em; padding: 14px 24px;
+      border-radius: var(--r-input); border: 1px solid var(--hairline-strong);
+      text-decoration: none; cursor: pointer;
+      transition: border-color 180ms var(--ease), background 180ms var(--ease);
+    }
+    .btn-ghost:hover { border-color: var(--ember); background: rgba(255,113,61,.07); }
+    /* Mock A "Statement": social proof as the hero's foundation line */
+    .hero-statbar {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 4;
+      display: grid; grid-template-columns: repeat(3, auto);
+      justify-content: center; gap: clamp(36px, 7vw, 96px);
+      max-width: 880px; width: calc(100% - 48px); margin: 0 auto;
+      border-top: 1px solid var(--hairline);
+      padding: 24px 0 34px;
+    }
+    .hero-stat { text-align: center; display: flex; flex-direction: column; justify-content: flex-end; }
+    .stat-value { font-family: var(--font-serif); font-weight: 400; font-size: 18px; color: var(--bone); line-height: 1.1; margin-bottom: 4px; }
+    .stat-value.stars { color: var(--ember); font-size: 11px; letter-spacing: 2px; }
+    .stat-value.compact { font-size: 13px; line-height: 1.25; }
+    .stat-label { font-family: var(--font-sans); font-size: 9px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bone-faint); line-height: 1.3; }
+    @media (max-width: 680px) {
+      /* keep both CTAs on one tidy row — labels never wrap */
+      .hero-ctas { width: 100%; gap: 10px; }
+      .hero-ctas .btn-primary,
+      .hero-ctas .btn-ghost {
+        flex: 1 1 0; justify-content: center; white-space: nowrap;
+        padding-left: 12px; padding-right: 12px; font-size: 13px;
+      }
+      .hero-statbar { gap: 18px; grid-template-columns: repeat(3, 1fr); padding: 16px 0 22px; }
+      .stat-value { font-size: 15px; }
+      .stat-value.compact { font-size: 11px; }
+      .stat-label { font-size: 8px; }
+    }
+    /* Trust band — Mock A's "In good company" logo strip below the hero */
+    .section-trust { background: var(--ink); padding: 40px 24px 48px; text-align: center; border-bottom: 1px solid var(--hairline-soft); }
+    .trust-label { font-family: var(--font-sans); font-size: 9px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bone-faint); margin-bottom: 28px; }
+    .trust-logos { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: clamp(28px, 4.5vw, 56px); max-width: 980px; margin: 0 auto; }
+    .trust-logos img { filter: grayscale(1) brightness(3.1); opacity: .42; transition: opacity .25s var(--ease); }
+    .trust-logos img:hover { opacity: .85; }
     .hero-scroll-hint {
       position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
       z-index: 4;
@@ -370,7 +453,8 @@
       gap: 10px;
       margin-bottom: var(--h-eyebrow-mb);
     }
-    .s-eyebrow::before {
+    .s-eyebrow::before,
+    .s-eyebrow::after {
       content: "";
       display: block;
       width: 28px; height: 1px;
@@ -616,52 +700,79 @@
       filter: blur(48px);
       pointer-events: none;
     }
+    /* ── Why Choose Me — bento grid ──────────────────────────── */
+    .section-why {
+      background: var(--ink);
+    }
     .why-inner {
-      position: relative; z-index: 1;
+      padding: var(--section-standard) var(--gutter);
+      /* extra room before the closing contact band */
+      padding-bottom: clamp(96px, 12vw, 160px);
       max-width: var(--container-wide);
       margin: 0 auto;
-      padding: var(--section-standard) var(--gutter);
     }
+    .why-eyebrow {
+      font-family: var(--font-sans);
+      font-size: 11px; font-weight: 500;
+      letter-spacing: 0.22em; text-transform: uppercase;
+      color: var(--bone-mute);
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 22px;
+    }
+    .why-eyebrow::before,
+    .why-eyebrow::after { content:""; width:28px; height:1px; background:var(--ember); }
     .why-heading {
       font-family: var(--font-serif);
       font-weight: 400;
       font-size: var(--font-h2);
-      line-height: var(--lh-tight);
-      letter-spacing: var(--track-tight);
+      line-height: 1.1;
+      letter-spacing: -0.02em;
       color: var(--bone);
-      margin-bottom: var(--h2-mb);
-    }
-    .why-sub {
-      font-family: var(--font-sans);
-      font-size: var(--font-body);
-      line-height: var(--lh-body);
-      color: var(--bone-mute);
-      max-width: 52ch;
       margin-bottom: 44px;
+      max-width: 20ch;
     }
-    .why-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+    .why-heading .accent { color: var(--ember); font-style: italic; }
+    /* desktop: header block reads left-aligned */
+    .section-why .why-eyebrow { justify-content: flex-start; text-align: left; }
+    .section-why .why-heading { text-align: left; max-width: none; }
+    .why-sub {
+      max-width: 680px;
+      margin: 18px 0 60px;
+      text-align: left;
+      font-family: var(--font-sans);
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--bone-mute);
     }
-    @media (min-width: 640px)  { .why-grid { grid-template-columns: 1fr 1fr; gap: 20px; } }
-    @media (min-width: 1024px) { .why-grid { grid-template-columns: repeat(4, 1fr); } }
-    .why-card {
-      background: var(--ink-soft);
-      border: 1px solid var(--hairline);
-      border-radius: var(--r-card);
-      padding: 30px 28px;
-      transition: border-color .2s var(--ease), transform .2s var(--ease);
+    /* mobile: center the About me header + subtext */
+    @media (max-width: 767px) {
+      .section-why .why-eyebrow { justify-content: center; text-align: center; }
+      .section-why .why-heading { text-align: center; }
+      .why-sub { text-align: center; margin: 18px auto 44px; }
     }
-    .why-card:hover { border-color: var(--hairline-strong); transform: translateY(-3px); }
+
     .why-ic {
       width: 46px; height: 46px; border-radius: 50%;
       border: 1px solid var(--hairline-strong);
       display: flex; align-items: center; justify-content: center;
       color: var(--ember); flex-shrink: 0;
-      margin-bottom: 22px;
     }
     .why-ic svg { width: 22px; height: 22px; }
+
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .why-card {
+      background: var(--ink-soft);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 30px 28px;
+      transition: border-color .2s var(--ease), transform .2s var(--ease);
+    }
+    .why-card:hover { border-color: var(--hairline-strong); transform: translateY(-3px); }
+    .why-card .why-ic { margin-bottom: 22px; }
     .why-card-title {
       font-family: var(--font-serif);
       font-weight: 500;
@@ -675,6 +786,78 @@
       font-size: var(--font-sm);
       line-height: var(--lh-body);
       color: var(--bone-mute);
+    }
+    .why-tall {
+      position: relative; overflow: hidden;
+      border-radius: 16px;
+      padding: 38px 34px;
+      display: flex; flex-direction: column;
+      background: linear-gradient(180deg, #241108 0%, #160a05 100%);
+      border: 1px solid rgba(255,113,61,.35);
+    }
+    /* Photo layer behind the card content */
+    .why-tall-photo {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 8%;   /* crop sits higher so the face is never clipped */
+      z-index: 0;
+    }
+    /* Ember wash + dark scrim over the photo — heaviest at the bottom where the text sits */
+    .why-tall::before {
+      content: ""; position: absolute; inset: 0; z-index: 1;
+      background:
+        radial-gradient(120% 90% at 85% 4%, rgba(255,179,138,.22) 0%, transparent 52%),
+        radial-gradient(120% 100% at 4% 100%, rgba(219,102,59,.34) 0%, transparent 58%),
+        linear-gradient(180deg, rgba(36,17,8,.5) 0%, rgba(22,10,5,.82) 62%, rgba(22,10,5,.94) 100%);
+    }
+    .why-tall > :not(.why-tall-photo) { position: relative; z-index: 2; }
+    .why-tall .why-ic { border-color: rgba(255,179,138,.5); color: var(--ember-glow); margin-bottom: auto; }
+    .why-tall-title {
+      font-family: var(--font-serif);
+      font-weight: 500;
+      font-size: var(--font-h3); line-height: var(--lh-tight);
+      letter-spacing: -0.01em;
+      color: var(--bone);
+      margin: 26px 0 14px;
+    }
+    .why-tall-body {
+      color: #E9D9C2;
+      font-size: 15px; line-height: 1.7;
+      margin-bottom: 26px;
+    }
+    .why-cta {
+      align-self: flex-start;
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--ember); color: var(--ink);
+      font-family: var(--font-sans); font-weight: 600; font-size: 15px;
+      border: none; border-radius: 100px;
+      padding: 14px 24px; cursor: pointer; text-decoration: none;
+      transition: background .18s var(--ease);
+    }
+    .why-cta:hover { background: var(--ember-glow); }
+    .why-cta .arr { transition: transform .18s var(--ease); }
+    .why-cta:hover .arr { transform: translateX(4px); }
+
+    /* Mobile: give the "Fully Personalised" photo card more height so the crop of
+       Jasper has room and the headline sits clear of his head, not over it. */
+    @media (max-width: 699px) {
+      .why-tall { min-height: 500px; }
+    }
+
+    @media (min-width: 700px) {
+      .why-grid {
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas: "a b" "c d" "e e";
+      }
+      .why-a { grid-area: a; } .why-b { grid-area: b; }
+      .why-c { grid-area: c; } .why-d { grid-area: d; } .why-e { grid-area: e; }
+    }
+    @media (min-width: 1000px) {
+      .why-grid {
+        grid-template-columns: 1fr 1fr 1.05fr;
+        grid-template-areas: "a b e" "c d e";
+      }
     }
 
     /* ── CTA band (mid + final) ──────────────────────────────── */
@@ -699,6 +882,18 @@
       background:
         linear-gradient(rgba(8,7,6,0.80), rgba(8,7,6,0.88)),
         url('assets/photos/wedding-reception.webp?v=2') center 42% / cover no-repeat;
+      /* now the page's closing statement — give it room to breathe */
+      padding-top: clamp(110px, 14vw, 180px);
+      padding-bottom: clamp(110px, 14vw, 180px);
+      position: relative;
+    }
+    /* melt the band's top edge into the section above — no hard seam */
+    .section-cta-band.band-contact::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: clamp(120px, 16vw, 200px);
+      background: linear-gradient(to bottom, var(--ink), transparent);
+      pointer-events: none;
     }
     .section-cta-band::before {
       content: "";
@@ -747,7 +942,6 @@
     .section-reviews {
       background: var(--ink);
       padding: var(--section-standard) 0;
-      border-top: 1px solid var(--hairline);
     }
     .reviews-container {
       max-width: 1100px;
@@ -1230,6 +1424,109 @@
   </script>
   <noscript><img height="1" width="1" style="display:none" alt=""
     src="https://www.facebook.com/tr?id=1023504601425184&ev=PageView&noscript=1"></noscript>
+  <style>
+    /* ── Hear me play — cinema rail (V1, chosen 13 Aug 2026) ──
+       Widescreen cards, centred focus, both neighbours peeking. Videos are
+       lazy: nothing loads until a play press. 16:9 Bunny masters to come —
+       swap GUIDs in the HEAR script when Jasper supplies the new IDs. */
+    .section-hear { padding: var(--section-standard) var(--gutter); background: var(--ink); }
+    .hear-inner .s-eyebrow { justify-content: center; }
+    .hear-inner .why-heading { text-align: center; max-width: none; margin-left: auto; margin-right: auto; }
+    .hear-inner .why-sub { text-align: center; max-width: 640px; margin-left: auto; margin-right: auto; }
+    .hear-inner { max-width: 1240px; margin: 0 auto; text-align: center; }
+    .hear-wrap { position: relative; margin-top: 40px; }
+    .hear-track {
+      display: flex; gap: 22px; overflow-x: auto; scroll-snap-type: x mandatory;
+      scrollbar-width: none; -ms-overflow-style: none;
+      padding: 6px 2px 10px; padding-inline: calc(50% - min(31vw, 375px));
+    }
+    .hear-track::-webkit-scrollbar { display: none; }
+    .hear-card {
+      flex: 0 0 min(62vw, 750px); scroll-snap-align: center;
+      border-radius: 16px; overflow: hidden; position: relative;
+      border: 1px solid var(--hairline); background: var(--ink-soft);
+      transition: transform .35s var(--ease), opacity .35s var(--ease);
+    }
+    /* entrance: cards drift up one after another when the rail first reveals */
+    .hear-wrap[data-reveal] .hear-card { opacity: 0; transform: translateY(26px); }
+    .hear-wrap[data-reveal].is-visible .hear-card {
+      opacity: 1; transform: translateY(0);
+      transition: transform .7s var(--ease), opacity .7s var(--ease);
+    }
+    .hear-wrap.is-visible .hear-card:nth-child(2) { transition-delay: 80ms; }
+    .hear-wrap.is-visible .hear-card:nth-child(3) { transition-delay: 160ms; }
+    .hear-wrap.is-visible .hear-card:nth-child(4) { transition-delay: 240ms; }
+    .hear-wrap.is-visible .hear-card.off { opacity: .55; transform: scale(.94); }
+    .hear-card.off { transform: scale(.94); opacity: .55; }
+    .hear-media { position: relative; aspect-ratio: 16 / 9; background: #0a0a0a; overflow: hidden; }
+    .hear-media img.hear-poster, .hear-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .hear-cap-scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 40%; z-index: 1;
+      background: linear-gradient(to top, rgba(0,0,0,.62), transparent); pointer-events: none; }
+    .hear-cap { position: absolute; left: 22px; bottom: 18px; z-index: 2; text-align: left; pointer-events: none; }
+    .hear-cap .t { font-family: var(--font-serif); font-size: 21px; color: #fff; }
+    .hear-cap .a { font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.72); margin-top: 3px; }
+    .hear-playbtn {
+      position: absolute; inset: 0; width: 100%; height: 100%; z-index: 3;
+      display: grid; place-items: center; border: 0; cursor: pointer; color: #fff;
+      background: linear-gradient(to top, rgba(0,0,0,.32), transparent 45%);
+      transition: opacity .25s var(--ease);
+    }
+    .hear-playbtn svg {
+      width: 50px; height: 50px; padding: 14px; box-sizing: border-box; border-radius: 50%;
+      background: rgba(10,10,10,.55); border: 1px solid rgba(255,255,255,.32);
+      backdrop-filter: blur(4px); transition: transform .25s var(--ease), background .25s var(--ease);
+    }
+    .hear-card.is-playing .hear-playbtn { opacity: 0; }
+    /* hover affordances only where hover really exists — on touch, taps leave
+       a sticky :hover that would keep the button visible over a playing video */
+    @media (hover: hover) {
+      .hear-card:hover .hear-playbtn svg { transform: scale(1.08); background: rgba(255,113,61,.75); }
+      .hear-card.is-playing .hear-playbtn:hover { opacity: 1; }
+    }
+    /* progress bar — same idea as the weddings phone player */
+    .hp-bar {
+      position: absolute; left: 16px; right: 16px; bottom: 12px; z-index: 3;
+      display: flex; align-items: center; gap: 12px;
+      opacity: 0; pointer-events: none; transition: opacity .3s;
+    }
+    .hp-toggle {
+      flex: 0 0 auto; width: 30px; height: 30px; border-radius: 50%;
+      background: var(--ember); color: var(--ink); border: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; line-height: 1; cursor: pointer;
+      box-shadow: 0 2px 12px rgba(255,113,61,.55); transition: transform .15s;
+    }
+    @media (hover: hover) { .hp-toggle:hover { transform: scale(1.08); } }
+    .hear-card.is-playing .hp-bar { opacity: 1; pointer-events: auto; }
+    .hp-scrub { position: relative; flex: 1; height: 18px; display: flex; align-items: center; cursor: pointer; touch-action: none; }
+    .hp-scrub::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); height: 3px; border-radius: 3px; background: rgba(242,234,216,.26); }
+    .hp-fill { position: absolute; left: 0; top: 50%; transform: translateY(-50%); height: 3px; width: 0; background: var(--ember); border-radius: 3px; box-shadow: 0 0 8px rgba(255,113,61,.55); }
+    .hp-knob { position: absolute; top: 50%; left: 0; width: 12px; height: 12px; border-radius: 50%; background: var(--ember); transform: translate(-50%,-50%); box-shadow: 0 1px 5px rgba(0,0,0,.6), 0 0 9px rgba(255,113,61,.6); }
+    .hear-cap { transition: opacity .3s; }
+    .hear-card.is-playing .hear-cap { opacity: 0; }
+    .hear-nav {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 5;
+      width: 44px; height: 44px; border-radius: 50%;
+      border: 1px solid var(--hairline-strong); background: rgba(10,10,10,.8);
+      color: var(--ember); cursor: pointer; display: grid; place-items: center;
+      backdrop-filter: blur(6px); transition: border-color .2s var(--ease);
+    }
+    .hear-nav:hover { border-color: var(--ember); }
+    .hear-nav svg { width: 19px; height: 19px; }
+    .hear-prev { left: 10px; }
+    .hear-next { right: 10px; }
+    @media (max-width: 700px) {
+      /* mobile: arrows sit as a tidy pair below the video, not floating over it */
+      .hear-wrap { padding-bottom: 58px; }
+      .hear-nav { width: 40px; height: 40px; top: auto; bottom: 0; transform: none; }
+      .hear-nav svg { width: 17px; height: 17px; }
+      .hear-prev { left: calc(50% - 48px); }
+      .hear-next { right: calc(50% - 48px); }
+      .hear-track { gap: 14px; padding-inline: calc(50% - 42vw); }
+      .hear-card { flex-basis: 84vw; }
+      .hear-cap .t { font-size: 17px; }
+    }
+    </style>
 </head>
 <body>
 
@@ -1270,7 +1567,7 @@
       </div>
       <a href="/songlist">Song List</a>
       <a href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire>Contact</a>
-      <a class="nav-cta" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire>Enquire now</a>
+      <a class="nav-cta" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire>Check availability</a>
     </div>
   </nav>
 
@@ -1289,13 +1586,26 @@
       <a href="/songlist">Song List</a>
       <a href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire>Contact</a>
     </nav>
-    <a class="nav-menu-cta" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire>Enquire now</a>
+    <a class="nav-menu-cta" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire>Check availability</a>
     <div class="nav-menu-note">Booking subject to availability</div>
   </div>
 
 
   <main id="main">
   <!-- ── Hero ─────────────────────────────────────────────── -->
+
+  <!-- ── About ─────────────────────────────────────────────── -->
+
+  <!-- ── Services ──────────────────────────────────────────── -->
+
+  <!-- ── Why Choose Me ─────────────────────────────────────── -->
+
+  <!-- ── CTA band ──────────────────────────────────────────── -->
+
+  <!-- ── Social proof ──────────────────────────────────────── -->
+
+  <!-- ── Final CTA ─────────────────────────────────────────── -->
+
   <section class="hero">
     <div class="hero-photo">
       <img
@@ -1307,43 +1617,24 @@
     <div class="hero-melt"></div>
 
     <div class="hero-content">
+      <div class="hero-role" data-load="260" style="animation-delay:260ms">Musician | Songwriter | DJ</div>
       <h1 class="hero-name" data-load="380" style="animation-delay:380ms">Jasper Hawkins</h1>
-      <div class="hero-role" data-load="540" style="animation-delay:540ms">Musician | Songwriter | DJ</div>
+      <p class="hero-sub" data-load="620" style="animation-delay:620ms">From intimate acoustic moments to full dance-floor energy. I'm an award-winning musician and DJ performing weddings, private parties and events across New Zealand.</p>
       <div class="hero-ctas" data-load="700" style="animation-delay:700ms">
-        <a class="btn-primary" href="#about">Learn More <span class="arr">→</span></a>
+        <a class="btn-primary" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire>Check your date <span class="arr">→</span></a>
+        <a class="btn-ghost" href="#hear">Hear me play</a>
       </div>
     </div>
-    <div class="hero-scroll-hint" data-load="880" style="animation-delay:880ms">Scroll</div>
-  </section>
-
-  <!-- ── About ─────────────────────────────────────────────── -->
-  <section class="section-about" id="about">
-    <div class="about-inner">
-      <div class="about-photo" data-reveal>
-        <img src="assets/photos/oldsite/home-about.webp?v=2" alt="Jasper Hawkins performing acoustic guitar and vocals" loading="lazy" decoding="async" width="1000" height="715">
-      </div>
-      <div>
-        <div class="s-eyebrow" data-reveal>About</div>
-        <h2 class="about-heading" data-reveal data-delay="1">Jasper Hawkins</h2>
-        <div class="about-role" data-reveal data-delay="1">Musician&nbsp;|&nbsp;Songwriter&nbsp;|&nbsp;DJ</div>
-        <p class="about-text" data-reveal data-delay="2">
-          With over 10 years of experience performing <strong>1,000+ successful gigs</strong>, and crowned the winner of the prestigious Wild Hearts <strong>'Entertainer Of The Year'</strong> award for 2022, I've mastered the ability to tailor music to create unforgettable events.
-        </p>
-        <p class="about-text" data-reveal data-delay="2">
-          Whether you crave solo upbeat acoustic melodies, a live band, or a high-energy dance floor ignited by a DJ delivering a mix of classics and Top 40 hits, I've got you covered.
-        </p>
-        <p class="about-text" data-reveal data-delay="3">
-          Let's collaborate and elevate your event to extraordinary heights.
-        </p>
-      </div>
+    <div class="hero-statbar" data-load="880" style="animation-delay:880ms">
+      <div class="hero-stat"><div class="stat-value">1,000+</div><div class="stat-label">Gigs performed</div></div>
+      <div class="hero-stat"><div class="stat-value stars">★★★★★</div><div class="stat-label">80+ Google reviews</div></div>
+      <div class="hero-stat"><div class="stat-value compact">Entertainer of the Year</div><div class="stat-label">Wild Hearts 2022</div></div>
     </div>
   </section>
-
-  <!-- ── Services ──────────────────────────────────────────── -->
   <section class="section-services" id="services">
     <div class="services-inner">
       <div class="s-eyebrow" data-reveal>What I do</div>
-      <h2 class="services-heading" data-reveal data-delay="1">Services</h2>
+      <h2 class="services-heading" data-reveal data-delay="1">Choose Your Experience</h2>
 
       <div class="services-grid">
         <div class="svc-card" data-reveal>
@@ -1372,7 +1663,7 @@
 
         <div class="svc-card" data-reveal data-delay="2">
           <div class="svc-photo">
-            <img src="assets/photos/oldsite/band-corporate.webp?v=2" alt="Jasper Hawkins DJing a party" loading="lazy" decoding="async" width="800" height="572">
+            <img src="assets/photos/oldsite/band-corporate.webp?v=2" alt="Jasper Hawkins DJing a party" loading="lazy" decoding="async" width="800" height="572" style="object-position: center 12%">
           </div>
           <div class="svc-body">
             <div class="svc-num">03</div>
@@ -1385,65 +1676,111 @@
     </div>
   </section>
 
-  <!-- ── Why Choose Me ─────────────────────────────────────── -->
-  <section class="section-why">
-    <div class="why-inner">
-      <div class="s-eyebrow" data-reveal>Why choose me</div>
-      <h2 class="why-heading" data-reveal data-delay="1">Why Choose Me?</h2>
-      <p class="why-sub" data-reveal data-delay="1">I know who you choose is a big decision and you've got to get it right</p>
-
-      <div class="why-grid">
-        <div class="why-card" data-reveal>
-          <div class="why-ic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+  <section class="section-hear" id="hear">
+    <div class="hear-inner">
+      <div class="s-eyebrow" data-reveal>Hear me play</div>
+      <h2 class="why-heading" data-reveal data-delay="1">Live Acoustic Sound</h2>
+      <p class="why-sub" data-reveal data-delay="1">Real moments from real events &mdash; tap the video to play</p>
+      <div class="hear-wrap" data-reveal data-delay="2">
+        <button class="hear-nav hear-prev" aria-label="Previous video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <div class="hear-track" id="hearTrack">
+        <div class="hear-card" data-guid="3fe5c048-0df2-4c61-9ae0-05afd56b8119">
+          <div class="hear-media">
+            <img class="hear-poster" src="https://vz-0620fbe9-cee.b-cdn.net/3fe5c048-0df2-4c61-9ae0-05afd56b8119/thumbnail.jpg" alt="Have You Ever Seen the Rain — live" loading="lazy">
+            <video playsinline preload="none"></video>
+            <div class="hear-cap-scrim"></div>
+            <div class="hear-cap"><div class="t">Have You Ever Seen the Rain</div><div class="a">CCR</div></div>
+            <button class="hear-playbtn" aria-label="Play Have You Ever Seen the Rain by CCR">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </button>
           </div>
-          <div class="why-card-title">Acoustic, Band &amp; DJ</div>
-          <p class="why-card-body">With an experienced eye for reading a room, I promise you... Right Songs, Right Volume, Right Time</p>
         </div>
-
-        <div class="why-card" data-reveal data-delay="1">
-          <div class="why-ic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 6.2L21 9l-5 4.3 1.6 6.7L12 16.6 6.4 20l1.6-6.7L3 9l6.6-.8L12 2z"/></svg>
+        <div class="hear-card" data-guid="e8ed8b6e-408c-4644-ae44-e613644c5974">
+          <div class="hear-media">
+            <img class="hear-poster" src="https://vz-0620fbe9-cee.b-cdn.net/e8ed8b6e-408c-4644-ae44-e613644c5974/thumbnail.jpg" alt="Perfect — live" loading="lazy">
+            <video playsinline preload="none"></video>
+            <div class="hear-cap-scrim"></div>
+            <div class="hear-cap"><div class="t">Perfect</div><div class="a">Ed Sheeran</div></div>
+            <button class="hear-playbtn" aria-label="Play Perfect by Ed Sheeran">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </button>
           </div>
-          <div class="why-card-title">It's a vibe</div>
-          <p class="why-card-body">That's what my clients say, coz I give it everything I've got and I love what I do!</p>
         </div>
-
-        <div class="why-card" data-reveal data-delay="2">
-          <div class="why-ic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg>
+        <div class="hear-card" data-guid="3cbfd775-5fc1-47e4-b3bd-8dbc8969f10d">
+          <div class="hear-media">
+            <img class="hear-poster" src="https://vz-0620fbe9-cee.b-cdn.net/3cbfd775-5fc1-47e4-b3bd-8dbc8969f10d/thumbnail.jpg" alt="Beautiful Crazy — live" loading="lazy">
+            <video playsinline preload="none"></video>
+            <div class="hear-cap-scrim"></div>
+            <div class="hear-cap"><div class="t">Beautiful Crazy</div><div class="a">Luke Combs</div></div>
+            <button class="hear-playbtn" aria-label="Play Beautiful Crazy by Luke Combs">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </button>
           </div>
-          <div class="why-card-title">Professionalism</div>
-          <p class="why-card-body">Email and phone support to ensure all your questions and concerns are taken care of.</p>
         </div>
-
-        <div class="why-card" data-reveal data-delay="3">
-          <div class="why-ic">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M8.2 13.9L7 22l5-3 5 3-1.2-8.1"/></svg>
+        <div class="hear-card" data-guid="6b8103b3-2afa-42f1-a5c9-7018b1bc23af">
+          <div class="hear-media">
+            <img class="hear-poster" src="https://vz-0620fbe9-cee.b-cdn.net/6b8103b3-2afa-42f1-a5c9-7018b1bc23af/thumbnail.jpg" alt="She Will Be Loved — live" loading="lazy">
+            <video playsinline preload="none"></video>
+            <div class="hear-cap-scrim"></div>
+            <div class="hear-cap"><div class="t">She Will Be Loved</div><div class="a">Maroon 5</div></div>
+            <button class="hear-playbtn" aria-label="Play She Will Be Loved by Maroon 5">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </button>
           </div>
-          <div class="why-card-title">Experienced</div>
-          <p class="why-card-body">Having performed over 1,000 gigs, I know what it takes to deliver unforgettable events!</p>
         </div>
+        <div class="hear-card" data-guid="1b50f1c2-f040-46d0-bef6-f38dc8ae3316">
+          <div class="hear-media">
+            <img class="hear-poster" src="https://vz-0620fbe9-cee.b-cdn.net/1b50f1c2-f040-46d0-bef6-f38dc8ae3316/thumbnail.jpg" alt="The Best — live" loading="lazy">
+            <video playsinline preload="none"></video>
+            <div class="hear-cap-scrim"></div>
+            <div class="hear-cap"><div class="t">The Best</div><div class="a">Tina Turner</div></div>
+            <button class="hear-playbtn" aria-label="Play The Best by Tina Turner">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="hear-card" data-guid="e179f898-daa2-418d-a845-2dc68107bdf2">
+          <div class="hear-media">
+            <img class="hear-poster" src="https://vz-0620fbe9-cee.b-cdn.net/e179f898-daa2-418d-a845-2dc68107bdf2/thumbnail.jpg" alt="Drops of Jupiter — live" loading="lazy">
+            <video playsinline preload="none"></video>
+            <div class="hear-cap-scrim"></div>
+            <div class="hear-cap"><div class="t">Drops of Jupiter</div><div class="a">Train</div></div>
+            <button class="hear-playbtn" aria-label="Play Drops of Jupiter by Train">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="hear-card" data-guid="b5be7694-90c0-4ee9-8e17-5ab27cbcdd5e">
+          <div class="hear-media">
+            <img class="hear-poster" src="https://vz-0620fbe9-cee.b-cdn.net/b5be7694-90c0-4ee9-8e17-5ab27cbcdd5e/thumbnail.jpg" alt="The A-Team — live" loading="lazy">
+            <video playsinline preload="none"></video>
+            <div class="hear-cap-scrim"></div>
+            <div class="hear-cap"><div class="t">The A-Team</div><div class="a">Ed Sheeran</div></div>
+            <button class="hear-playbtn" aria-label="Play The A-Team by Ed Sheeran">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </div>
+        </div>
+        </div>
+        <button class="hear-nav hear-next" aria-label="Next video"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg></button>
       </div>
     </div>
   </section>
 
-  <!-- ── CTA band ──────────────────────────────────────────── -->
-  <section class="section-cta-band band-day">
-    <div class="cta-band-inner">
-      <h2 class="cta-band-heading" data-reveal>Award winning entertainment to cover your entire day</h2>
-      <a class="btn-primary" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire data-reveal data-delay="1">Enquire Now</a>
-      <div class="cta-band-note" data-reveal data-delay="2">Booking subject to availability</div>
-    </div>
-  </section>
-
-  <!-- ── Social proof ──────────────────────────────────────── -->
   <section class="section-reviews">
     <div class="reviews-container">
       <div class="reviews-header">
-        <div class="s-eyebrow centered" data-reveal style="display:inline-flex">Kind words</div>
-        <h2 class="reviews-headline" data-reveal data-delay="1">Music That Will Have You And Your Guests Talking For Years To Come</h2>
-        <div class="reviews-kicker" data-reveal data-delay="2">But Don't Take My Word For It . . .</div>
+        <div class="reviews-eyebrow" data-reveal>
+          <svg width="15" height="15" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+          </svg>
+          <span>Google Reviews</span>
+        </div>
+        <h2 class="reviews-headline" data-reveal data-delay="1">Trusted By Hundreds<br>Of Happy Clients</h2>
+        <p class="reviews-sub" data-reveal data-delay="2" style="max-width:640px;margin:22px auto 0;text-align:center;font-family:var(--font-sans);font-size:16px;line-height:1.65;color:var(--bone-mute);">From weddings and private parties to corporate events, choosing the right entertainment matters. Here's what people have said after having me play theirs.</p>
       </div>
 
       <div class="reviews-grid">
@@ -1468,12 +1805,49 @@
     </div>
   </section>
 
-  <!-- ── Final CTA ─────────────────────────────────────────── -->
-  <section class="section-cta-band band-contact" style="border-top:1px solid var(--hairline)">
+  <section class="section-why">
+    <div class="why-inner">
+      <span class="why-eyebrow" data-reveal>About me</span>
+      <h2 class="why-heading" data-reveal data-delay="1">More Than Just A Musician</h2>
+      <p class="why-sub" data-reveal data-delay="1">There are plenty of great musicians. There are plenty of great DJs.<br>Finding someone who can read the room, adapt as things change, move seamlessly between live music and DJ sets, and make the whole experience feel effortless is much harder.</p>
+
+      <div class="why-grid">
+        <div class="why-card why-a" data-reveal>
+          <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+          <h3 class="why-card-title">1,000+ Gigs</h3>
+          <p class="why-card-body">Over a decade and more than a thousand weddings, parties and events. I've learned exactly what works and what turns a good event into a great one.</p>
+        </div>
+        <div class="why-card why-b" data-reveal data-delay="1">
+          <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4zM7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/></svg></div>
+          <h3 class="why-card-title">Award-Winning Musician</h3>
+          <p class="why-card-body">Named Wild Hearts Entertainer of the Year 2022, with years of experience performing across New Zealand.</p>
+        </div>
+        <div class="why-card why-c" data-reveal>
+          <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="8" cy="15" r="4"/><path d="M12 15V4l7-1"/><circle cx="18.5" cy="15.5" r="1"/><path d="M18.5 12.5v.01"/></svg></div>
+          <h3 class="why-card-title">Acoustic + DJ</h3>
+          <p class="why-card-body">Stripped-back acoustic sets, full dance-floor DJ sets, or both. One artist with the range to cover everything from the quieter moments to the biggest ones.</p>
+        </div>
+        <div class="why-card why-d" data-reveal data-delay="1">
+          <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 2l2.9 6.3 6.9.7-5.1 4.6 1.4 6.8L12 17.8 5.9 20.4l1.4-6.8L2.2 9l6.9-.7L12 2z"/></svg></div>
+          <h3 class="why-card-title">80+ Five-Star Reviews</h3>
+          <p class="why-card-body">Couples, businesses, venues and event organisers consistently rate the experience five stars. Read them for yourself on Google.</p>
+        </div>
+        <div class="why-tall why-e" data-reveal data-delay="2">
+          <img class="why-tall-photo" src="assets/photos/ceremony-markovina.webp" alt="" aria-hidden="true" loading="lazy" decoding="async" width="680" height="1020">
+          <div class="why-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-4.35-9.5-8.5C.8 9.6 2.3 6 5.5 6 7.6 6 9 7.3 12 10c3-2.7 4.4-4 6.5-4 3.2 0 4.7 3.6 3 6.5C19 16.65 12 21 12 21z"/></svg></div>
+          <h3 class="why-tall-title">Fully Personalised</h3>
+          <p class="why-tall-body">Every detail is tailored to you, right down to your custom aisle song and first dance track. Nothing generic, nothing left to chance.</p>
+          <a class="why-cta" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire>Check availability <span class="arr">→</span></a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-cta-band band-contact">
     <div class="cta-band-inner">
-      <h2 class="cta-band-heading" data-reveal>Contact Me Now</h2>
-      <div class="cta-band-sub" data-reveal data-delay="1">and let's make <em>Your Event A Huge Success</em></div>
-      <a class="btn-primary" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire data-reveal data-delay="2">Enquire Now</a>
+      <h2 class="cta-band-heading" data-reveal>Check Availability</h2>
+      <div class="cta-band-sub" data-reveal data-delay="1">Tell me a little about your event — I'll come back to you personally within 48 hours.</div>
+      <a class="btn-primary" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire data-reveal data-delay="2">Check availability <span class="arr">→</span></a>
     </div>
   </section>
 
@@ -1598,9 +1972,9 @@
   </aside>
 
   <!-- Floating enquiry CTA — persists past the hero, even while the nav is hidden -->
-  <a class="float-cta" id="float-cta" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire aria-label="Enquire now">
+  <a class="float-cta" id="float-cta" href="mailto:hello@jasperhawkinsmusic.co.nz?subject=Music%20enquiry" data-enquire aria-label="Check availability">
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4.5" width="18" height="17" rx="2"/><path d="M16 2.5v4M8 2.5v4M3 9.5h18"/></svg>
-    Enquire now
+    Check availability
   </a>
 
   <script>
@@ -1975,5 +2349,173 @@
   })();
   </script>
 
+  <!-- Hear me play: adaptive Bunny streaming (HLS native on Safari, hls.js elsewhere) -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.13/dist/hls.min.js" defer></script>
+  <script>
+  (function(){
+    var CDN = 'vz-0620fbe9-cee.b-cdn.net';
+    var track = document.getElementById('hearTrack');
+    if (!track) return;
+
+    /* ── infinite carousel: clone 2 cards onto each end, teleport silently
+       when the viewer settles on a clone, so "next" past the last song brings
+       the first sliding in from the right — no rewind. ── */
+    var realCards = Array.prototype.slice.call(track.querySelectorAll('.hear-card'));
+    var N = realCards.length;
+    var CLONES = Math.min(2, N);
+    for (var i = 0; i < CLONES; i++) {
+      var head = realCards[i].cloneNode(true);          head.dataset.cloneOf = i;
+      var tail = realCards[N - 1 - i].cloneNode(true);  tail.dataset.cloneOf = N - 1 - i;
+      track.appendChild(head);                  // copies of the FIRST cards after the end
+      track.insertBefore(tail, track.firstElementChild); // copies of the LAST cards before the start
+    }
+    var cards = Array.prototype.slice.call(track.querySelectorAll('.hear-card'));
+
+    function load(video, guid){
+      var u = 'https://' + CDN + '/' + guid + '/playlist.m3u8';
+      video.preload = 'auto';
+      if (video.canPlayType('application/vnd.apple.mpegurl')) { video.src = u; video.load(); }
+      else if (window.Hls && window.Hls.isSupported()) {
+        var h = new Hls({ capLevelToPlayerSize: true, startLevel: -1 });
+        h.loadSource(u); h.attachMedia(video); video._hls = h;
+      } else { video.src = 'https://' + CDN + '/' + guid + '/play_720p.mp4'; }
+      video._loaded = true;
+    }
+    function stopOthers(current){
+      cards.forEach(function(c){
+        var v = c.querySelector('video');
+        if (v !== current && !v.paused) v.pause();
+      });
+    }
+    function anyPlaying(){
+      for (var i = 0; i < cards.length; i++) {
+        var v = cards[i].querySelector('video');
+        if (v && !v.paused) return v;
+      }
+      return null;
+    }
+    function warm(card){
+      var v = card.querySelector('video');
+      if (!v._loaded) load(v, card.getAttribute('data-guid'));
+    }
+    cards.forEach(function(card){
+      var video = card.querySelector('video');
+      var guid = card.getAttribute('data-guid');
+      video.loop = true;
+      card.querySelector('.hear-playbtn').addEventListener('click', function(){
+        if (!video._loaded) load(video, guid);
+        if (video.paused) { stopOthers(video); var p = video.play(); if (p && p.catch) p.catch(function(){}); }
+        else { video.pause(); }
+      });
+      video.addEventListener('play',  function(){ card.classList.add('is-playing'); });
+      video.addEventListener('pause', function(){ card.classList.remove('is-playing'); });
+
+      // scrub bar — drag or tap anywhere on the line to jump
+      var bar = document.createElement('div');
+      bar.className = 'hp-bar';
+      bar.innerHTML = '<button class="hp-toggle" type="button" aria-label="Pause">&#10074;&#10074;</button><div class="hp-scrub"><div class="hp-fill"></div><div class="hp-knob"></div></div>';
+      card.querySelector('.hear-media').appendChild(bar);
+      bar.querySelector('.hp-toggle').addEventListener('click', function(e){
+        e.stopPropagation(); video.pause();
+      });
+      var scrub = bar.querySelector('.hp-scrub');
+      var fill = bar.querySelector('.hp-fill'), knob = bar.querySelector('.hp-knob');
+      var seeking = false;
+      function setScrub(frac){
+        var p = Math.min(1, Math.max(0, frac || 0)) * 100;
+        fill.style.width = p + '%'; knob.style.left = p + '%';
+      }
+      function scrubTo(x){
+        var r = scrub.getBoundingClientRect();
+        var frac = Math.min(1, Math.max(0, (x - r.left) / r.width));
+        setScrub(frac);
+        if (video.duration) { try { video.currentTime = frac * video.duration; } catch(e){} }
+      }
+      scrub.addEventListener('click', function(e){ e.stopPropagation(); });
+      scrub.addEventListener('pointerdown', function(e){
+        e.stopPropagation(); e.preventDefault(); seeking = true;
+        try { scrub.setPointerCapture(e.pointerId); } catch(_){}
+        scrubTo(e.clientX);
+      });
+      scrub.addEventListener('pointermove', function(e){ if (seeking) scrubTo(e.clientX); });
+      scrub.addEventListener('pointerup', function(e){
+        if (seeking) { seeking = false; try { scrub.releasePointerCapture(e.pointerId); } catch(_){} }
+      });
+      video.addEventListener('timeupdate', function(){
+        if (video.duration && !seeking) setScrub(video.currentTime / video.duration);
+      });
+    });
+
+    function centerOf(card){ return card.offsetLeft + card.offsetWidth / 2 - track.clientWidth / 2; }
+    function focusRail(){
+      var mid = track.scrollLeft + track.clientWidth / 2;
+      cards.forEach(function(c){
+        var cMid = c.offsetLeft + c.offsetWidth / 2;
+        c.classList.toggle('off', Math.abs(cMid - mid) > c.offsetWidth * 0.5);
+      });
+    }
+    track.addEventListener('scroll', function(){ requestAnimationFrame(focusRail); }, { passive: true });
+
+    // when the rail settles on a clone, teleport (instantly) to its real twin
+    var settleTimer = null;
+    function onSettle(){
+      var mid = track.scrollLeft + track.clientWidth / 2;
+      var nearest = null, dist = Infinity;
+      cards.forEach(function(c){
+        var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid);
+        if (d < dist) { dist = d; nearest = c; }
+      });
+      if (nearest && nearest.dataset.cloneOf !== undefined) {
+        var real = realCards[Number(nearest.dataset.cloneOf)];
+        var v = nearest.querySelector('video');
+        if (v && !v.paused) v.pause();
+        track.style.scrollBehavior = 'auto';
+        track.scrollLeft = centerOf(real);
+        track.style.scrollBehavior = '';
+        focusRail();
+        nearest = real;
+      }
+      // moved to a new card → the old song stops; the new card waits, warmed, for a tap
+      var playing = anyPlaying();
+      if (playing && nearest && playing !== nearest.querySelector('video')) playing.pause();
+      if (nearest) warm(nearest);
+    }
+    track.addEventListener('scroll', function(){
+      clearTimeout(settleTimer);
+      settleTimer = setTimeout(onSettle, 140);
+    }, { passive: true });
+
+    // land centred on the first real card — a clone of the last peeks in from the left
+    window.addEventListener('load', function(){
+      track.style.scrollBehavior = 'auto';
+      track.scrollLeft = centerOf(realCards[0]);
+      track.style.scrollBehavior = '';
+      focusRail();
+      warm(realCards[0]); // first tap starts instantly
+    });
+
+    function step(){
+      var c = cards[0];
+      return c ? c.getBoundingClientRect().width + 22 : 400;
+    }
+    function nearestCard(){
+      var mid = track.scrollLeft + track.clientWidth / 2, best = null, dist = Infinity;
+      cards.forEach(function(c){
+        var d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - mid);
+        if (d < dist) { dist = d; best = c; }
+      });
+      return best;
+    }
+    function arrowTo(dir){
+      // stepping away ends the current song; the next card arrives ready to tap
+      stopOthers(null);
+      var cur = nearestCard();
+      var next = dir > 0 ? cur.nextElementSibling : cur.previousElementSibling;
+      if (next) { track.scrollTo({ left: centerOf(next), behavior: 'smooth' }); warm(next); }
+    }
+    document.querySelector('.hear-prev').addEventListener('click', function(){ arrowTo(-1); });
+    document.querySelector('.hear-next').addEventListener('click', function(){ arrowTo(1); });
+  })();
+  </script>
 </body>
 </html>
