@@ -168,7 +168,7 @@ async function acFieldMap(base, headers) {
   return map;
 }
 
-async function addToActiveCampaign({ name, email, phone, eventType, eventDate, location, source, message }) {
+async function addToActiveCampaign({ name, email, phone, eventType, eventDate, location, source, message, dateTaken }) {
   const base = (process.env.AC_API_URL || '').replace(/\/+$/, '');
   const key = process.env.AC_API_KEY;
   const tagName = process.env.AC_TAG_NAME;
@@ -223,6 +223,13 @@ async function addToActiveCampaign({ name, email, phone, eventType, eventDate, l
   const allowed = (process.env.AC_TAG_EVENT_TYPES || 'wedding').toLowerCase();
   if (allowed !== 'all' && !allowed.split(',').map(s => s.trim()).includes(eventType)) {
     return { contactId, skipped: `event type ${eventType} not tagged (contact + fields synced)` };
+  }
+
+  // A booked-out date means the follow-up sequence would nag them to book a
+  // day Jasper can't play. Contact + fields stay synced (useful data, and
+  // Jasper may offer an alternative), but no tag → no automation → no emails.
+  if (dateTaken) {
+    return { contactId, skipped: 'date already booked — automation tag withheld' };
   }
 
   // 2) Resolve the tag name to its id. Jasper supplies the name he sees in
@@ -502,6 +509,7 @@ export default async function handler(req, res) {
       addToActiveCampaign({
         name, email, phone: record.phone, eventType,
         eventDate, location, source: record.source, message,
+        dateTaken: clashTag.startsWith('[DATE TAKEN]'),
       }),
       new Promise((_, rj) => setTimeout(() => rj(new Error('AC budget exceeded')), 6000)),
     ]);
