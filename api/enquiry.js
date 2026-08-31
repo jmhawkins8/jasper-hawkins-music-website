@@ -361,30 +361,40 @@ export default async function handler(req, res) {
   let clashTag = '';      // prefixes the email subject
   if (eventDate) {
     try {
-      const r = await withTimeout(signal => fetch(
-        `${SB}/rest/v1/clients?event_date=eq.${encodeURIComponent(eventDate)}&select=name,stage`,
-        { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }, signal },
-      ), 5000);
-      if (r.ok) {
-        // Runs before the insert, so this counts who was already there.
-        const rows = await r.json();
-        const booked = rows.filter(c => c.stage !== 'enquiry' && c.stage !== 'cancelled');
-        const others = rows.filter(c => c.stage === 'enquiry');
-        const parts = [];
-        if (booked.length) {
-          parts.push(`DATE ALREADY BOOKED — ${booked.map(c => c.name).join(', ')}`);
-        }
-        if (others.length) {
-          // Phrased so it can be repeated to the couple more or less verbatim:
-          // "the date's still free, but someone else is looking at it too."
-          const who = others.map(c => c.name).join(', ');
-          parts.push(others.length === 1
-            ? `1 other person is enquiring about this date (${who}) — still unbooked`
-            : `${others.length} other people are enquiring about this date (${who}) — still unbooked`);
-        }
-        if (parts.length) clash = `⚠ ${parts.join('\n⚠ ')}`;
-        clashTag = booked.length ? '[DATE TAKEN] ' : others.length ? '[DATE IN DEMAND] ' : '';
+      // Two doors onto the same day: client bookings, and personal holds in
+      // calendar_events (open days, original-music gigs). Either one blocks it.
+      const [r, rHolds] = await Promise.all([
+        withTimeout(signal => fetch(
+          `${SB}/rest/v1/clients?event_date=eq.${encodeURIComponent(eventDate)}&select=name,stage`,
+          { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }, signal },
+        ), 5000).catch(() => null),
+        withTimeout(signal => fetch(
+          `${SB}/rest/v1/calendar_events?event_date=eq.${encodeURIComponent(eventDate)}&select=title`,
+          { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }, signal },
+        ), 5000).catch(() => null),
+      ]);
+      // Runs before the insert, so this counts who was already there.
+      const rows = r && r.ok ? await r.json() : [];
+      const holds = rHolds && rHolds.ok ? await rHolds.json() : [];
+      const booked = rows.filter(c => c.stage !== 'enquiry' && c.stage !== 'cancelled');
+      const others = rows.filter(c => c.stage === 'enquiry');
+      const parts = [];
+      if (booked.length) {
+        parts.push(`DATE ALREADY BOOKED — ${booked.map(c => c.name).join(', ')}`);
       }
+      if (holds.length) {
+        parts.push(`DATE BLOCKED — ${holds.map(e => e.title).join(', ')} (hold on the calendar)`);
+      }
+      if (others.length) {
+        // Phrased so it can be repeated to the couple more or less verbatim:
+        // "the date's still free, but someone else is looking at it too."
+        const who = others.map(c => c.name).join(', ');
+        parts.push(others.length === 1
+          ? `1 other person is enquiring about this date (${who}) — still unbooked`
+          : `${others.length} other people are enquiring about this date (${who}) — still unbooked`);
+      }
+      if (parts.length) clash = `⚠ ${parts.join('\n⚠ ')}`;
+      clashTag = (booked.length || holds.length) ? '[DATE TAKEN] ' : others.length ? '[DATE IN DEMAND] ' : '';
     } catch (err) {
       console.error('Date clash lookup failed (enquiry unaffected):', String(err).slice(0, 200));
     }
