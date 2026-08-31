@@ -383,7 +383,7 @@ export default async function handler(req, res) {
         parts.push(`DATE ALREADY BOOKED — ${booked.map(c => c.name).join(', ')}`);
       }
       if (holds.length) {
-        parts.push(`DATE BLOCKED — ${holds.map(e => e.title).join(', ')} (hold on the calendar)`);
+        parts.push(`HOLD ON THIS DATE — ${holds.map(e => e.title).join(', ')} (cancel the hold if you'd rather take this)`);
       }
       if (others.length) {
         // Phrased so it can be repeated to the couple more or less verbatim:
@@ -394,7 +394,12 @@ export default async function handler(req, res) {
           : `${others.length} other people are enquiring about this date (${who}) — still unbooked`);
       }
       if (parts.length) clash = `⚠ ${parts.join('\n⚠ ')}`;
-      clashTag = (booked.length || holds.length) ? '[DATE TAKEN] ' : others.length ? '[DATE IN DEMAND] ' : '';
+      // A real booking is immovable → DATE TAKEN. A hold is Jasper's own block
+      // he could choose to cancel → DATE HELD, so the subject line tells him
+      // which decision he's making before he even opens the email.
+      clashTag = booked.length ? '[DATE TAKEN] '
+        : holds.length ? '[DATE HELD] '
+        : others.length ? '[DATE IN DEMAND] ' : '';
     } catch (err) {
       console.error('Date clash lookup failed (enquiry unaffected):', String(err).slice(0, 200));
     }
@@ -519,7 +524,7 @@ export default async function handler(req, res) {
       addToActiveCampaign({
         name, email, phone: record.phone, eventType,
         eventDate, location, source: record.source, message,
-        dateTaken: clashTag.startsWith('[DATE TAKEN]'),
+        dateTaken: clashTag.startsWith('[DATE TAKEN]') || clashTag.startsWith('[DATE HELD]'),
       }),
       new Promise((_, rj) => setTimeout(() => rj(new Error('AC budget exceeded')), 6000)),
     ]);
