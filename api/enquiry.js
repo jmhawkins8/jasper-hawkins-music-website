@@ -408,6 +408,9 @@ export default async function handler(req, res) {
   const message = clean(body.message, 4000);
   const record = {
     id: randomUUID(),                                // clients.id is NOT NULL with no default
+    portal_token: randomUUID(),                      // DB default is '' (not null) — an empty
+                                                     // token survives the dashboard's ?? fallback
+                                                     // and produces a bare /portal/ link
     user_id: OWNER,
     stage: 'enquiry',
     gig_type: gigType,
