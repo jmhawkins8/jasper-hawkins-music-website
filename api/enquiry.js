@@ -359,23 +359,51 @@ export default async function handler(req, res) {
   // Best-effort: a failure here must never stop the enquiry being saved.
   let clash = '';        // written into the dashboard record
   let clashTag = '';      // prefixes the email subject
+  let clashUnchecked = false; // lookup failed → Jasper must check the date himself
   if (eventDate) {
-    try {
-      // Two doors onto the same day: client bookings, and personal holds in
-      // calendar_events (open days, original-music gigs). Either one blocks it.
-      const [r, rHolds] = await Promise.all([
-        withTimeout(signal => fetch(
-          `${SB}/rest/v1/clients?event_date=eq.${encodeURIComponent(eventDate)}&select=name,stage`,
-          { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }, signal },
-        ), 5000).catch(() => null),
-        withTimeout(signal => fetch(
-          `${SB}/rest/v1/calendar_events?event_date=eq.${encodeURIComponent(eventDate)}&select=title`,
-          { headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }, signal },
-        ), 5000).catch(() => null),
+    // Two doors onto the same day: client bookings, and personal holds in
+    // calendar_events (open days, original-music gigs). Either one blocks it.
+    //
+    // 2026-10-28: Natalie's enquiry for a day Leah & Raoul had held since
+    // March arrived with no [DATE TAKEN] tag and the AC sequence running. Both
+    // lookups had failed inside the old 5s limit (first request of the morning,
+    // database cold) and the failure was swallowed — a non-OK response or a
+    // timeout quietly read as "day is free". Now: a longer limit, one retry,
+    // every failure logged, and when both attempts fail the email says the
+    // date is UNCHECKED instead of implying it's free.
+    const sbGet = async (path, label) => {
+      try {
+        const r = await withTimeout(signal => fetch(`${SB}/rest/v1/${path}`, {
+          headers: { apikey: KEY, Authorization: `Bearer ${KEY}` }, signal,
+        }), 7000);
+        if (!r.ok) {
+          console.error(`Date clash lookup (${label}) HTTP ${r.status}:`, (await r.text()).slice(0, 200));
+          return null;
+        }
+        return await r.json();
+      } catch (err) {
+        console.error(`Date clash lookup (${label}) failed:`, err?.name === 'AbortError' ? 'timed out after 7s' : String(err).slice(0, 200));
+        return null;
+      }
+    };
+    const day = encodeURIComponent(eventDate);
+    let rows = null, holds = null;
+    for (let attempt = 1; attempt <= 2 && (rows === null || holds === null); attempt++) {
+      if (attempt > 1) console.error('Date clash lookup: retrying');
+      const [r1, r2] = await Promise.all([
+        rows === null ? sbGet(`clients?event_date=eq.${day}&select=name,stage`, 'clients') : rows,
+        holds === null ? sbGet(`calendar_events?event_date=eq.${day}&select=title`, 'holds') : holds,
       ]);
+      rows = r1; holds = r2;
+    }
+    if (rows === null || holds === null) {
+      // Don't guess. Say so in the subject and the banner, and leave the
+      // dashboard record carrying the same warning.
+      clashUnchecked = true;
+      clash = '⚠ DATE NOT CHECKED — the availability lookup failed twice, so this date may already be booked. Check it in the dashboard before replying. (Follow-up emails were NOT withheld.)';
+      clashTag = '[DATE UNCHECKED] ';
+    } else {
       // Runs before the insert, so this counts who was already there.
-      const rows = r && r.ok ? await r.json() : [];
-      const holds = rHolds && rHolds.ok ? await rHolds.json() : [];
       const booked = rows.filter(c => c.stage !== 'enquiry' && c.stage !== 'cancelled');
       const others = rows.filter(c => c.stage === 'enquiry');
       const parts = [];
@@ -400,8 +428,6 @@ export default async function handler(req, res) {
       clashTag = booked.length ? '[DATE TAKEN] '
         : holds.length ? '[DATE HELD] '
         : others.length ? '[DATE IN DEMAND] ' : '';
-    } catch (err) {
-      console.error('Date clash lookup failed (enquiry unaffected):', String(err).slice(0, 200));
     }
   }
 
@@ -486,7 +512,7 @@ export default async function handler(req, res) {
         : "It's already in your dashboard Enquiry tab.";
       // Front and centre, so the date situation is obvious before replying.
       // Red when the date is gone, amber when it's merely contested.
-      const hard = clash.includes('ALREADY BOOKED');
+      const hard = clash.includes('ALREADY BOOKED') || clashUnchecked;
       const clashBlock = clash
         ? `<p style="font-family:sans-serif;font-size:14px;line-height:1.6;padding:10px 14px;border-radius:8px;white-space:pre-line;background:${hard ? '#fdecea' : '#fff4e5'};border:1px solid ${hard ? '#e0a8a2' : '#f0c48a'};color:${hard ? '#8a1f14' : '#8a4b00'}">${esc(clash)}</p>`
         : '';
