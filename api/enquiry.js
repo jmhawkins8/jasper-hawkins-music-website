@@ -538,6 +538,34 @@ export default async function handler(req, res) {
     console.error('Resend email threw:', String(err).slice(0, 300));
   }
 
+  // 2b) Silent push to the phone app (badge on the icon). Best-effort and
+  // short: a push failure must never delay or fail the enquiry. The title
+  // carries the same [DATE TAKEN]/[DATE HELD]/[DATE UNCHECKED] tag as the
+  // email subject so the two never disagree. Needs PUSH_KEY in Vercel env
+  // (same value as the push-send function's secret).
+  if (saved && process.env.PUSH_KEY) {
+    try {
+      const dateLabel = record.event_date
+        ? new Date(record.event_date + 'T00:00:00').toLocaleDateString('en-NZ', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
+        : 'no date given';
+      const snippet = message ? message.replace(/\s+/g, ' ').trim().slice(0, 120) : '';
+      const r = await withTimeout(signal => fetch(`${SB}/functions/v1/push-send`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${process.env.PUSH_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          kind: 'enquiry',
+          clientId: record.id,
+          title: `${clashTag}${suspect ? '[possible spam] ' : ''}New ${evLabel} enquiry — ${name}`,
+          body: [dateLabel, location || null, snippet || null].filter(Boolean).join(' · '),
+        }),
+        signal,
+      }), 4000);
+      if (!r.ok) console.error('push-send failed:', r.status, (await r.text()).slice(0, 200));
+    } catch (err) {
+      console.error('push-send threw (enquiry still saved + emailed):', String(err).slice(0, 200));
+    }
+  }
+
   // The visitor needs to know it didn't land, so they can try again or ring.
   if (!saved) {
     return res.status(502).json({
