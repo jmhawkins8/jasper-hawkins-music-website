@@ -1527,6 +1527,7 @@
       .hear-cap .t { font-size: 17px; }
     }
     </style>
+  <script src="/assets/attribution.js" defer></script>
 </head>
 <body>
 
@@ -2108,6 +2109,7 @@
           source:        form.source.value,
           message:       form.message.value,
           enquiry_ref:   form.enquiry_ref ? form.enquiry_ref.value : '',  // honeypot
+          attribution:   window.jhmAttribution ? window.jhmAttribution() : null,  // ad/UTM tags, see assets/attribution.js
         };
 
         const orig = btn.textContent;

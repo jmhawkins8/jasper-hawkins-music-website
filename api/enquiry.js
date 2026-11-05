@@ -81,6 +81,26 @@ function spamScore(body, name, email, message) {
   return score;
 }
 
+// Ad/UTM attribution the page remembered — see assets/attribution.js.
+const ATTR_KEYS = ['fbclid', 'gclid', 'fbc', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'landing', 'referrer', 'ts'];
+function cleanAttribution(a) {
+  if (!a || typeof a !== 'object' || Array.isArray(a)) return null;
+  const out = {};
+  for (const k of ATTR_KEYS) {
+    const v = a[k];
+    if (typeof v === 'string' && v.trim()) out[k] = v.trim().slice(0, 200);
+  }
+  return Object.keys(out).length ? out : null;
+}
+// Human label for the email: "Meta ad · spring-promo", "Google ad", "newsletter".
+function attributionLabel(a) {
+  const src = (a.utm_source || '').toLowerCase();
+  const meta = a.fbclid || a.fbc || /^(facebook|instagram|fb|ig|meta)$/.test(src);
+  const google = a.gclid || src === 'google';
+  const base = meta ? 'Meta ad' : google ? 'Google ad' : (a.utm_source || 'tagged link');
+  return a.utm_campaign ? `${base} · ${a.utm_campaign}` : base;
+}
+
 // NZ-local YYYY-MM-DD for the enquiry_date stamp.
 function nzToday() {
   const parts = new Intl.DateTimeFormat('en-CA', {
@@ -432,6 +452,10 @@ export default async function handler(req, res) {
   }
 
   const message = clean(body.message, 4000);
+  // Ad/UTM tags the page remembered (assets/attribution.js). Whitelisted
+  // keys, strings only, capped — a visitor can put anything in a URL.
+  const attribution = cleanAttribution(body.attribution);
+
   const record = {
     id: randomUUID(),                                // clients.id is NOT NULL with no default
     portal_token: randomUUID(),                      // DB default is '' (not null) — an empty
@@ -454,6 +478,7 @@ export default async function handler(req, res) {
       message,
     ].filter(Boolean).join('\n'),
     enquiry_date: nzToday(),
+    ...(attribution ? { attribution } : {}),
   };
 
   // 1) Save the enquiry (source of truth). If this fails we do NOT bail out —
@@ -461,7 +486,7 @@ export default async function handler(req, res) {
   // than a tidy early return. The visitor still gets an honest error at the end.
   let saved = true;
   try {
-    const r = await withTimeout(
+    const insert = rec => withTimeout(
       signal => fetch(`${SB}/rest/v1/clients`, {
         method: 'POST',
         headers: {
@@ -470,12 +495,24 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
           Prefer: 'return=minimal',
         },
-        body: JSON.stringify(record),
+        body: JSON.stringify(rec),
         signal,
       }), 8000);
+    let r = await insert(record);
     if (!r.ok) {
-      console.error('Supabase insert failed:', r.status, (await r.text()).slice(0, 300));
-      saved = false;
+      const text = (await r.text()).slice(0, 300);
+      // Belt and braces: if the attribution column isn't there yet (migration
+      // not run), drop the tag and save the lead anyway. Losing one tag is
+      // nothing; losing an enquiry is not.
+      if (record.attribution && /attribution/i.test(text)) {
+        console.error('Supabase rejected attribution column — retrying without it:', text);
+        const { attribution: _dropped, ...bare } = record;
+        r = await insert(bare);
+        if (!r.ok) { console.error('Supabase insert failed (retry):', r.status, (await r.text()).slice(0, 300)); saved = false; }
+      } else {
+        console.error('Supabase insert failed:', r.status, text);
+        saved = false;
+      }
     }
   } catch (err) {
     console.error('Supabase insert threw:', String(err).slice(0, 300));
@@ -504,7 +541,9 @@ export default async function handler(req, res) {
         // it, which is right for the dashboard — that has nowhere else to put
         // them — but in the email both already appear in the subject line and
         // the banner above. Repeating them here just buried the actual message.
-        ['Heard via', record.source || '—'], ['Message', message || '—'],
+        ['Heard via', record.source || '—'],
+        ...(attribution ? [['Came via', attributionLabel(attribution)]] : []),
+        ['Message', message || '—'],
       ].map(([k, v]) => `<tr><td style="padding:4px 12px 4px 0;color:#888;vertical-align:top">${esc(k)}</td><td style="padding:4px 0">${esc(v)}</td></tr>`).join('');
       const flag = !saved ? '⚠ NOT SAVED — ' : (clashTag || (suspect ? '[possible spam] ' : ''));
       const note = !saved

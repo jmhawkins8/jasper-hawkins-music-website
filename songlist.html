@@ -2940,6 +2940,7 @@
   </script>
   <noscript><img height="1" width="1" style="display:none" alt=""
     src="https://www.facebook.com/tr?id=1023504601425184&ev=PageView&noscript=1"></noscript>
+  <script src="/assets/attribution.js" defer></script>
 </head>
 <body>
 
@@ -3296,6 +3297,7 @@
           source:        form.source.value,
           message:       form.message.value,
           enquiry_ref:   form.enquiry_ref ? form.enquiry_ref.value : '',  // honeypot
+          attribution:   window.jhmAttribution ? window.jhmAttribution() : null,  // ad/UTM tags, see assets/attribution.js
         };
 
         const orig = btn.textContent;
