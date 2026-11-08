@@ -380,6 +380,11 @@ export default async function handler(req, res) {
   let clash = '';        // written into the dashboard record
   let clashTag = '';      // prefixes the email subject
   let clashUnchecked = false; // lookup failed → Jasper must check the date himself
+  // Stored on the record so Analytics can count "date already taken" as it
+  // stood WHEN THE ENQUIRY ARRIVED. Recomputing it later against today's
+  // bookings would rewrite history every time a date gets booked.
+  //   taken | held | in_demand | free | unchecked   (null when no date given)
+  let dateStatus = null;
   if (eventDate) {
     // Two doors onto the same day: client bookings, and personal holds in
     // calendar_events (open days, original-music gigs). Either one blocks it.
@@ -420,6 +425,7 @@ export default async function handler(req, res) {
       // Don't guess. Say so in the subject and the banner, and leave the
       // dashboard record carrying the same warning.
       clashUnchecked = true;
+      dateStatus = 'unchecked';
       clash = '⚠ DATE NOT CHECKED — the availability lookup failed twice, so this date may already be booked. Check it in the dashboard before replying. (Follow-up emails were NOT withheld.)';
       clashTag = '[DATE UNCHECKED] ';
     } else {
@@ -448,6 +454,9 @@ export default async function handler(req, res) {
       clashTag = booked.length ? '[DATE TAKEN] '
         : holds.length ? '[DATE HELD] '
         : others.length ? '[DATE IN DEMAND] ' : '';
+      dateStatus = booked.length ? 'taken'
+        : holds.length ? 'held'
+        : others.length ? 'in_demand' : 'free';
     }
   }
 
@@ -479,6 +488,7 @@ export default async function handler(req, res) {
     ].filter(Boolean).join('\n'),
     enquiry_date: nzToday(),
     ...(attribution ? { attribution } : {}),
+    ...(dateStatus ? { date_status: dateStatus } : {}),
   };
 
   // 1) Save the enquiry (source of truth). If this fails we do NOT bail out —
@@ -504,9 +514,11 @@ export default async function handler(req, res) {
       // Belt and braces: if the attribution column isn't there yet (migration
       // not run), drop the tag and save the lead anyway. Losing one tag is
       // nothing; losing an enquiry is not.
-      if (record.attribution && /attribution/i.test(text)) {
-        console.error('Supabase rejected attribution column — retrying without it:', text);
-        const { attribution: _dropped, ...bare } = record;
+      // Same for date_status. Both are optional columns added by later
+      // migrations; the insert must never depend on them being there.
+      if ((record.attribution || record.date_status) && /attribution|date_status/i.test(text)) {
+        console.error('Supabase rejected an optional column — retrying without attribution/date_status:', text);
+        const { attribution: _dropped, date_status: _dropped2, ...bare } = record;
         r = await insert(bare);
         if (!r.ok) { console.error('Supabase insert failed (retry):', r.status, (await r.text()).slice(0, 300)); saved = false; }
       } else {
