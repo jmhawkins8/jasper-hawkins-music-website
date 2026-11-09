@@ -489,6 +489,7 @@ export default async function handler(req, res) {
     enquiry_date: nzToday(),
     ...(attribution ? { attribution } : {}),
     ...(dateStatus ? { date_status: dateStatus } : {}),
+    origin: 'website',                               // vs 'manual' for dashboard-entered records
   };
 
   // 1) Save the enquiry (source of truth). If this fails we do NOT bail out —
@@ -516,9 +517,9 @@ export default async function handler(req, res) {
       // nothing; losing an enquiry is not.
       // Same for date_status. Both are optional columns added by later
       // migrations; the insert must never depend on them being there.
-      if ((record.attribution || record.date_status) && /attribution|date_status/i.test(text)) {
-        console.error('Supabase rejected an optional column — retrying without attribution/date_status:', text);
-        const { attribution: _dropped, date_status: _dropped2, ...bare } = record;
+      if ((record.attribution || record.date_status || record.origin) && /attribution|date_status|origin/i.test(text)) {
+        console.error('Supabase rejected an optional column — retrying without attribution/date_status/origin:', text);
+        const { attribution: _dropped, date_status: _dropped2, origin: _dropped3, ...bare } = record;
         r = await insert(bare);
         if (!r.ok) { console.error('Supabase insert failed (retry):', r.status, (await r.text()).slice(0, 300)); saved = false; }
       } else {
