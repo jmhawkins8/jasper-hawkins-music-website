@@ -14,6 +14,10 @@
 //   NOTIFY_EMAIL                where the alert lands, e.g. hello@jasperhawkinsmusic.co.nz
 //   FROM_EMAIL                  verified sender, e.g. "Jasper Hawkins Music <hello@jasperhawkinsmusic.co.nz>"
 //
+// Optional — AI reply draft in Gmail (wedding enquiries only; drafts, never sends):
+//   ENQUIRY_DRAFT_KEY           bearer for the dashboard's enquiry-draft edge function
+//                               (same value as that function's ENQUIRY_DRAFT_KEY secret)
+//
 // Optional — ActiveCampaign follow-up sequence (all three needed, else skipped):
 //   AC_API_URL                  e.g. https://jasperhawkins.api-us1.com  (Settings → Developer)
 //   AC_API_KEY                  the API key from that same screen (SECRET)
@@ -532,6 +536,38 @@ export default async function handler(req, res) {
     saved = false;
   }
 
+  // 1b) Queue the AI reply draft (wedding enquiries only). The dashboard's
+  // enquiry-draft function writes a reply into hello@'s Gmail DRAFTS with the
+  // name, date and travel line filled in from Jasper's standard wording; he
+  // checks it and presses send himself — nothing is sent from here. It
+  // answers 202 straight away and does the work in the background, so this
+  // costs the visitor ~300ms. Best-effort: a failure must never delay or fail
+  // the enquiry, and the function emails Jasper itself if the draft can't be
+  // made. Runs before the alert so the alert can say whether it was queued.
+  let draftNote = '';
+  if (saved && eventType === 'wedding' && process.env.ENQUIRY_DRAFT_KEY) {
+    try {
+      const r = await withTimeout(signal => fetch(`${SB}/functions/v1/enquiry-draft`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${process.env.ENQUIRY_DRAFT_KEY}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          clientId: record.id, name, email, eventDate, location, eventType,
+          dateStatus,
+        }),
+        signal,
+      }), 4000);
+      if (r.ok) {
+        draftNote = '✍ A reply has been drafted in your Gmail Drafts — check it, then send.';
+      } else {
+        console.error('enquiry-draft failed:', r.status, (await r.text()).slice(0, 200));
+        draftNote = '⚠ Reply draft was NOT created — reply by hand this time.';
+      }
+    } catch (err) {
+      console.error('enquiry-draft threw (enquiry still saved):', String(err).slice(0, 200));
+      draftNote = '⚠ Reply draft was NOT created — reply by hand this time.';
+    }
+  }
+
   // 2) Notify Jasper by email. If the save failed this email IS the lead, so
   // it says so loudly in the subject.
   const haveEnv = {
@@ -561,7 +597,7 @@ export default async function handler(req, res) {
       const flag = !saved ? '⚠ NOT SAVED — ' : (clashTag || (suspect ? '[possible spam] ' : ''));
       const note = !saved
         ? 'This enquiry could NOT be saved to your dashboard — this email is the only copy. Add it manually.'
-        : "It's already in your dashboard Enquiry tab.";
+        : "It's already in your dashboard Enquiry tab." + (draftNote ? ` ${draftNote}` : '');
       // Front and centre, so the date situation is obvious before replying.
       // Red when the date is gone, amber when it's merely contested.
       const hard = clash.includes('ALREADY BOOKED') || clashUnchecked;
