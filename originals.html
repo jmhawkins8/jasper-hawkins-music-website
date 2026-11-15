@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Original Songs · Jasper Hawkins</title>
+  <!-- Private, unlisted page: not in the nav or sitemap, and hidden from search engines. -->
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/colors_and_type.css?v=4">
+  <link rel="stylesheet" href="assets/design-system.css?v=4">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+    body { background: var(--ink); color: var(--bone); font-family: var(--font-sans); }
+    main { max-width: 860px; margin: 0 auto; padding: 72px 24px 96px; }
+    .eyebrow { font-size: 12px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--ember); }
+    h1 { font-family: var(--font-serif); font-weight: 500; font-size: clamp(40px, 8vw, 64px); line-height: 1.05; margin-top: 12px; }
+    .intro { color: var(--bone-mute); font-size: 17px; line-height: 1.6; margin-top: 18px; max-width: 52ch; }
+    .song { margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--hairline); }
+    h2 { font-family: var(--font-serif); font-weight: 500; font-size: clamp(24px, 4.5vw, 32px); display: flex; align-items: baseline; gap: 14px; }
+    h2 span { font-family: var(--font-sans); font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--ember); }
+    .frame { position: relative; aspect-ratio: 16 / 9; margin-top: 18px; border-radius: 12px; overflow: hidden; background: #111; }
+    .frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .demos { margin-top: 80px; padding-top: 36px; border-top: 1px solid var(--hairline); }
+    .demos h2 { font-size: clamp(28px, 5.5vw, 40px); display: block; }
+    .demos p { color: var(--bone-mute); font-size: 16px; line-height: 1.6; margin-top: 10px; }
+    .demos ol { list-style: none; margin-top: 20px; }
+    .demos li { padding: 22px 0; border-bottom: 1px solid var(--hairline); }
+    .demos .t { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+    .demos .t span { font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--ember); }
+    .demos .t b { font-family: var(--font-serif); font-weight: 500; font-size: 21px; }
+    .demos .t em { font-style: normal; font-size: 13px; color: var(--bone-mute); }
+    .player { display: flex; align-items: center; gap: 14px; margin-top: 14px; }
+    .pp { flex: none; width: 46px; height: 46px; border-radius: 50%; border: 0; background: var(--ember); cursor: pointer; position: relative; }
+    .pp::before { content: ""; position: absolute; left: 18px; top: 14px; border-style: solid; border-width: 9px 0 9px 14px; border-color: transparent transparent transparent #000; }
+    .player.playing .pp::before { left: 15px; top: 14px; width: 16px; height: 18px; border: 0; background: linear-gradient(90deg, #000 0 5px, transparent 5px 11px, #000 11px 16px); }
+    .cur, .dur { flex: none; width: 40px; font-size: 13px; font-variant-numeric: tabular-nums; color: var(--bone-mute); }
+    .dur { text-align: right; }
+    .seek { flex: 1; min-width: 0; height: 28px; margin: 0; background: transparent; cursor: pointer; -webkit-appearance: none; appearance: none; --p: 0%; }
+    .seek::-webkit-slider-runnable-track { height: 6px; border-radius: 3px; background: linear-gradient(90deg, var(--ember) var(--p), rgba(242,234,216,.18) var(--p)); }
+    .seek::-moz-range-track { height: 6px; border-radius: 3px; background: rgba(242,234,216,.18); }
+    .seek::-moz-range-progress { height: 6px; border-radius: 3px; background: var(--ember); }
+    .seek::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--bone); margin-top: -6px; }
+    .seek::-moz-range-thumb { width: 18px; height: 18px; border: 0; border-radius: 50%; background: var(--bone); }
+    footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--hairline); color: var(--bone-mute); font-size: 14px; line-height: 1.6; }
+    footer a { color: var(--bone); }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">Jasper Hawkins</p>
+    <h1>Original songs</h1>
+    <p class="intro">Live room takes of the songs I'm working on, filmed with the band in the living room.</p>
+
+    <section class="song">
+      <h2><span>01</span>She's A Winner</h2>
+      <div class="frame"><iframe src="https://player.vimeo.com/video/1122037315?title=0&byline=0&portrait=0&dnt=1" title="She's A Winner" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+    </section>
+    <section class="song">
+      <h2><span>02</span>Silicone</h2>
+      <div class="frame"><iframe src="https://player.vimeo.com/video/1122037344?title=0&byline=0&portrait=0&dnt=1" title="Silicone" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+    </section>
+    <section class="song">
+      <h2><span>03</span>Knock Knock</h2>
+      <div class="frame"><iframe src="https://player.vimeo.com/video/1122037289?title=0&byline=0&portrait=0&dnt=1" title="Knock Knock" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+    </section>
+    <section class="song">
+      <h2><span>04</span>Gone</h2>
+      <div class="frame"><iframe src="https://player.vimeo.com/video/1122037415?title=0&byline=0&portrait=0&dnt=1" title="Gone" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+    </section>
+    <section class="song">
+      <h2><span>05</span>Traffic Light Mind</h2>
+      <div class="frame"><iframe src="https://player.vimeo.com/video/1122037379?title=0&byline=0&portrait=0&dnt=1" title="Traffic Light Mind" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+    </section>
+    <section class="song">
+      <h2><span>06</span>Alone In My Head</h2>
+      <div class="frame"><iframe src="https://player.vimeo.com/video/1126978201?title=0&byline=0&portrait=0&dnt=1" title="Alone In My Head" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+    </section>
+    <section class="song">
+      <h2><span>07</span>Lost In The Post</h2>
+      <div class="frame"><iframe src="https://player.vimeo.com/video/1126981433?title=0&byline=0&portrait=0&dnt=1" title="Lost In The Post" loading="lazy" allow="fullscreen; picture-in-picture" allowfullscreen></iframe></div>
+    </section>
+    <section class="demos" id="demos">
+      <h2>All twelve tracks</h2>
+      <p>Audio demos of the full set, latest version of each.</p>
+      <ol>
+      <li><div class="t"><span>01</span><b>Traffic Light Mind</b><em>Demo, 26 Oct 2025</em></div><div class="player" data-src="assets/audio/originals/traffic-light-mind.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>02</span><b>Alone In My Head</b><em>Piano demo</em></div><div class="player" data-src="assets/audio/originals/alone-in-my-head-piano.m4a"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>03</span><b>Gone</b><em>Demo, 16 May 2025</em></div><div class="player" data-src="assets/audio/originals/gone.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>04</span><b>Knock Knock</b><em>Demo, 20 Sep 2025</em></div><div class="player" data-src="assets/audio/originals/knock-knock.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>05</span><b>Silicone</b><em>Demo, 12 Jun 2025</em></div><div class="player" data-src="assets/audio/originals/silicone.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>06</span><b>None Of It Mine</b><em>Demo, 7 Oct 2025</em></div><div class="player" data-src="assets/audio/originals/none-of-it-mine.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>07</span><b>Nothing More To Say</b><em>Demo, 30 Apr 2024</em></div><div class="player" data-src="assets/audio/originals/nothing-more-to-say.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>08</span><b>Opened The Door</b><em>Demo, 7 Oct 2025</em></div><div class="player" data-src="assets/audio/originals/opened-the-door.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>09</span><b>She's A Winner</b><em>Demo, 26 Oct 2025</em></div><div class="player" data-src="assets/audio/originals/she-s-a-winner.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>10</span><b>Shut Up</b><em>Demo, 7 Oct 2025</em></div><div class="player" data-src="assets/audio/originals/shut-up.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>11</span><b>God Is Watching</b><em>Demo with drums</em></div><div class="player" data-src="assets/audio/originals/god-is-watching-with-drums.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      <li><div class="t"><span>12</span><b>Lost In The Post</b><em>Demo, 26 Oct 2025</em></div><div class="player" data-src="assets/audio/originals/lost-in-the-post.mp3"><button type="button" class="pp" aria-label="Play"></button><span class="cur">0:00</span><input type="range" class="seek" min="0" max="1000" value="0" step="1" aria-label="Scrub through the track"><span class="dur">–:––</span></div></li>
+      </ol>
+    </section>
+
+    <footer>Jasper Hawkins &nbsp;·&nbsp; <a href="mailto:hello@jasperhawkinsmusic.co.nz">hello@jasperhawkinsmusic.co.nz</a></footer>
+  </main>
+  <script>
+    (function () {
+      var players = [].slice.call(document.querySelectorAll('.player')), current = null;
+      function fmt(t) { if (!isFinite(t)) return '\u2013:\u2013\u2013'; t = Math.floor(t); return Math.floor(t / 60) + ':' + ('0' + (t % 60)).slice(-2); }
+      players.forEach(function (el) {
+        var a = new Audio(); a.preload = 'metadata'; a.src = el.dataset.src;
+        var btn = el.querySelector('.pp'), seek = el.querySelector('.seek'), cur = el.querySelector('.cur'), dur = el.querySelector('.dur'), dragging = false;
+        function paint() { var p = a.duration ? (a.currentTime / a.duration) * 100 : 0; seek.style.setProperty('--p', p + '%'); cur.textContent = fmt(a.currentTime); }
+        a.addEventListener('loadedmetadata', function () { dur.textContent = fmt(a.duration); });
+        a.addEventListener('timeupdate', function () { if (!dragging && a.duration) { seek.value = (a.currentTime / a.duration) * 1000; } paint(); });
+        a.addEventListener('play', function () { if (current && current !== a) current.pause(); current = a; el.classList.add('playing'); btn.setAttribute('aria-label', 'Pause'); });
+        a.addEventListener('pause', function () { el.classList.remove('playing'); btn.setAttribute('aria-label', 'Play'); });
+        a.addEventListener('ended', function () { a.currentTime = 0; seek.value = 0; paint(); });
+        btn.addEventListener('click', function () { a.paused ? a.play() : a.pause(); });
+        seek.addEventListener('input', function () { dragging = true; if (a.duration) { var t = (seek.value / 1000) * a.duration; seek.style.setProperty('--p', (seek.value / 10) + '%'); cur.textContent = fmt(t); } });
+        seek.addEventListener('change', function () { if (a.duration) a.currentTime = (seek.value / 1000) * a.duration; dragging = false; });
+      });
+    })();
+  </script>
+</body>
+</html>
